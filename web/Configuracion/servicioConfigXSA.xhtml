@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide()"/>  
+
+                <p:dialog modal="true" widgetVar="statusDialog" showHeader="false"  
+                          draggable="false" closable="false" resizable="false" style="font-size: small">  
+                    <p:graphicImage value="/resources/images/ajax-loader.gif" /> 
+                </p:dialog>
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmGen">
+                    <p:panel id="panelGen" header="Configuraciones XSA" style="margin-bottom:20px; height: 185px; font-size: medium">
+                        <h:panelGrid columns="2" style="font-size: small">
+                            <p:outputLabel value="WebService Actualiza CFD: " />
+                            <p:outputLabel value="#{mbServicios.wsActuzliza.valor}" />
+                            <p:outputLabel value="WebService valida CFD: " />
+                            <p:outputLabel value="#{mbServicios.wsValida.valor}" />
+                            <p:outputLabel value="Key del Servidor: " />
+                            <p:outputLabel value="#{mbServicios.keyServ.valor}" />
+                            <p></p>
+                            <p:outputLabel />
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <p:commandButton id="btnModificar" value="Modificar" actionListener="#{mbServicios.resetWS}" oncomplete="PF('dialogModificarXSA').show();" update=":frmGen:displayGen" icon="ui-icon-pencil" rendered="#{mbAcceso.CONFIG_SERVICIOS}" styleClass="boton"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:dialog header="Servicio Configuraciones XSA" widgetVar="dialogModificarXSA" modal="true" resizable="fasle" style="font-size: small">
+                        <h:panelGrid id="displayGen" columns="2" cellspacing="5">
+                            <p:outputLabel value="IP XSA: " />
+                            <h:panelGrid columns="3">
+                                <p:inputText value="#{mbServicios.ipXsa}" label="IP XSA" disabled="#{mbServicios.connectWS}"/>
+                                <p:outputLabel value="Puerto XSA: " />
+                                <p:inputText id="puertoXsa" value="#{mbServicios.portXsa}" label="Puerto" size="5" disabled="#{mbServicios.connectWS}">
+                                    <pe:keyFilter for="puertoXsa" mask="pint"/>
+                                </p:inputText>
+                            </h:panelGrid>
+                            <p:outputLabel value="Key Servidor: " />
+                            <p:inputText value="#{mbServicios.keyServ.valor}" label="Key Servidor" size="40" disabled="#{mbServicios.connectWS}"/>
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:commandButton id="btnCancelarGen" value="Cancelar" action="#{mbServicios.reloadConfigXsa}" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden" rendered="#{!mbServicios.connectWS}"/>
+                                <p:commandButton id="btnProbarConexion" value="Probar Conexión" actionListener="#{mbServicios.conexionWS}" icon="ui-icon-transferthick-e-w" styleClass="boton" update=":frmGen:panelGen, :frmGen:displayGen" rendered="#{!mbServicios.connectWS}"/>
+                                <p:panel style="visibility: hidden" rendered="#{mbServicios.connectWS}"/>
+                                <p:commandButton id="btnGuardarGen" value="Guardar" actionListener="#{mbServicios.updateServXSA}" oncomplete="validaServXSA(xhr, status, args)" update=":frmGen:panelGen, :frmGen:displayGen" icon="ui-icon-disk" styleClass="boton" rendered="#{mbServicios.connectWS}"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <script type="text/javascript">
+                            function validaServXSA(xhr, status, args) {
+                                if (!args.servicioXSA) {
+                                    dialogModificarXSA.jq.effect("shake", {times: 5}, 500);
+                                } else {
+                                    dialogModificarXSA.hide();
+                                }
+                            }
+                        </script>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

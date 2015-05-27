@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl id="general" showDetail="true" autoUpdate="true" sticky="false"/>
+                <h:form id="frmArchivos">
+                    <p:dataTable id="tablaContabilidad" var="contabilidad" paginator="true" rows="12" 
+                                 value="#{mbContabilidadElectronica.modelDataList}" rowKey="#{contabilidad.idContabilidad}" selection="#{mbContabilidadElectronica.contabilidadSeleccionados}" 
+                                 resizableColumns="false" style="text-align: center; font-size: x-small" emptyMessage="No se han encontrado resultados" lazy="true"
+                                 paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
+                        <f:facet name="header">
+                            <p:outputLabel value="Archivos de Contabilidad Electrónica" style="font-size: medium" />
+                        </f:facet>
+                        <p:column selectionMode="multiple" />
+                        <p:column headerText="Archivo Fuente" filterBy="#{contabilidad.nombreRecibido}" sortBy="#{contabilidad.nombreRecibido}">
+                            <h:commandLink id="downPDF" value="#{contabilidad.nombreRecibido}" actionListener="#{mbContabilidadElectronica.downloadArchivoRecibido}" >
+                                <f:param name="idContabilidad" value="#{contabilidad.idContabilidad}" />
+                            </h:commandLink>
+                        </p:column>
+                        <p:column headerText="XML Generado" filterBy="#{contabilidad.nombreGenerado}" sortBy="#{contabilidad.nombreGenerado}">
+                            <h:commandLink value="#{contabilidad.nombreGenerado}" actionListener="#{mbContabilidadElectronica.downloadXMLGenerado}" >
+                                <f:param name="idContabilidad" value="#{contabilidad.idContabilidad}" />
+                            </h:commandLink>
+                        </p:column>
+                        <p:column headerText="Tipo" filterBy="#{contabilidad.tipoArchivo}" sortBy="#{contabilidad.tipoArchivo}" filterOptions="#{mbContabilidadElectronica.tipoSelectItems}">
+                            <h:outputText value="#{contabilidad.tipoArchivo}"/>
+                        </p:column>
+                        <p:column headerText="Fecha de Recepción" filterBy="#{contabilidad.fechaRecepcion}" sortBy="#{contabilidad.fechaRecepcion}">
+                            <h:outputText value="#{contabilidad.fechaRecepcion}"/>
+                        </p:column>
+                        <p:column headerText="Estado" filterBy="#{contabilidad.estado}" sortBy="#{contabilidad.estado}" filterOptions="#{mbContabilidadElectronica.estadoSelectItems}">
+                            <p:commandLink value="#{contabilidad.estado}" actionListener="#{mbContabilidadElectronica.verContElectronica}" oncomplete="dlg1.show()" update=":frmVerContabilidad">
+                                <f:param name="idContabilidad" value="#{contabilidad.idContabilidad}" />
+                            </p:commandLink>
+                        </p:column>
+                        <p:column headerText="Mes" filterBy="#{contabilidad.mes}" sortBy="#{contabilidad.mes}" filterOptions="#{mbContabilidadElectronica.mesSelectItems}">
+                            <h:outputText value="#{contabilidad.mes}"/>
+                        </p:column>
+                        <p:column headerText="Año" filterBy="#{contabilidad.anio}" sortBy="#{contabilidad.anio}">
+                            <h:outputText value="#{contabilidad.anio}"/>
+                        </p:column>
+                        <f:facet name="footer" >
+                            <center>
+                                <h:panelGrid id="pgEmpresas" columns="7" cellspacing="5" style="border-style: hidden; text-align: center;">
+                                    <p:commandButton id="btnNuevoCatalogo" value="Catálogo" actionListener="#{mbContabilidadElectronica.tipoArchivo}" onclick="PF('dlgNuevo').show();" update=":frmArchivos" rendered="#{mbAcceso.BTN_NUEVO_CAT}" icon="ui-icon-plusthick" styleClass="boton" >
+                                        <f:param name="tipoArchivo" value="CATALOGO" />
+                                    </p:commandButton>
+                                    <p:commandButton id="btnNuevoBalanza" value="Balanza" actionListener="#{mbContabilidadElectronica.tipoArchivo}" onclick="PF('dlgNuevo').show();" update=":frmArchivos" rendered="#{mbAcceso.BTN_NUEVO_BAL}" icon="ui-icon-plusthick" styleClass="boton" >
+                                        <f:param name="tipoArchivo" value="BALANZA" />
+                                    </p:commandButton>
+                                    <p:commandButton id="btnNuevoPoliza" value="Póliza" actionListener="#{mbContabilidadElectronica.tipoArchivo}" onclick="PF('dlgNuevo').show();" update=":frmArchivos" rendered="#{mbAcceso.BTN_NUEVO_POL}" icon="ui-icon-plusthick" styleClass="boton">
+                                        <f:param name="tipoArchivo" value="POLIZA" />
+                                    </p:commandButton>
+                                    <p:commandButton id="btnNuevoFolios" value="Auxiliar Folios" actionListener="#{mbContabilidadElectronica.tipoArchivo}" onclick="PF('dlgNuevo').show();" update=":frmArchivos" rendered="#{mbAcceso.BTN_NUEVO_FOL}" icon="ui-icon-plusthick" styleClass="boton">
+                                        <f:param name="tipoArchivo" value="AUXFOLIOS" />
+                                    </p:commandButton>
+                                    <p:commandButton id="btnNuevoCuentas" value="Auxiliar Cuentas" actionListener="#{mbContabilidadElectronica.tipoArchivo}" onclick="PF('dlgNuevo').show();" update=":frmArchivos" rendered="#{mbAcceso.BTN_NUEVO_CUE}" icon="ui-icon-plusthick" styleClass="boton">
+                                        <f:param name="tipoArchivo" value="AUXCUENTAS" />
+                                    </p:commandButton>
+                                    <p:commandButton id="btnReprocesar" value="Reprocesar" actionListener="#{mbContabilidadElectronica.procesarContabilidad}" update=":frmArchivos" rendered="#{mbAcceso.BTN_PROCESAR_CE}" icon="ui-icon-refresh" styleClass="boton"/>
+                                    <p:commandButton id="btnEliminar" value="Eliminar" actionListener="#{mbContabilidadElectronica.existeSeleccionContabilidad}" oncomplete="showDialogDelete(xhr, status, args)" update=":frmDeleteContabilidad:confirmDialog" rendered="#{mbAcceso.BTN_ELIMINAR_CE}" icon="ui-icon-trash" styleClass="boton">
+                                        <f:param name="nombreParametro" value="eliminar"/> 
+                                    </p:commandButton>
+                                </h:panelGrid>
+                            </center>
+                        </f:facet>
+                    </p:dataTable>
+                    <p:poll interval="60" update="frmArchivos, tablaContabilidad" global="false"/>
+                </h:form>
+                <script type='text/javascript'>
+                    function showDialogDelete(xhr, status, args) {
+                        if (args.contabilidad) {
+                            dialogContabilidadDelete.show();
+                        }
+                    }
+                </script>
+
+                <h:form id="frmVerContabilidad" >
+                    <p:dialog header="Detalles Contabilidad Electrónica" widgetVar="dlg1" modal="true" width="600" height="300" minHeight="300" minWidth="600">
+                        <h:panelGrid columns="2" cellspacing="5">
+                            <h:outputText value="Tipo: " />
+                            <h:outputText value="#{mbContabilidadElectronica.contabilidadElectronica.tipoArchivo}" />
+                            <h:outputText value="Archivo fuente: " />
+                            <h:outputText value="#{mbContabilidadElectronica.contabilidadElectronica.nombreRecibido}" />
+                            <h:outputText value="Archivo generado: " />
+                            <h:outputText value="#{mbContabilidadElectronica.contabilidadElectronica.nombreGenerado}" />
+                            <h:outputText value="Mes: " />
+                            <h:outputText value="#{mbContabilidadElectronica.contabilidadElectronica.mes}" />
+                            <h:outputText value="Año: " />
+                            <h:outputText value="#{mbContabilidadElectronica.contabilidadElectronica.anio}" />
+                            <h:outputText value="Fecha de recepción: " />
+                            <h:outputText value="#{mbContabilidadElectronica.contabilidadElectronica.fechaRecepcion}" />
+                            <h:outputText value="Estado: " />
+                            <h:outputText value="#{mbContabilidadElectronica.contabilidadElectronica.estado}" />
+                            <h:outputText value="Error: " />
+                            <h:outputText value="#{mbContabilidadElectronica.contabilidadElectronica.error}" />
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="frmDeleteContabilidad">
+                    <p:confirmDialog id="confirmDialog" message="¿Desea eliminar los archivos de Contabilidad Electrónica seleccionados?" header="Eliminar archivos de Contabilidad Electrónica" 
+                                     severity="alert" widgetVar="dialogContabilidadDelete"  showEffect="fade" hideEffect="fade" closable="false">
+                        <center>
+                            <h:panelGrid columns="3" cellspacing="5" >
+                                <p:commandButton id="declineDelete" value="Cancelar" onclick="dialogContabilidadDelete.hide();" icon="ui-icon-close"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="confirmDelete" value="Aceptar" update=":frmArchivos:tablaContabilidad" 
+                                                 oncomplete="dialogContabilidadDelete.hide()" actionListener="#{mbContabilidadElectronica.deleteContabilidad}" icon="ui-icon-check"/>
+                            </h:panelGrid>
+                        </center>
+                    </p:confirmDialog>
+                </h:form>
+
+                <h:form id="frmNuevo">
+                    <p:dialog header="Seleccione uno o varios archivos TXT" widgetVar="dlgNuevo" modal="true" resizable="false">
+                        <p:fileUpload fileUploadListener="#{mbContabilidadElectronica.fileUpload}" mode="advanced" update=":frmArchivos:tablaContabilidad, :general"
+                                      multiple="true" oncomplete="dlgNuevo.hide(); reload()" auto="true" label="Seleccione"/>
+                    </p:dialog> 
+                    <script type='text/javascript'>
+                        function reload() {
+                            location.href = "/Validacion/faces/ContabilidadElectronica/administrarArchivos.xhtml";
+                        }
+                    </script>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

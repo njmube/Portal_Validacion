@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.ContabilidadElectronica" table="CONTABILIDAD_ELECTRONICA" catalog="iqtb" optimistic-lock="version">
+        <id name="idContabilidad" type="java.lang.Integer">
+            <column name="idCONTABILIDAD" />
+            <generator class="identity" />
+        </id>
+        <property name="idEmpresa" type="int">
+            <column name="idEMPRESA" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="8" not-null="true" />
+        </property>
+        <property name="tipoArchivo" type="string">
+            <column name="TIPO_ARCHIVO" length="10" not-null="true" />
+        </property>
+        <property name="nombreRecibido" type="string">
+            <column name="NOMBRE_RECIBIDO" length="150" not-null="true" />
+        </property>
+        <property name="nombreGenerado" type="string">
+            <column name="NOMBRE_GENERADO" length="150" />
+        </property>
+        <property name="archivoRecibido" type="string">
+            <column name="ARCHIVO_RECIBIDO" not-null="true" />
+        </property>
+        <property name="xmlGenerado" type="string">
+            <column name="XML_GENERADO" />
+        </property>
+        <property name="fechaRecepcion" type="timestamp">
+            <column name="FECHA_RECEPCION" length="19" not-null="true" />
+        </property>
+        <property name="error" type="string">
+            <column name="ERROR" length="65535" />
+        </property>
+        <property name="mes" type="string">
+            <column name="MES" length="3" />
+        </property>
+        <property name="anio" type="java.lang.Integer">
+            <column name="ANIO" />
+        </property>
+    </class>
+</hibernate-mapping>

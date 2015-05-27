@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true" autoUpdate="true" sticky="fasle"/>
+
+                <p:panel header="Editar Información" style="font-size: large">
+                    <h:form id="form">
+                        <h:panelGrid columns="2" style="font-size: small">
+                            <h:outputLabel/>
+                            <p:outputLabel value="*Datos Requeridos" style="font-size: x-small; float: right"/>
+                            <h:outputLabel/><h:outputLabel/>
+                            <p:outputLabel for="txtEmail" value="Correo Electrónico:*" />
+                            <p:inputText id="txtEmail" value="#{mbAcceso.usuario.email}" label="Correo Electrónico" size="40" validator="validarEmail"/>
+                            <p:outputLabel for="txtNombre" value="Nombre:" />
+                            <p:inputText id="txtNombre" value="#{mbAcceso.usuario.nombre}" label="Nombre" size="40" readonly="true"/>
+                            <p:outputLabel for="txtApPaterno" value="Apellido paterno:" />
+                            <p:inputText id="txtApPaterno" value="#{mbAcceso.usuario.apaterno}" label="Apellido paterno" size="40"/>
+                            <p:outputLabel for="txtApMaterno" value="Apellido materno:" />
+                            <p:inputText id="txtApMaterno" value="#{mbAcceso.usuario.amaterno}" label="Apellido materno" size="40"/>
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <h:panelGrid columns="2" >
+                                <p:selectBooleanCheckbox id="chk" value="#{mbAcceso.chkBoolean}">
+                                    <p:ajax event="change" process="chk" update="form"/>
+                                </p:selectBooleanCheckbox>
+                                <p:outputLabel value="Cambiar contraseña"/>
+                            </h:panelGrid>
+                            <p:outputLabel for="txtPass" value="Contraseña actual:" />
+                            <p:password id="txtPass" value="#{mbAcceso.pass}" size="30" disabled="#{!mbAcceso.chkBoolean}" label="Contraseña actual"  required="true"/>
+                            <p:outputLabel for="txtNewPass" value="Nueva Contraseña:" />
+                            <p:password id="txtNewPass" value="#{mbAcceso.newPass}" size="30" disabled="#{!mbAcceso.chkBoolean}" label="Nueva Contraseña"  required="true"/>
+                            <p:outputLabel for="txtCPass" value="Confirmar Contraseña:" />
+                            <p:password id="txtCPass" value="#{mbAcceso.confirmarPass}" size="30" disabled="#{!mbAcceso.chkBoolean}" label="Confirmar contraseña" required="true"/>
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <p:commandButton id="btnGuardar" value="Guardar" actionListener="#{mbAcceso.modContasenia}" update=":form" icon="ui-icon-disk" styleClass="boton"/>
+
+
+                        </h:panelGrid>
+                    </h:form>
+
+                </p:panel>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,182 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputStylesheet name="./css/cssLayout.css"/>
+        <h:outputStylesheet name="./css/cssEstilo.css"/>
+        <link rel="shortcut icon" href="/Validacion/resources/images/favicon.ico" type="image/x-icon"/>
+        <h:outputScript library="js" name="calendar_es.js" />
+        <title>Validación</title>
+    </h:head>
+
+    <h:body>
+        <h:form id="frmIdle">
+            <p:idleMonitor timeout="1800000" onidle="dialogIdle.show()" > 
+                <p:ajax event="idle" listener="#{mbAcceso.logout}"  />
+            </p:idleMonitor>
+            <p:confirmDialog id="dialog" header="Sesión caducada" message="La sesión ha caducado, por favor, pulse el siguiente botón para volver a aceder a la aplicación" widgetVar="dialogIdle" closable="false">
+                <center><p:commandButton id="btnTimeOut" value="Aceptar" action="#{mbAcceso.logout}" oncomplete="dialogIdle.hide()" ajax="false"/></center>
+            </p:confirmDialog>
+        </h:form>
+
+        <script type="text/javascript">
+            function cerrar() {
+                document.getElementById('frmIdle:btnTimeOut').click();
+            }
+        </script>
+
+        <div id="top">
+            <h:form>
+                <div id="logo">
+                    <p:graphicImage value="/resources/images/logo.png" width="100" height="100"/> 
+                </div>
+                <div id="divH1"><h1>Validación</h1></div>
+                <div id="divSesionUsuario">
+                    <span>
+                        <p:outputLabel value="#{mbAcceso.usuario.userid}" />
+                        <br/>
+                        <p:outputLabel value="#{mbAcceso.empresaSeleccionada}" rendered="#{!mbAcceso.rolServidor}"/>
+                        <p:outputLabel value="SERVIDOR" rendered="#{mbAcceso.rolServidor}"/>
+                        <p></p>
+                    </span>
+                </div>
+                <div id="divMenu">
+                    <p:megaMenu style="width: 900px">
+                        <p:menuitem value="Principal" action="#{mbAcceso.irPrincipal}" icon="ui-icon-home" ajax="false"/>
+                        <p:submenu label="CFDIs" icon="ui-icon-document" rendered="#{mbAcceso.rolEmpresa and mbAcceso.MENU_CFDIS}">
+                            <p:column>
+                                <p:submenu style="display: none;">
+                                    <p:menuitem value="Recibidos" action="#{mbAcceso.irCDFIs}" rendered="#{mbAcceso.VER_CFDIS_RECIBIDOS}" icon="ui-icon-arrowthick-1-e" />
+                                    <p:menuitem value="Duplicados" action="#{mbAcceso.irCDFIs}" rendered="#{mbAcceso.VER_CFDIS_RECIBIDOS}" icon="ui-icon-copy" />
+                                    <p:menuitem value="Eliminados/Cancelados" action="#{mbAcceso.irCDFIsEliminados}" rendered="#{mbAcceso.VER_CFDIS_ELIMINADOS}" icon="ui-icon-trash" />
+                                    <p:menuitem value="Emitidos" action="#{mbAcceso.irCDFIsEmitidos}" rendered="#{mbAcceso.VER_CFDIS_EMITIDOS}" icon="ui-icon-arrowthick-1-w" />
+                                    <p:menuitem value="Reglas de Negocio" action="#{mbAcceso.irOrdenCompra}" rendered="#{mbAcceso.VER_ORDEN_COMPRA}" icon="ui-icon-tag" />
+                                </p:submenu>
+                            </p:column>   
+                        </p:submenu>
+                        <p:submenu label="CFDIs" icon="ui-icon-document" rendered="#{mbAcceso.rolSocioComercial and mbAcceso.VER_CFDIS_RECIBIDOS_SC}">
+                            <p:column>
+                                <p:submenu style="display: none;">
+                                    <p:menuitem value="Emitidos" action="#{mbAcceso.irCDFIs}" rendered="#{mbAcceso.VER_CFDIS_RECIBIDOS_SC}" icon="ui-icon-arrowthick-1-w" />
+                                    <p:menuitem value="Eliminados/Cancelados" action="#{mbAcceso.irCDFIsEliminados}" rendered="#{mbAcceso.VER_CFDIS_ELIMINADOS_SC}" icon="ui-icon-trash"/>
+                                </p:submenu>
+                            </p:column>   
+                        </p:submenu>
+                        <p:menuitem value="Mis Datos" action="#{mbAcceso.irSocioMisDatos}" icon="ui-icon-person" rendered="#{mbAcceso.rolSocioComercial}"/>
+                        <p:menuitem value="Socios Comerciales" action="#{mbAcceso.irSociosComerciales}" icon="ui-icon-person" rendered="#{mbAcceso.rolEmpresa and mbAcceso.VER_SOCIOS_COMERCIALES}"/>
+                        <p:submenu label="Configuración de Servicios" icon="ui-icon-wrench" rendered="#{mbAcceso.rolServidor and mbAcceso.VER_CONFIG_SERVICIOS}">
+                            <p:column>
+                                <p:submenu style="display: none;">
+                                    <p:menuitem value="Recepción" outcome="/Configuracion/servicioRecepcion?faces-redirect=true" rendered="#{mbAcceso.VER_SERV_RECEPCION}" icon="ui-icon-mail-open"/>
+                                    <p:menuitem value="Validación" outcome="/Configuracion/servicioValidacion?faces-redirect=true" rendered="#{mbAcceso.VER_SERV_VALIDACION}" icon="ui-icon-circle-check"/>
+                                    <p:menuitem value="Notificaciones" outcome="/Configuracion/servicioNotificaciones?faces-redirect=true" rendered="#{mbAcceso.VER_SERV_NOTIFICACIONES}" icon="ui-icon-comment" />
+                                    <p:menuitem value="Cuentas de Usuario" outcome="/Configuracion/servicioUsuarios?faces-redirect=true" rendered="#{mbAcceso.VER_SERV_ACCESO}" icon="ui-icon-person" />
+                                    <p:menuitem value="Servidor SMTP" outcome="/Configuracion/servicioSMTP?faces-redirect=true" rendered="#{mbAcceso.VER_SERV_SMTP}" icon="ui-icon-mail-closed"/>
+                                    <p:menuitem value="Contabilidad Elec." outcome="/Configuracion/servicioContabilidad?faces-redirect=true" rendered="#{mbAcceso.VER_SERV_CONTABILIDAD_ELECTRONICA}" icon="ui-icon-bookmark"/>
+                                    <p:menuitem value="Sincronizar CFDIs" outcome="/Configuracion/servicioActualizar?faces-redirect=true" rendered="#{mbAcceso.VER_SERV_SINCRONIZAR}" icon="ui-icon-refresh"/>
+                                    <p:menuitem value="Configuraciones XSA" outcome="/Configuracion/servicioConfigXSA?faces-redirect=true" rendered="#{mbAcceso.VER_SERV_CONFIG_XSA}" icon="ui-icon-gear"/>
+                                    <p:menuitem value="Script" outcome="/Scripts/script?faces-redirect=true" rendered="true" icon="ui-icon-document"/>
+                                </p:submenu>
+                            </p:column>   
+                        </p:submenu>
+                        <p:submenu label="Usuarios" icon="ui-icon-person" rendered="#{mbAcceso.rolServidor}">
+                            <p:column>
+                                <p:submenu style="display: none;">
+                                    <p:menuitem value="Usuarios" outcome="/Usuario/usuarios?faces-redirect=true" rendered="#{mbAcceso.VER_USUARIOS}" icon="ui-icon-person" />
+                                    <p:menuitem value="Roles" outcome="/Usuario/roles?faces-redirect=true" rendered="#{mbAcceso.VER_ROLES}" icon="ui-icon-contact"/>
+                                </p:submenu>
+                            </p:column>   
+                        </p:submenu>
+                        <p:submenu label="Empresa" icon="ui-icon-star" rendered="#{mbAcceso.rolServidor and mbAcceso.VER_EMPRESAS}">
+                            <p:column>
+                                <p:submenu style="display: none;">
+                                    <p:menuitem value="Nueva" outcome="/Empresa/nueva?faces-redirect=true" icon="ui-icon-plusthick" />
+                                    <p:menuitem value="Ver" outcome="/Empresa/empresas?faces-redirect=true" icon="ui-icon-search"/>
+                                </p:submenu>
+                            </p:column>   
+                        </p:submenu>
+                        <p:menuitem value="Contabilidad Electrónica" action="#{mbAcceso.irContabilidadElectronica}" icon="ui-icon-bookmark" rendered="#{mbAcceso.rolEmpresa and mbAcceso.VER_CONTABILIDAD_ELECTRONICA}"/>
+                        <p:submenu label="Configuración" icon="ui-icon-wrench" rendered="#{mbAcceso.rolEmpresa and mbAcceso.MENU_CONFIGURACION}">
+                            <p:column>
+                                <p:submenu style="display: none;">
+                                    <p:menuitem value="Empresa" action="#{mbAcceso.irConfiguracionEmpresa}" rendered="#{mbAcceso.VER_CONFIG_EMPRESA}" icon="ui-icon-star"/>
+                                    <p:menuitem value="Notificaciones" action="#{mbAcceso.irConfiguracionNotificaciones}" rendered="#{mbAcceso.VER_CONFIG_NOTIFICACION}" icon="ui-icon-comment"/>
+                                    <p:menuitem value="Plantilla" action="#{mbAcceso.irConfiguracionPlantilla}" rendered="#{mbAcceso.VER_CONFIG_PLANTILLA}" icon="ui-icon-document"/>
+                                    <p:menuitem value="Correo Electrónico" action="#{mbAcceso.irConfiguracionEmail}" rendered="#{mbAcceso.VER_CONFIG_EMAIL}" icon="ui-icon-mail-open"/>
+                                    <p:menuitem value="Usuario FTP" action="#{mbAcceso.irUsuarioValidacionFTP}" rendered="#{mbAcceso.VER_CONFIG_FTP}" icon="ui-icon-gear"/>
+                                    <p:menuitem value="Reportar CFDI" action="#{mbAcceso.irReportar}" rendered="#{mbAcceso.VER_CONFIG_REPORTAR}" icon="ui-icon-transferthick-e-w"/>
+                                    <p:menuitem value="Addenda" action="#{mbAcceso.irConfiguracionAddenda}" rendered="#{mbAcceso.VER_CONFIG_ADDENDA}" icon="ui-icon-copy"/>
+                                    <p:menuitem value="Adaptador/Conector" action="#{mbAcceso.irConectorAdaptador}" rendered="#{mbAcceso.VER_CONFIG_ADAPTADOR_CONECTOR}" icon="ui-icon-document-b" />
+                                </p:submenu>
+                            </p:column>
+                        </p:submenu>
+                        <p:submenu label="#{mbAcceso.usuario.userid}" icon="ui-icon-gear" style="float: right;">
+                            <p:column>
+                                <p:submenu style="display: none;">
+                                    <p:menuitem value="Cambiar Empresa" onclick="dialogCambioEmpresa.show();" icon="ui-icon-star" rendered="#{mbAcceso.rolEmpresa}"/>
+                                    <p:menuitem value="Editar Usuario" outcome="/Usuario/modificar?faces-redirect=true" icon="ui-icon-person" />
+                                    <p:menuitem value="Salir" onclick="dialogLogout.show();" icon="ui-icon-extlink" />
+                                </p:submenu>
+                            </p:column>   
+                        </p:submenu>
+                    </p:megaMenu> 
+                </div>
+            </h:form>
+
+            <h:form id="frmLogout">
+                <p:confirmDialog id="confirmDialog" message="¿Desea salir de la aplicación?" header="Cerrar Sesión"
+                                 severity="alert" widgetVar="dialogLogout" showEffect="fade" hideEffect="fade" closable="false">
+                    <center>
+                        <h:panelGrid columns="3" cellspacing="5" >
+                            <p:commandButton id="decline" value="Cancelar" onclick="dialogSalir.hide();" icon="ui-icon-close" styleClass="boton"/>
+                            <p:panel style="visibility: hidden"/>
+                            <p:commandButton id="confirm" value="Aceptar" action="#{mbAcceso.logout}" oncomplete="dialogSalir.hide()" icon="ui-icon-check" styleClass="boton" ajax="false"/>                        
+                        </h:panelGrid>
+                    </center>
+                </p:confirmDialog>
+            </h:form>
+
+            <h:form id="frmCambioEmpresa">
+                <p:dialog header="Selección de Empresa" widgetVar="dialogCambioEmpresa" resizable="false" modal="true">
+                    <h:panelGrid columns="2" cellspacing="5">
+                        <p:outputLabel value="Empresa:"/>
+                        <p:selectOneMenu id="somEmpresas" value="#{mbAcceso.empresaSeleccionada}" label="Empresas" style="width: 250px"> 
+                            <f:selectItems value="#{mbAcceso.listaEmpresas}"/>  
+                        </p:selectOneMenu>
+                        <p/>
+                        <h:panelGrid columns="3" cellspacing="5">
+                            <p:commandButton value="Cancelar" onclick="dialogCambioEmpresa.hide();" icon="ui-icon-close" styleClass="boton"/>
+                            <p:panel style="visibility: hidden"/>
+                            <p:commandButton value="Aceptar" action="#{mbAcceso.cambiarEmpresa}" icon="ui-icon-check" styleClass="boton" ajax="false"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+
+            <ui:insert name="top">Top</ui:insert>
+        </div>
+        <div>
+            <div id="left">
+                <ui:insert name="left">Left</ui:insert>
+            </div>
+            <div>
+                <div id="right">
+                    <ui:insert name="right">Right</ui:insert>
+                </div>
+                <div id="cuerpo" class="center_content">
+                    <ui:insert name="content">Content</ui:insert>
+                </div>
+            </div>
+        </div>        
+    </h:body>
+
+</html>
+<!--                                    <p:menuitem value="Centinela" outcome="/Configuracion/servicioCentinela?faces-redirect=true" rendered="{mbAcceso.VER_SERV_CENTINELA}" icon="ui-icon-search"/>
+                                    <p:menuitem value="Script" outcome="/Scripts/script?faces-redirect=true" rendered="{mbAcceso.VER_SERV_SCRIPT}" icon="ui-icon-document-b"/>-->

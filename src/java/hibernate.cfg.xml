@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/iqtb?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.username">manager</property>
+    <property name="hibernate.connection.password">mysql</property>
+    <property name="hibernate.show_sql">false</property>
+    <property name="hibernate.current_session_context_class">thread</property>
+    <mapping resource="com/iqtb/validacion/pojo/MetodosPago.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/SociosComerciales.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Cfdis.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Pestanias.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/OrdenesCompra.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Roles.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Opciones.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Bitacora.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/ConfiguracionesEmpresas.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Transferencias.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/ContabilidadElectronica.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Script.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/ConectorAdaptador.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/ConfiguracionesServicios.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/CfdisRecibidos.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/OtroMetodoPago.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Usuarios.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Servicios.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Empresas.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/RolesHasOpciones.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Sucursales.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Cheques.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/Plantillas.hbm.xml"/>
+    <mapping resource="com/iqtb/validacion/pojo/UsuariosHasEmpresas.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

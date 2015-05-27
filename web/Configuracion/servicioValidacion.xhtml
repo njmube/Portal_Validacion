@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+
+                <h:form id="frmVa">
+                    <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                    <p:panel id="panelVa" header="Servicio de validación" style="margin-bottom:20px; height: 185px; font-size: medium">
+                        <h:panelGrid columns="2" style="font-size: small">
+                            <p:outputLabel value="Tiempo de espera entre cada ciclo:" />
+                            <p:outputLabel value="#{mbServicios.teValidacion.valor} ms" />
+                            <p:outputLabel value="Tiempo de espera para recargar configuración:" />
+                            <p:outputLabel value="#{mbServicios.trcValidacion.valor} ms" />
+                            <p:outputLabel value="Webservice para validar certificados:" />
+                            <p:outputLabel value="#{mbServicios.wsValidacion.valor}" />
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <p:commandButton id="btnModificarVa" value="Modificar" onclick="PF('dialogModificarValidacion').show();" update=":frmVa:displayVa" icon="ui-icon-pencil" rendered="#{mbAcceso.CONFIG_SERVICIOS}" styleClass="boton"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:dialog header="Servicio de validación" widgetVar="dialogModificarValidacion" modal="true" resizable="fasle" style="font-size: small">
+                        <h:panelGrid id="displayVa" columns="2" >
+                            <p:outputLabel value="Tiempo de espera entre cada ciclo (milisegundos):" />
+                            <p:inputText value="#{mbServicios.teValidacion.valor}" label="Tiempo de espera entre cada ciclo" size="45" validator="validarVacio">
+                                <f:validateLongRange minimum="1000" />
+                            </p:inputText>
+                            <p:outputLabel value="Tiempo de espera para recargar configuración (milisegundos):" />
+                            <p:inputText value="#{mbServicios.trcValidacion.valor}" label="Tiempo de espera para recargar configuración" size="45" validator="validarVacio">
+                                <f:validateLongRange minimum="1000" />
+                            </p:inputText>
+                            <p:outputLabel value="Webservice para validar certificados:"/>
+                            <p:inputText value="#{mbServicios.wsValidacion.valor}" size="45" validator="validarVacio"/>
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <h:panelGrid columns="4" cellspacing="5">
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnCancelarVa" value="Cancelar" action="#{mbServicios.reloadValidacion}" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnGuardarva" value="Guardar" actionListener="#{mbServicios.updateServValidacion}" oncomplete="validaServValidacion(xhr, status, args)" update=":frmVa:panelVa, :frmVa:displayVa" icon="ui-icon-disk" styleClass="boton"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <script type="text/javascript">
+                            function validaServValidacion(xhr, status, args) {
+                                if (!args.servicioValidacion) {
+                                    dialogModificarValidacion.jq.effect("shake", {times: 5}, 500);
+                                } else {
+                                    dialogModificarValidacion.hide();
+                                }
+                            }
+                        </script>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

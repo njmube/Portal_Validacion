@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="iqtb"/>
+  <table-filter match-name="CFDIS"/>
+  <table-filter match-name="TRANSFERENCIAS"/>
+  <table-filter match-name="OPCIONES"/>
+  <table-filter match-name="SCRIPT"/>
+  <table-filter match-name="PESTANIAS"/>
+  <table-filter match-name="CFDIS_RECIBIDOS"/>
+  <table-filter match-name="CONTABILIDAD_ELECTRONICA"/>
+  <table-filter match-name="SUCURSALES"/>
+  <table-filter match-name="SOCIOS_COMERCIALES"/>
+  <table-filter match-name="CHEQUES"/>
+  <table-filter match-name="OTRO_METODO_PAGO"/>
+  <table-filter match-name="USUARIOS_has_EMPRESAS"/>
+  <table-filter match-name="METODOS_PAGO"/>
+  <table-filter match-name="CONFIGURACIONES_EMPRESAS"/>
+  <table-filter match-name="ROLES"/>
+  <table-filter match-name="CONFIGURACIONES_SERVICIOS"/>
+  <table-filter match-name="EMPRESAS"/>
+  <table-filter match-name="ROLES_has_OPCIONES"/>
+  <table-filter match-name="USUARIOS"/>
+  <table-filter match-name="BITACORA"/>
+  <table-filter match-name="ORDENES_COMPRA"/>
+  <table-filter match-name="CONECTOR_ADAPTADOR"/>
+  <table-filter match-name="SERVICIOS"/>
+  <table-filter match-name="PLANTILLAS"/>
+</hibernate-reverse-engineering>

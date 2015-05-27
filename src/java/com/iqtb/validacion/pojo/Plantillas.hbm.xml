@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.Plantillas" table="PLANTILLAS" catalog="iqtb" optimistic-lock="version">
+        <id name="idPlantillas" type="java.lang.Integer">
+            <column name="idPLANTILLAS" />
+            <generator class="identity" />
+        </id>
+        <property name="idEmpresa" type="int">
+            <column name="idEMPRESA" not-null="true" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" length="45" not-null="true" />
+        </property>
+        <property name="ruta" type="string">
+            <column name="RUTA" length="100" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

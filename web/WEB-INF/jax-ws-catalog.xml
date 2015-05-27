@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://209.212.145.87:8080/WSLCO/WSLCO?wsdl" uri="src/conf/xml-resources/web-service-references/WSLCO/wsdl/209.212.145.87_8080/WSLCO/WSLCO.wsdl"/>
+    <system systemId="http://209.212.145.87:8080/WSLCO/WSLCO?xsd=1" uri="src/conf/xml-resources/web-service-references/WSLCO/wsdl/209.212.145.87_8080/WSLCO/WSLCO.xsd_1.xsd"/>
+    <system systemId="http://192.168.250.146:8080/contabilidadWS/actualizacionCfds?wsdl" uri="wsdl/192.168.250.146_8080/contabilidadWS/actualizacionCfds.wsdl"/>
+    <system systemId="http://192.168.250.146:8080/contabilidadWS/actualizacionCfds?xsd=1" uri="wsdl/192.168.250.146_8080/contabilidadWS/actualizacionCfds.xsd_1.xsd"/>
+</catalog>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.CfdisRecibidos" table="CFDIS_RECIBIDOS" catalog="iqtb" optimistic-lock="version">
+        <id name="idCfdiRecibido" type="java.lang.Integer">
+            <column name="idCFDI_RECIBIDO" />
+            <generator class="identity" />
+        </id>
+        <property name="idSocioComercial" type="int">
+            <column name="idSOCIO_COMERCIAL" not-null="true" />
+        </property>
+        <property name="idEmpresa" type="int">
+            <column name="idEMPRESA" not-null="true" />
+        </property>
+        <property name="idOrdenCompra" type="java.lang.Integer">
+            <column name="idORDEN_COMPRA" />
+        </property>
+        <property name="serie" type="string">
+            <column name="SERIE" length="45" />
+        </property>
+        <property name="folio" type="java.lang.Long">
+            <column name="FOLIO" />
+        </property>
+        <property name="uuid" type="string">
+            <column name="UUID" length="36" />
+        </property>
+        <property name="fecha" type="timestamp">
+            <column name="FECHA" length="19" not-null="true" />
+        </property>
+        <property name="total" type="big_decimal">
+            <column name="TOTAL" precision="16" scale="6" not-null="true" />
+        </property>
+        <property name="xmlSat" type="string">
+            <column name="XML_SAT" not-null="true" />
+        </property>
+        <property name="fechaRecepcion" type="timestamp">
+            <column name="FECHA_RECEPCION" length="19" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="20" not-null="true" />
+        </property>
+        <property name="error" type="string">
+            <column name="ERROR" length="65535" />
+        </property>
+        <property name="reportado" type="java.lang.Boolean">
+            <column name="REPORTADO" />
+        </property>
+        <property name="estadoNotificacion" type="string">
+            <column name="ESTADO_NOTIFICACION" length="15" />
+        </property>
+        <property name="nombreArchivo" type="string">
+            <column name="NOMBRE_ARCHIVO" length="150" />
+        </property>
+        <property name="pdf" type="binary">
+            <column name="PDF" />
+        </property>
+        <property name="statusPdf" type="java.lang.Boolean">
+            <column name="STATUS_PDF" />
+        </property>
+        <property name="esCfd" type="java.lang.Boolean">
+            <column name="ES_CFD" />
+        </property>
+        <property name="reportadoXsa" type="java.lang.Boolean">
+            <column name="REPORTADO_XSA" />
+        </property>
+        <property name="totalOc" type="big_decimal">
+            <column name="TOTAL_OC" precision="16" scale="6" />
+        </property>
+        <property name="tipoMoneda" type="string">
+            <column name="TIPO_MONEDA" length="3" />
+        </property>
+        <property name="tipoCambio" type="big_decimal">
+            <column name="TIPO_CAMBIO" precision="16" scale="6" />
+        </property>
+        <property name="entradaAlmacen" type="string">
+            <column name="ENTRADA_ALMACEN" length="65535" />
+        </property>
+        <property name="controlCalidad" type="string">
+            <column name="CONTROL_CALIDAD" length="65535" />
+        </property>
+        <property name="autorizacion" type="string">
+            <column name="AUTORIZACION" length="65535" />
+        </property>
+        <property name="tiposWarn" type="string">
+            <column name="TIPOS_WARN" length="150" />
+        </property>
+    </class>
+</hibernate-mapping>

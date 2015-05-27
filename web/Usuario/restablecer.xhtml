@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>Acceso</title>
+        <link rel="stylesheet" href="/Validacion/resources/css/cssLogin.css"/>
+        <link rel="shortcut icon" href="/Validacion/resources/images/favicon.ico" type="image/x-icon"/>
+    </h:head>
+    <h:body>
+        <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide()"/>  
+
+        <p:dialog modal="true" widgetVar="statusDialog" showHeader="false"  
+                  draggable="false" closable="false" resizable="false">  
+            <p:graphicImage value="/resources/images/ajax-loader.gif" /> 
+        </p:dialog>
+        <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+        <section class="contenedorLogin">
+            <h:form id="frmRestablecer" class="formulario">  
+                <h:panelGrid columns="2" cellpadding="1" cellspacing="5">
+                    <p:panel style="border-style: hidden; background: border-box " >
+                        <p:graphicImage value="/resources/images/logo.png" width="80px"/>  
+                    </p:panel>        
+                    <h2>Validación</h2>
+                </h:panelGrid>
+                <p></p>
+                <p><h:inputText pt:placeholder="Introduzca su Usuario para restablecer contraseña" value="#{mbAcceso.user}" /></p>
+                <section class="seccionBotones">
+                    <p:commandButton id="btnAtras" value="Atras" action="#{mbAcceso.irLogin}" styleClass="btnLogin" update="frmRestablecer"/>
+                    <p:commandButton id="btnRestablecer" value="Restablecer" actionListener="#{mbAcceso.restablecerContrasenia}" styleClass="btnLogin" update=":frmRestablecer, :frmRestablecer:msgInfo" oncomplete="validaRestablecerPass(xhr, status, args)"/>
+                </section>
+                <p:outputLabel value="VERSION: 0.2" style="font-size: xx-small; color: #036fab; font-weight: bold"/>
+                <script type="text/javascript">
+                    function validaRestablecerPass(xhr, status, args) {
+                        if (!args.actualiza) {
+                            confirmation.hide();
+                        }
+                        else {
+                            confirmation.show();
+                        }
+                    }
+                </script>
+                <p:confirmDialog id="msgInfo" message="La contraseña se ha enviado al correo electrónico #{mbAcceso.usuarioContraseña.email}" showEffect="fade" 
+                                 header="Contraseña restablecida" severity="info" widgetVar="confirmation" style="font-size: small;" closable="false">
+                    <center> <p:commandButton value="Aceptar" oncomplete="confirmation.hide()" action="#{mbAcceso.irLogin}" icon="ui-icon-circle-check"/> </center>
+                </p:confirmDialog>  
+            </h:form>
+        </section>
+    </h:body>
+</html>
+

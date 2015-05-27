@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.Sucursales" table="SUCURSALES" catalog="iqtb" optimistic-lock="version">
+        <id name="idSucursal" type="java.lang.Integer">
+            <column name="idSUCURSAL" />
+            <generator class="identity" />
+        </id>
+        <property name="idEmpresa" type="int">
+            <column name="idEMPRESA" not-null="true" />
+        </property>
+        <property name="idCertificado" type="java.lang.Integer">
+            <column name="idCERTIFICADO" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" not-null="true" />
+        </property>
+        <property name="calle" type="string">
+            <column name="CALLE" length="65535" />
+        </property>
+        <property name="numExterior" type="string">
+            <column name="NUM_EXTERIOR" />
+        </property>
+        <property name="numInterior" type="string">
+            <column name="NUM_INTERIOR" />
+        </property>
+        <property name="colonia" type="string">
+            <column name="COLONIA" length="65535" />
+        </property>
+        <property name="localidad" type="string">
+            <column name="LOCALIDAD" />
+        </property>
+        <property name="referencia" type="string">
+            <column name="REFERENCIA" length="65535" />
+        </property>
+        <property name="municipio" type="string">
+            <column name="MUNICIPIO" />
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" />
+        </property>
+        <property name="pais" type="string">
+            <column name="PAIS" not-null="true" />
+        </property>
+        <property name="cp" type="string">
+            <column name="CP" length="16" />
+        </property>
+        <property name="tiposucursal" type="string">
+            <column name="TIPOSUCURSAL" length="8" not-null="true" />
+        </property>
+        <property name="codigogln" type="string">
+            <column name="CODIGOGLN" />
+        </property>
+        <property name="claveSucursal" type="string">
+            <column name="CLAVE_SUCURSAL" />
+        </property>
+        <property name="extras" type="string">
+            <column name="EXTRAS" />
+        </property>
+        <property name="printWhenSend" type="java.lang.Boolean">
+            <column name="PRINT_WHEN_SEND" />
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="TELEFONO" />
+        </property>
+        <property name="esFrontera" type="boolean">
+            <column name="ES_FRONTERA" not-null="true" />
+        </property>
+        <property name="lugarExpedicion" type="string">
+            <column name="LUGAR_EXPEDICION" />
+        </property>
+        <property name="idSucursalXsa" type="java.lang.Integer">
+            <column name="idSUCURSAL_XSA" />
+        </property>
+    </class>
+</hibernate-mapping>

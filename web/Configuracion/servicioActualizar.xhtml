@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmGen">
+                    <p:panel id="panelGen" header="Servicio Sincronización de CFDIs Emitidos" style="margin-bottom:20px; height: 185px; font-size: medium">
+                        <h:panelGrid columns="2" style="font-size: small">
+                            <p:outputLabel value="Tiempo de espera entre cada ciclo:" />
+                            <p:outputLabel value="#{mbServicios.teActualizar.valor} ms" />
+                            <p:outputLabel value="Tiempo de espera para recargar configuración:" />
+                            <p:outputLabel value="#{mbServicios.trcActualizar.valor} ms" />
+                            <p></p>
+                            <p:outputLabel />
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <p:commandButton id="btnModificarGen" value="Modificar" onclick="PF('dialogModificarGeneracion').show();" update=":frmGen:displayGen" icon="ui-icon-pencil" rendered="#{mbAcceso.CONFIG_SERVICIOS}" styleClass="boton"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:dialog header="Configuración de Servicio Sincronización de CFDIs Emitidos" widgetVar="dialogModificarGeneracion" modal="true" resizable="fasle" style="font-size: small">
+                        <h:panelGrid id="displayGen" columns="2">
+                            <p:outputLabel value="Tiempo de espera entre cada ciclo (milisegundos):" />
+                            <p:inputText value="#{mbServicios.teActualizar.valor}" label="Tiempo de espera entre cada ciclo" size="45" validator="validarVacio">
+                                <f:validateLongRange minimum="1000" />
+                            </p:inputText>
+                            <p:outputLabel value="Tiempo de espera para recargar configuración (milisegundos):" />
+                            <p:inputText value="#{mbServicios.trcActualizar.valor}" label="Tiempo de espera para recargar configuración" size="45" validator="validarVacio">
+                                <f:validateLongRange minimum="1000" />
+                            </p:inputText>
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <h:panelGrid columns="4" cellspacing="5">
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnCancelarGen" value="Cancelar" action="#{mbServicios.reloadActualizar}" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnGuardarGen" value="Guardar" actionListener="#{mbServicios.updateServActualizar}" oncomplete="validaServActuliza(xhr, status, args)" update=":frmGen:panelGen, :frmGen:displayGen" icon="ui-icon-disk" styleClass="boton"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <script type="text/javascript">
+                            function validaServActuliza(xhr, status, args) {
+                                if (!args.servicioActuzliza) {
+                                    dialogModificarGeneracion.jq.effect("shake", {times: 5}, 500);
+                                } else {
+                                    dialogModificarGeneracion.hide();
+                                }
+                            }
+                        </script>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

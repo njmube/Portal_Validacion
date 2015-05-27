@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.UsuariosHasEmpresas" table="USUARIOS_has_EMPRESAS" catalog="iqtb" optimistic-lock="version">
+        <composite-id name="id" class="com.iqtb.validacion.pojo.UsuariosHasEmpresasId">
+            <key-property name="idUsuario" type="int">
+                <column name="idUSUARIO" />
+            </key-property>
+            <key-property name="idEmpresa" type="int">
+                <column name="idEMPRESA" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

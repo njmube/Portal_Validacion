@@ -1,0 +1,583 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide()"/>  
+
+                <p:dialog modal="true" widgetVar="statusDialog" showHeader="false"  
+                          draggable="false" closable="false" resizable="false">  
+                    <p:graphicImage value="/resources/images/ajax-loader.gif" /> 
+                </p:dialog>
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmEmpresas">
+                    <p:dataTable id="tablaEmpresas" var="empresa" paginator="true" rows="10" 
+                                 value="#{mbEmpresa.listaEmpresas}" rowKey="#{empresa.idEmpresa}" selection="#{mbEmpresa.empresasSeleccionadas}" 
+                                 resizableColumns="false" style="text-align: center; font-size: x-small" emptyMessage="No se han encontrado resultados">
+                        <f:facet name="header"><p:outputLabel value="Empresas" style="font-size: large"/></f:facet>
+                        <p:column selectionMode="multiple" style="width: 2%" />
+                        <p:column headerText="Nombre" sortBy="#{empresa.nombre}" filterBy="#{empresa.nombre}">
+                            <h:outputText value="#{empresa.nombre}"/>
+                        </p:column>
+                        <p:column headerText="RFC" sortBy="#{empresa.rfc}" filterBy="#{empresa.rfc}">
+                            <h:outputText value="#{empresa.rfc}"/>
+                        </p:column>
+                        <p:column headerText="Calle" >
+                            <h:outputText value="#{empresa.calle}"/>
+                        </p:column>
+                        <p:column headerText="Estado" >
+                            <h:outputText value="#{empresa.estado}"/>
+                        </p:column>
+                        <p:column headerText="País" >
+                            <h:outputText value="#{empresa.pais}"/>
+                        </p:column>
+                        <f:facet name="footer" >
+                            <center>
+                                <h:panelGrid id="pgEmpresas" columns="5" cellpadding="10" cellspacing="10" rendered="#{mbAcceso.ADMINISTRAR_EMPRESAS}" style="border-style: hidden; text-align: center; width: 80%" class="btn">
+                                    <p:commandButton id="btnInsertaEmpresa" value="Nueva" action="/Empresa/nueva?faces-redirect=true" actionListener="#{mbEmpresa.resetEmpresa}" icon="ui-icon-plusthick" ajax="false" styleClass="boton"/>
+                                    <p:commandButton value="Ver" update=":frmEmpresas:display" oncomplete="mostrarDialogVisualizar(xhr, status, args)" icon="ui-icon-search" actionListener="#{mbEmpresa.existeSeleccionEmpresa}" styleClass="boton" />
+                                    <p:commandButton value="Modificar" update=":frmUpdateEmpresa:displayUpdate" oncomplete="mostrarDialogUpdate(xhr, status, args)" icon="ui-icon-pencil" actionListener="#{mbEmpresa.existeSeleccionEmpresa}" styleClass="boton" />
+                                    <p:commandButton value="Eliminar" update=":frmDeleteEmpresa" oncomplete="mostrarDialogDelete(xhr, status, args)" actionListener="#{mbEmpresa.existeSeleccionEmpresa}" icon="ui-icon-trash" styleClass="boton">
+                                        <f:param name="nombreParametro" value="eliminar"/> 
+                                    </p:commandButton>
+                                </h:panelGrid>
+                            </center>
+                        </f:facet>
+                    </p:dataTable>
+                    <p:dialog header="Detalles de la Empresa" widgetVar="empresaDialog" resizable="false" showEffect="fade" hideEffect="fade" id="dialog" modal="true" closable="true" style="font-size: small">  
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4">  
+                            <p:outputLabel value="Nombre:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.nombre}" />
+                            <p:outputLabel value="RFC:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.rfc}" />
+                            <p:outputLabel value="Calle:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.calle}" />
+                            <p:outputLabel value="Número interior:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.numInterior}" />
+                            <p:outputLabel value="Número exterior:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.numExterior}" />
+                            <p:outputLabel value="Colonia:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.colonia}" />
+                            <p:outputLabel value="Localidad:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.localidad}" />
+                            <p:outputLabel value="Referencia:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.referencia}" />
+                            <p:outputLabel value="Municipio / Delegación:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.municipio}" />
+                            <p:outputLabel value="Estado:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.estado}" />
+                            <p:outputLabel value="País:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.pais}" />
+                            <p:outputLabel value="Código Postal:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.cp}" />
+                            <p:outputLabel value="Código GLN:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.codigogln}" />
+                            <p:outputLabel value="Correo Electrónico:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.email}" />
+                            <p:outputLabel value="Teléfono:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.telefono}" />
+                            <p:outputLabel value="CURP:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.curp}" />
+                            <p:outputLabel value="Régimen fiscal:" />
+                            <p:outputLabel value="#{mbEmpresa.empresa.regimenFiscal}" />
+                        </h:panelGrid>  
+                    </p:dialog>
+                    <script type="text/javascript">
+                        function mostrarDialogVisualizar(xhr, status, args) {
+                            if (args.estadoEmpresa) {
+                                empresaDialog.show();
+                            }
+                        }
+
+                        function mostrarDialogDelete(xhr, status, args) {
+                            if (args.estadoEmpresa) {
+                                dialogEmpresaDelete.show();
+                            }
+                        }
+                        function mostrarDialogUpdate(xhr, status, args) {
+                            if (args.estadoEmpresa) {
+                                dialogModificarEmpresa.show();
+                            }
+                        }
+                    </script>
+                </h:form>
+
+                <p:dialog header="Modificar Empresa" widgetVar="dialogModificarEmpresa" modal="true" resizable="fasle" style="font-size: small">
+                    <h:form id="frmUpdateEmpresa">
+                        <h:panelGrid id="displayUpdate" columns="2">
+                            <p:outputLabel for="txtNombre" value="Nombre:" />
+                            <p:inputText id="txtNombre" label="Nombre" value="#{mbEmpresa.empresa.nombre}" size="50">
+                                <f:validator validatorId="validarVacio"/>
+                            </p:inputText>
+
+                            <p:outputLabel for="txtRFC" value="RFC:" />
+                            <p:inputText id="txtRFC" label="RFC" value="#{mbEmpresa.empresa.rfc}" size="50" validator="validarRfc"/>
+
+                            <p:outputLabel for="txtCalle" value="Calle:" />
+                            <p:inputText id="txtCalle" label="Calle" value="#{mbEmpresa.empresa.calle}" size="50">
+                                <f:validator validatorId="validarVacio"/>
+                            </p:inputText>
+
+                            <p:outputLabel for="txtNoInterior" value="Número interior:" />
+                            <p:inputText id="txtNoInterior" label="Número Interior" value="#{mbEmpresa.empresa.numInterior}" size="50"/>
+
+                            <p:outputLabel for="txtNoExterior" value="Número exterior:" />
+                            <p:inputText id="txtNoExterior" label="Número Exterior" value="#{mbEmpresa.empresa.numExterior}" size="50"/>
+
+                            <p:outputLabel for="txtColonia" value="Colonia:" />
+                            <p:inputText id="txtColonia" label="Colonia" value="#{mbEmpresa.empresa.colonia}" size="50"/>
+
+                            <p:outputLabel for="txtLocalidad" value="Localidad:" />
+                            <p:inputText id="txtLocalidad" label="Localidad" value="#{mbEmpresa.empresa.localidad}" size="50"/>
+
+                            <p:outputLabel for="txtReferencia" value="Referencia:" />
+                            <p:inputText id="txtReferencia" label="Referencia" value="#{mbEmpresa.empresa.referencia}" size="50"/>
+
+                            <p:outputLabel for="txtMunicipio" value="Municipio / Delegación:" />
+                            <p:inputText id="txtMunicipio" label="Municipio" value="#{mbEmpresa.empresa.municipio}" size="50"/>
+
+                            <p:outputLabel for="txtEstado" value="Estado:" />
+                            <p:inputText id="txtEstado" label="Estado" value="#{mbEmpresa.empresa.estado}" size="50"/>
+
+                            <p:outputLabel for="txtPais" value="País:" />
+                            <p:inputText id="txtPais" label="País"  value="#{mbEmpresa.empresa.pais}" size="50"/>
+
+                            <p:outputLabel for="txtCP" value="Código Postal:" />
+                            <p:inputText id="txtCP" label="Código Postal" value="#{mbEmpresa.empresa.cp}" size="50"/>
+
+                            <p:outputLabel for="txtGNL" value="Código GNL:" />
+                            <p:inputText id="txtGNL" label="Código GNL" value="#{mbEmpresa.empresa.codigogln}" size="50"/>
+
+                            <p:outputLabel for="txtEmail" value="Correo Electrónico:" />
+                            <p:inputText id="txtEmail" label="Correo Electrónico" value="#{mbEmpresa.empresa.email}" size="50" validator="validarEmail"/>
+
+                            <p:outputLabel for="txtTelefono" value="Teléfono:" />
+                            <p:inputText id="txtTelefono" label="Teléfono" value="#{mbEmpresa.empresa.telefono}" size="50"/>
+
+                            <p:outputLabel for="txtCURP" value="CURP:" />
+                            <p:inputText id="txtCURP" label="CURP" value="#{mbEmpresa.empresa.curp}" size="50"/>
+
+                            <p:outputLabel for="txtRegimen" value="Régimen fiscal:" />
+                            <p:inputText id="txtRegimen" label="Regimen" value="#{mbEmpresa.empresa.regimenFiscal}" size="50"/>
+
+                            <p:outputLabel/>
+                            <p:outputLabel/>
+                            <p:outputLabel/>
+                            <h:panelGrid columns="4" cellspacing="5">
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnCancelarEmpresa" value="Cancelar" onclick="dialogModificarEmpresa.hide()" icon="ui-icon-close" styleClass="boton" update=":frmEmpresas:tablaEmpresas"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnGuardarEmpresa" value="Guardar" actionListener="#{mbEmpresa.updateEmpresa}" oncomplete="validaUpdateEmpresa(xhr, status, args)" icon="ui-icon-disk" styleClass="boton" update=":frmEmpresas:tablaEmpresas"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                    <script type="text/javascript">
+                        function validaUpdateEmpresa(xhr, status, args) {
+                            if (!args.actualiza) {
+                                dialogModificarEmpresa.jq.effect("shake", {times: 5}, 500);
+                            }
+                            else {
+                                dialogModificarEmpresa.hide();
+                            }
+                        }
+                    </script>
+                </p:dialog>
+
+                <h:form id="frmDeleteEmpresa">
+                    <p:confirmDialog id="confirmDialog" message="¿Está seguro que desea eliminar el(los) registro(s) seleccionado(s)?" header="Eliminar Empresa"
+                                     severity="alert" widgetVar="dialogEmpresaDelete" showEffect="fade" hideEffect="fade" closable="false" style="font-size: small">
+                        <center>
+                            <h:panelGrid columns="3" cellspacing="5" >
+                                <p:commandButton id="decline" value="Cancelar" onclick="dialogEmpresaDelete.hide()" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="confirm" value="Aceptar" update=":frmEmpresas:tablaEmpresas" oncomplete="dialogEmpresaDelete.hide()" actionListener="#{mbEmpresa.deleteEmpresas}" icon="ui-icon-check" styleClass="boton"/>
+                            </h:panelGrid>
+                        </center>
+                    </p:confirmDialog>
+                </h:form>    
+
+                <h:form id="formInsertEmpresa">
+                    <p:panel id="panelInsertEmpresa" style="visibility: hidden">
+                        <p:dialog id="dlgEmpresaCreate" header="Registar Empresa" widgetVar="dialogEmpresaCreate" 
+                                  resizable="false" showEffect="fade" hideEffect="fold" modal="true" >
+                            <p:ajax event="close" listener="#{mbEmpresa.close}" update="dlgEmpresaCreate" onstart="PF('dialogEmpresaCreate').content.empty()"/>
+                            <p:wizard id="wizard" widgetVar="wizard" flowListener="#{mbEmpresa.onFlowProcess}" nextLabel="Siguiente" backLabel="Atras" style="width: 950px; height: 450px">
+                                <!--flowListener="{mbEmpresa.onFlowProcess}"-->
+                                <p:tab id="empresa" title="Empresa">
+                                    <p:panel header="Registrar Empresa">
+                                        <p:messages autoUpdate="true" showDetail="true" closable="true"/>
+                                        <h:panelGrid columns="2" columnClasses="label, value">
+                                            <p:outputLabel for="nombreEmp" value="Nombre: *" />
+                                            <p:inputText id="nombreEmp" label="Nombre" value="#{mbEmpresa.empresa.nombre}" size="90">
+                                                <f:validator validatorId="validarVacio"/>
+                                            </p:inputText>
+                                        </h:panelGrid>
+
+                                        <h:panelGrid columns="4" columnClasses="label, value">
+                                            <p:outputLabel for="rfcEmp" value="RFC: *" />
+                                            <p:inputText id="rfcEmp" label="RFC" value="#{mbEmpresa.empresa.rfc}" size="30" validator="validarRfc"/>
+
+                                            <p:outputLabel for="calleEmp" value="Calle: *" />
+                                            <p:inputText id="calleEmp" label="Calle" value="#{mbEmpresa.empresa.calle}" size="30">
+                                                <f:validator validatorId="validarVacio"/>
+                                            </p:inputText>
+
+                                            <p:outputLabel for="noIntEmp" value="Núm. Interior:" />
+                                            <p:inputText id="noIntEmp" label="Número Interior" value="#{mbEmpresa.empresa.numInterior}" size="30"/>
+
+                                            <p:outputLabel for="noExtEmp" value="Núm. Exterior:" />
+                                            <p:inputText id="noExtEmp" label="Número Exterior" value="#{mbEmpresa.empresa.numExterior}" size="30"/>
+
+                                            <p:outputLabel for="coloniaEmp" value="Colonia:" />
+                                            <p:inputText id="coloniaEmp" label="Colonia" value="#{mbEmpresa.empresa.colonia}" size="30"/>
+
+                                            <p:outputLabel for="localidadEmp" value="Localidad:" />
+                                            <p:inputText id="localidadEmp" label="Localidad" value="#{mbEmpresa.empresa.localidad}" size="30"/>
+
+                                            <p:outputLabel for="referenciaEmp" value="Referencia:" />
+                                            <p:inputText id="referenciaEmp" label="Referencia" value="#{mbEmpresa.empresa.referencia}" size="30"/>
+
+                                            <p:outputLabel for="municipioEmp" value="Municipio / Delegación:" />
+                                            <p:inputText id="municipioEmp" label="Municipio" value="#{mbEmpresa.empresa.municipio}" size="30"/>
+
+                                            <p:outputLabel for="estadoEmp" value="Estado:" />
+                                            <p:inputText id="estadoEmp" label="Estado" value="#{mbEmpresa.empresa.estado}" size="30"/>
+
+                                            <p:outputLabel for="paisEmp" value="País:" />
+                                            <p:inputText id="paisEmp" label="País"  value="#{mbEmpresa.empresa.pais}" size="30"/>
+
+                                            <p:outputLabel for="cpEmp" value="Código Postal:" />
+                                            <p:inputText id="cpEmp" label="Código Postal" value="#{mbEmpresa.empresa.cp}" size="30"/>
+
+                                            <p:outputLabel for="gnlEmp" value="Código GNL:" />
+                                            <p:inputText id="gnlEmp" label="Código GNL" value="#{mbEmpresa.empresa.codigogln}" size="30"/>
+
+                                            <p:outputLabel for="emailEmp" value="Correo Electrónico:" />
+                                            <p:inputText id="emailEmp" label="Correo Electrónico" value="#{mbEmpresa.empresa.email}" size="30" validator="validarEmail"/>
+
+                                            <p:outputLabel for="telefonoEmp" value="Teléfono:" />
+                                            <p:inputText id="telefonoEmp" label="Teléfono" value="#{mbEmpresa.empresa.telefono}" size="30"/>
+
+                                            <p:outputLabel for="curpEmp" value="CURP:" />
+                                            <p:inputText id="curpEmp" label="CURP" value="#{mbEmpresa.empresa.curp}" size="30"/>
+
+                                            <p:outputLabel for="regimenEmp" value="Régimen Fiscal:" />
+                                            <p:inputText id="regimenEmp" label="Regimen" value="#{mbEmpresa.empresa.regimenFiscal}" size="30"/>
+                                        </h:panelGrid>
+
+                                    </p:panel>
+                                </p:tab>
+
+                                <p:tab id="notificacion" title="Notificaciones">
+                                    <p:panel id="panelNotificacion" header="Configuración de Notificaciones">
+                                        <p:messages autoUpdate="true" showDetail="true" closable="true"/>
+                                        <h:panelGrid columns="2" columnClasses="label, value">
+                                            <p:selectBooleanCheckbox value="#{mbEmpresa.xmlValido}" />
+                                            <p:outputLabel value="Enviar notificación de XML válido al remitente." />
+
+                                            <p:selectBooleanCheckbox value="#{mbEmpresa.xmlInvalido}" />
+                                            <p:outputLabel value="Enviar notificación de XML inválido al remitente." />
+
+                                            <p:selectBooleanCheckbox value="#{mbEmpresa.validoEmail}" />
+                                            <p:outputLabel value="Enviar notificación de XML válido al correo registrado." />
+
+                                            <p:selectBooleanCheckbox value="#{mbEmpresa.invalidoEmail}" />
+                                            <p:outputLabel value="Enviar notificación de XML inválido al correo registrado." />
+                                        </h:panelGrid>
+
+
+                                        <h:panelGrid columns="2" cellspacing="5">
+                                            <p:panel header="Inserte una nueva dirección de correo electrónico" style="margin-bottom:20px;">
+                                                <h:panelGrid columns="2" cellpadding="5">
+                                                    <h:outputLabel value="Correo Electrónico: *" for="txtEmail"/>
+                                                    <p:inputText id="txtEmail" value="#{mbEmpresa.newEmail}" placeholder="ejemplo@dominio.com" label="Correo Electrónico" validator="validarEmail" size="30" />
+                                                    <p:commandButton id="btn_add" value="Agregar" actionListener="#{mbEmpresa.insertNewEmail}" update=":formInsertEmpresa:txtEmail, :formInsertEmpresa:emails" />
+                                                </h:panelGrid>
+                                            </p:panel>
+                                            <p:outputPanel id="emails" >
+                                                <p:dataTable value="#{mbEmpresa.emails}" var="email" id="EmailsTable" rows="5" paginator="true">
+                                                    <f:facet name="header"><p:outputLabel value="Lista de correos que reciben notificaciones" style="font-size: small"/></f:facet>
+                                                    <p:column headerText="Correo Electronico">
+                                                        <h:outputText value="#{email}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Eliminar">
+                                                        <p:commandButton icon="ui-icon-trash" update=":formInsertEmpresa:emails" process=":formInsertEmpresa:emails" actionListener="#{mbEmpresa.removeEmail}">
+                                                            <f:param name="emailRemove" value="#{email}" />
+                                                        </p:commandButton>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:outputPanel>
+                                        </h:panelGrid>
+
+
+                                    </p:panel>
+                                </p:tab>
+
+                                <p:tab id="smtp" title="SMTP">
+                                    <p:panel header="Servidor de Envío de Correos Electrónicos">
+                                        <p:messages autoUpdate="true" showDetail="true" closable="true"/>
+                                        <h:panelGrid id="displaySMTP" columns="2" columnClasses="label, value">
+                                            <p:outputLabel value="Servidor:" />
+                                            <p:inputText value="#{mbEmpresa.strHostSMTP}" label="Servidor" size="35" validator="validarVacio" disabled="#{mbEmpresa.connectSMTP}"/>
+                                            <p:outputLabel value="Puerto:" />
+                                            <p:inputText value="#{mbEmpresa.strPortSMTP}" label="Puerto" size="35" validator="validarVacio" disabled="#{mbEmpresa.connectSMTP}"/>
+                                            <p:outputLabel value="Nombre:" />
+                                            <p:inputText value="#{mbEmpresa.strNombreSMTP}" size="35" disabled="#{mbEmpresa.connectSMTP}"/>
+                                            <p:outputLabel value="De:" />
+                                            <p:inputText value="#{mbEmpresa.strEmailSMTP}" label="De" size="35" disabled="#{mbEmpresa.connectSMTP}"/>
+                                            <p:outputLabel value="Usuario:" />
+                                            <p:inputText value="#{mbEmpresa.strUserSMTP}" size="35" disabled="#{mbEmpresa.connectSMTP}"/>
+                                            <p:outputLabel value="Contraseña:" />
+                                            <p:password value="#{mbEmpresa.strPassSMTP}" size="35" disabled="#{mbEmpresa.connectSMTP}"/>
+                                            <p:outputLabel value="Enviar código a:" />
+                                            <p:inputText value="#{mbEmpresa.strEmailCodigo}" label="Enviar código a" size="35" validator="validarEmail" disabled="#{mbEmpresa.connectSMTP}"/>
+                                            <p:outputLabel />
+                                            <h:panelGrid columns="2" cellspacing="10">
+                                                <p:selectBooleanCheckbox value="#{mbEmpresa.sslSMTP}" disabled="#{mbEmpresa.connectSMTP}"/>
+                                                <p:outputLabel value="Usar SSL" />
+                                            </h:panelGrid>
+                                            <p:outputLabel value="Codigo:" rendered="#{mbEmpresa.connectSMTP}"/>
+                                            <p:inputText value="#{mbEmpresa.hashSMTP}" size="60" rendered="#{mbEmpresa.connectSMTP}"/>
+                                            <p></p>
+                                            <p:outputLabel />
+                                            <p:outputLabel />
+                                            <h:panelGrid columns="6" cellspacing="5">
+                                                <p:panel style="visibility: hidden"/>
+                                                <p:commandButton id="btnProbarConexion" value="Probar Conexión" actionListener="#{mbEmpresa.conexionSMTP}" icon="ui-icon-transferthick-e-w" styleClass="boton" update=":formInsertEmpresa:displaySMTP" disabled="#{mbEmpresa.connectSMTP}"/>
+                                                <p:panel style="visibility: hidden"/>
+                                                <p:commandButton id="btnCancelarHash" value="Cancelar" actionListener="#{mbEmpresa.cancelarSMTP}" update=":formInsertEmpresa:displaySMTP" icon="ui-icon-close" styleClass="boton" rendered="#{mbEmpresa.connectSMTP}"/>
+                                                <p:panel style="visibility: hidden"/>
+                                                <p:commandButton id="btnGuardarHash" value="Confirmar" actionListener="#{mbEmpresa.confirmSMTP}" update=":formInsertEmpresa:displaySMTP" icon="ui-icon-disk" styleClass="boton" rendered="#{mbEmpresa.connectSMTP}"/>
+                                            </h:panelGrid>
+                                            <p:outputLabel />
+                                            <p:outputLabel value="#{mbEmpresa.msgSMTP}" style="font-size: medium"/>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:tab>
+
+                                <p:tab id="pop" title="IMAP/POP3">
+                                    <p:panel header="Servidor de Recepción de Correos Electrónicos">
+                                        <p:messages autoUpdate="true" showDetail="true" closable="true"/>
+                                        <h:panelGrid id="displayPOP" columns="2" columnClasses="label, value">
+                                            <p:outputLabel for="recepcion" value="IMAP/POP3:" />
+                                            <p:selectOneMenu id="recepcion" value="#{mbEmpresa.strTipoServidor}" disabled="#{mbEmpresa.confirmPOP}">
+                                                <f:selectItem itemLabel="Selecciona uno" itemValue="" />
+                                                <f:selectItem itemLabel="IMAP" itemValue="imap" />
+                                                <f:selectItem itemLabel="POP3" itemValue="pop3" />
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Servidor:" />
+                                            <p:inputText value="#{mbEmpresa.strservidorRecepcion}" label="Servidor" size="35" validator="validarVacio" disabled="#{mbEmpresa.confirmPOP}"/>
+                                            <p:outputLabel value="Puerto:" />
+                                            <p:inputText value="#{mbEmpresa.strPuertoRecepcion}" label="Puerto" size="35" validator="validarVacio" disabled="#{mbEmpresa.confirmPOP}"/>
+                                            <p:outputLabel value="Usuario:" />
+                                            <p:inputText value="#{mbEmpresa.strUsuarioRecepcion}" label="Usuario" size="35" validator="validarVacio" disabled="#{mbEmpresa.confirmPOP}"/>
+                                            <p:outputLabel value="Contraseña:" />
+                                            <p:password value="#{mbEmpresa.strPassRecepcion}" label="Contraseña" size="35" disabled="#{mbEmpresa.confirmPOP}"/>
+                                            <p:outputLabel />
+                                            <h:panelGrid columns="2" cellspacing="10">
+                                                <p:selectBooleanCheckbox value="#{mbEmpresa.sslRecepcion}" disabled="#{mbEmpresa.confirmPOP}"/>
+                                                <p:outputLabel value="Usar SSL" />
+                                            </h:panelGrid>
+                                            <p></p>
+                                            <p:outputLabel />
+                                            <p:outputLabel />
+                                            <h:panelGrid columns="3" cellspacing="5">
+                                                <p:commandButton id="btnCanclearPOP" value="Cancelar" actionListener="#{mbEmpresa.cancelarPOP}" update=":formInsertEmpresa:displayPOP" icon="ui-icon-transferthick-e-w" styleClass="boton"/>
+                                                <p:panel style="visibility: hidden"/>
+                                                <p:commandButton id="btnProbarConexionPOP" value="Probar Conexion" actionListener="#{mbEmpresa.conexionPOP}" update=":formInsertEmpresa:displayPOP" icon="ui-icon-transferthick-e-w" styleClass="boton" disabled="#{mbEmpresa.confirmPOP}"/>
+                                            </h:panelGrid>
+                                            <p:outputLabel />
+                                            <p:outputLabel value="#{mbEmpresa.msgPOP}" style="font-size: medium"/>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:tab>
+
+                                <p:tab id="ftp"  title="FTP">
+                                    <p:panel header="Configurar usuarios FTP">
+                                        <p:messages autoUpdate="true" showDetail="true" closable="true"/>
+                                        <h:panelGrid id="validacionFTP" columns="2" columnClasses="label, value">
+                                            <p:outputLabel value="Usuario: " />
+                                            <p:inputText value="#{mbEmpresa.userFtpV}" disabled="#{mbEmpresa.existFtp}"/>
+                                            <p:outputLabel value="Contraseña: " />
+                                            <p:password value="#{mbEmpresa.passFtpV}" disabled="#{mbEmpresa.existFtp}"/>
+                                            <p:outputLabel value="Confirmar Contraseña: " />
+                                            <p:password value="#{mbEmpresa.confirmFtpV}" disabled="#{mbEmpresa.existFtp}"/>
+                                            <h:outputLabel/><h:outputLabel/><h:outputLabel/>
+                                            <h:panelGrid columns="3" cellspacing="5">
+                                                <p:commandButton id="btnCanclearVal" value="Cancelar" actionListener="#{mbEmpresa.cancelarFtp}" update="validacionFTP" icon="ui-icon-close" styleClass="boton"/>
+                                                <p:panel style="visibility: hidden"/>
+                                                <p:commandButton id="btnValidacion" value="Agregar" actionListener="#{mbEmpresa.createUserVal}" icon="ui-icon-check" update="validacionFTP" styleClass="boton" disabled="#{mbEmpresa.existFtp}"/>
+                                            </h:panelGrid>
+
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:tab>
+
+                                <p:tab id="adaptador"  title="Adaptador/Conector">
+                                    <p:panel header="Adaptador/Conector para contabilidad electrónica" >
+                                        <p:messages autoUpdate="true" showDetail="true" closable="true" />
+                                        <h:panelGrid columns="3" cellspacing="5">
+                                            <h:panelGrid columns="2" cellspacing="5">
+                                                <f:facet name="header">
+                                                    <h:outputLabel value="Balanza de comprobación" />
+                                                </f:facet>
+                                                <p:fileUpload label="Adaptador" fileUploadListener="#{mbEmpresa.uploadAdaptadorBal}" mode="advanced" auto="true"/>
+                                                <p:fileUpload label="Conector" fileUploadListener="#{mbEmpresa.uploadConectorBal}" mode="advanced" auto="true"/>
+                                            </h:panelGrid>
+                                            <p:panel style="visibility: hidden"/>
+                                            <h:panelGrid columns="2" cellspacing="5">
+                                                <f:facet name="header">
+                                                    <h:outputLabel value="Catálogo de cuentas" />
+                                                </f:facet>
+                                                <p:fileUpload label="Adaptador" fileUploadListener="#{mbEmpresa.uploadAdaptadorCat}" mode="advanced" auto="true"/>
+                                                <p:fileUpload label="Conector" fileUploadListener="#{mbEmpresa.uploadConectorCat}" mode="advanced" auto="true"/>
+                                            </h:panelGrid>
+                                            <h:panelGrid columns="2" cellspacing="5">
+                                                <f:facet name="header">
+                                                    <h:outputLabel value="Pólizas del periodo" />
+                                                </f:facet>
+                                                <p:fileUpload label="Adaptador" fileUploadListener="#{mbEmpresa.uploadAdaptadorPol}" mode="advanced" auto="true"/>
+                                                <p:fileUpload label="Conector" fileUploadListener="#{mbEmpresa.uploadConectorPol}" mode="advanced" auto="true"/>
+                                            </h:panelGrid>
+                                            <p:panel style="visibility: hidden"/>
+                                            <h:panelGrid columns="2" cellspacing="5">
+                                                <f:facet name="header">
+                                                    <h:outputLabel value="Auxiliar de folios de comprobantes fiscales" />
+                                                </f:facet>
+                                                <p:fileUpload label="Adaptador" fileUploadListener="#{mbEmpresa.uploadFoliosAdaptador}" mode="advanced" auto="true"/>
+                                                <p:fileUpload label="Conector" fileUploadListener="#{mbEmpresa.uploadFoliosConector}" mode="advanced" auto="true"/>
+                                            </h:panelGrid>
+                                            <h:panelGrid columns="2" cellspacing="5">
+                                                <f:facet name="header">
+                                                    <h:outputLabel value="Auxiliar de cuenta y subcuenta" />
+                                                </f:facet>
+                                                <p:fileUpload label="Adaptador" fileUploadListener="#{mbEmpresa.uploadCuentasAdaptador}" mode="advanced" auto="true"/>
+                                                <p:fileUpload label="Conector" fileUploadListener="#{mbEmpresa.uploadCuentasConector}" mode="advanced" auto="true"/>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:tab>
+
+                                <p:tab id="confirm" title="Guardar">
+                                    <p:panel header="Guardar Empresa y Configuraciones">
+                                        <h:panelGrid id="confirmation" columns="2" columnClasses="grid,grid">
+                                            <p:panel header="Empresa" style="width: 425px; height: 200px">
+                                                <h:panelGrid columns="2" columnClasses="label, value">
+                                                    <h:outputText value="Nombre: " />
+                                                    <h:outputText value="#{mbEmpresa.empresa.nombre}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="RFC: " />
+                                                    <h:outputText value="#{mbEmpresa.empresa.rfc}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Calle: " />
+                                                    <h:outputText value="#{mbEmpresa.empresa.calle}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Estado: " />
+                                                    <h:outputText value="#{mbEmpresa.empresa.estado}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="País: " />
+                                                    <h:outputText value="#{mbEmpresa.empresa.pais}" styleClass="outputLabel"/>
+                                                </h:panelGrid>
+                                            </p:panel>
+
+                                            <p:panel header="Notificaciones" style="width: 425px; height: 200px">
+                                                <h:panelGrid columns="2" columnClasses="label, value">
+                                                    <p:outputLabel value="#{mbEmpresa.xmlValido == true ? 'ACTIVO':'INACTIVO'}" />
+                                                    <h:outputText value="Enviar notificación de XML válido al remitente." styleClass="outputLabel"/>
+
+                                                    <p:outputLabel value="#{mbEmpresa.xmlInvalido == true ? 'ACTIVO':'INACTIVO'}" />
+                                                    <h:outputText value="Enviar notificación de XML inválido al remitente." styleClass="outputLabel"/>
+
+                                                    <p:outputLabel value="#{mbEmpresa.validoEmail == true ? 'ACTIVO':'INACTIVO'}" />
+                                                    <h:outputText value="Enviar notificación de XML válido al correo registrado." styleClass="outputLabel"/>
+
+                                                    <p:outputLabel value="#{mbEmpresa.invalidoEmail == true ? 'ACTIVO':'INACTIVO'}" />
+                                                    <h:outputText value="Enviar notificación de XML inválido al correo registrado." styleClass="outputLabel"/>
+                                                </h:panelGrid>
+                                                <h:outputText value="Lista de correos que reciben notificación: " />
+                                                <h:outputText value="#{mbEmpresa.configValor}" styleClass="outputLabel"/>
+                                            </p:panel>
+
+                                            <p:panel header="Servidor SMTP" style="width: 425px; height: 150px">
+                                                <h:panelGrid columns="2" columnClasses="label, value">
+                                                    <h:outputText value="Servidor SMTP: " />
+                                                    <h:outputText value="#{mbEmpresa.strHostSMTP}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Puerto: " />
+                                                    <h:outputText value="#{mbEmpresa.strPortSMTP}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="De: " />
+                                                    <h:outputText value="#{mbEmpresa.strEmailSMTP}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Usa SSL" styleClass="outputLabel"/>
+                                                    <p:outputLabel value="#{mbEmpresa.sslSMTP == true ? 'ACTIVO':'INACTIVO'}" />
+
+                                                    <h:outputText />
+                                                    <h:outputText />
+                                                </h:panelGrid>
+                                            </p:panel>
+
+                                            <p:panel header="Servidor IMAP/POP3" style="width: 425px; height: 150px">
+                                                <h:panelGrid columns="2" columnClasses="label, value">
+                                                    <h:outputText value="Protocolo recepcion: " />
+                                                    <h:outputText value="#{mbEmpresa.strTipoServidor}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Servidor recepcion: " />
+                                                    <h:outputText value="#{mbEmpresa.strservidorRecepcion}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Puerto: " />
+                                                    <h:outputText value="#{mbEmpresa.strPuertoRecepcion}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Usuario: " />
+                                                    <h:outputText value="#{mbEmpresa.strUsuarioRecepcion}" styleClass="outputLabel"/>
+
+                                                    <h:outputText value="Usa SSL" styleClass="outputLabel"/>
+                                                    <p:outputLabel value="#{mbEmpresa.sslRecepcion == true ? 'ACTIVO':'INACTIVO'}" />
+
+                                                </h:panelGrid>
+                                            </p:panel>
+
+                                            <p:panel style="visibility: hidden"/>
+                                            <h:panelGrid columns="4" cellspacing="5">
+                                                <p:panel style="visibility: hidden"/>
+                                                <p:panel style="visibility: hidden"/>
+                                                <p:panel style="visibility: hidden"/>
+                                                <p:commandButton value="Guardar" actionListener="#{mbEmpresa.saveEmpresaConfig}" update=":formInsertEmpresa:confirmation, :frmEmpresas:tablaEmpresas" oncomplete="dialogEmpresaCreate.hide(), wizard.loadStep (wizard.cfg.steps [0], true);" styleClass="boton" icon="ui-icon-disk" />
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+
+                                    </p:panel>
+                                </p:tab>
+                            </p:wizard>
+
+                        </p:dialog>
+                    </p:panel>
+                </h:form>
+
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

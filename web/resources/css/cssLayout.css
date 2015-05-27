@@ -1,0 +1,97 @@
+#divSesionUsuario
+{
+    position: relative;
+    right: 75px;
+    top: -60px;
+    margin-bottom: 15px;
+    margin-top: 25px;
+    text-align: right;
+}
+
+#divSesionUsuario > span
+{
+    color: black;
+}
+
+#divMenu{
+    position: relative;
+    margin-top: -52px;
+    margin-left: 120px;
+}
+
+#divH1{
+    position: relative;
+    margin-bottom: 10px;
+    margin-top: -35px;
+    margin-left: 200px;
+}
+
+#top{
+    /*background: radial-gradient(circle, #036fab, white); #D4DEDF  #EEEEEE*/
+    background-color: #EEEEEE;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.7);
+    color: #000;
+    border: 1.5px solid #000000;
+    padding: 10px;
+    margin: 0 auto;
+    width: 1100px;
+    /*text-align: center;*/
+    height: 90px;
+    position: relative;
+    border-radius: 7px;
+    -moz-border-radius: 5px 10px;
+}
+
+#logo{
+   
+    margin-top: -3px;
+    width: 30px;
+    height: 30px;
+}
+
+.center_content{
+    background-position: center center;
+    background-color: #EEEEEE;
+    box-shadow: 0px 0px 2px black;
+    border: 1.5px solid #000000;
+    padding: 10px;
+    margin: 1px auto;
+    margin-top: 5px;
+    width: 1100px;
+    height: auto;  //650px
+    position: relative;
+    border-radius: 7px;
+}
+
+.dataList .ui-datalist-data{
+border: none;
+background: transparent;
+background-image: none;
+}
+
+.dataList .ui-widget-content {
+    border: none;
+
+}
+
+/*#left{
+    background-color: #c2dfef;
+    width: 20%;
+    float: left;
+    padding: 1px;
+    height: 585px;
+    margin: -10px -10px -10px -10px;
+    border-radius: 7px;
+    position: relative;
+
+}
+
+.left_content {
+    background-color: rgb;
+    padding: 5px;
+    margin-left: 20%;
+    height: 560px;
+    border-radius: 7px;
+    margin-bottom: -10px;
+}*/
+

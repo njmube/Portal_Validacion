@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmConAdap" enctype="multipart/form-data">
+                    <p:panel header="Adaptadores y Conectores" style="font-size: large">
+                        <p:panel style="font-size: small; border: hidden">
+                            <h:outputLabel value="Balanza de comprobación" style="font-size: small"/>
+                            <p:separator/>
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:fileUpload fileUploadListener="#{mbConectorAdaptador.uploadBalanzaAdaptador}" label="Adaptador" mode="advanced" auto="true" update="msgBal"/>
+                                <p:fileUpload fileUploadListener="#{mbConectorAdaptador.uploadBalanzaConector}" label="Conector" mode="advanced" auto="true" update="msgBal"/>
+                                <p:messages id="msgBal" showDetail="true" closable="true"/>
+                            </h:panelGrid>
+                            <h:outputLabel value="Catálogo de cuentas" style="font-size: small"/>
+                            <p:separator/>
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:fileUpload fileUploadListener="#{mbConectorAdaptador.uploadCatalogoAdaptador}" label="Adaptador" mode="advanced" auto="true" update="msgCat"/>
+                                <p:fileUpload fileUploadListener="#{mbConectorAdaptador.uploadCatalogoConector}" label="Conector" mode="advanced" auto="true" update="msgCat"/>
+                                <p:messages id="msgCat" showDetail="true" closable="true"/>
+                            </h:panelGrid>
+                            <h:outputLabel value="Pólizas del periodo" style="font-size: small"/>
+                            <p:separator/>
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:fileUpload fileUploadListener="#{mbConectorAdaptador.uploadPolizaAdaptador}" label="Adaptador" mode="advanced" auto="true" update="msgPol"/>
+                                <p:fileUpload fileUploadListener="#{mbConectorAdaptador.uploadPolizaConector}" label="Conector" mode="advanced" auto="true" update="msgPol"/>
+                                <p:messages id="msgPol" showDetail="true" closable="true"/>
+                            </h:panelGrid>
+                            <h:outputLabel value="Auxiliar de folios de comprobantes fiscales" style="font-size: small"/>
+                            <p:separator/>
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:fileUpload fileUploadListener="#{mbConectorAdaptador.uploadFoliosAdaptador}" label="Adaptador" mode="advanced" auto="true" update="msgFolios"/>
+                                <p:fileUpload fileUploadListener="#{mbConectorAdaptador.uploadFoliosConector}" label="Conector" mode="advanced" auto="true" update="msgFolios"/>
+                                <p:messages id="msgFolios" showDetail="true" closable="true"/>
+                            </h:panelGrid>
+                            <h:outputLabel value="Auxiliar de cuenta y subcuenta" style="font-size: small"/>
+                            <p:separator/>
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:fileUpload fileUploadListener="#{mbConectorAdaptador.uploadCuentasAdaptador}" label="Adaptador" mode="advanced" auto="true" update="msgCuentas"/>
+                                <p:fileUpload fileUploadListener="#{mbConectorAdaptador.uploadCuentasConector}" label="Conector" mode="advanced" auto="true" update="msgCuentas"/>
+                                <p:messages id="msgCuentas" showDetail="true" closable="true"/>
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:panel>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

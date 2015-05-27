@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmNotificacion">
+                    <p:panel id="panelConfigNotificacion" header="Configuración de Notificaciones" style="font-size: large">
+                        <h:panelGrid id="displayBooleanChk" columns="2" cellspacing="5" style="font-size: small">
+                            <p></p>
+                            <p:outputLabel/>
+                            <p:outputLabel value="#{mbConfiguracion.validoRemitente.valor == true ? 'ACTIVO':'INACTIVO'}" />
+                            <p:outputLabel value="Enviar notificación de XML válido al remitente." />
+
+                            <p:outputLabel value="#{mbConfiguracion.invalidoRemitente.valor == true ? 'ACTIVO':'INACTIVO'}" />
+                            <p:outputLabel value="Enviar notificación de XML inválido al remitente." />
+
+                            <p:outputLabel value="#{mbConfiguracion.validoEmail.valor == true ? 'ACTIVO':'INACTIVO'}" />
+                            <p:outputLabel value="Enviar notificación de XML válido al correo registrado." />
+
+                            <p:outputLabel value="#{mbConfiguracion.invalidoEmail.valor == true ? 'ACTIVO':'INACTIVO'}" />
+                            <p:outputLabel value="Enviar notificación de XML inválido al correo registrado." />
+                            <p></p>
+                            <h:panelGrid columns="2" cellspacing="5">
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnModificarNotificacion" value="Modificar" onclick="PF('dialogModificarNotificaciones').show();" update=":frmChk:displayBooleanChk" rendered="#{mbAcceso.BTN_MODIFICAR_NOTIFICACION}" icon="ui-icon-pencil" styleClass="boton"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <h:panelGrid id="panelEmail" columns="1" cellpadding="10" style="font-size: small">
+                            <p></p>
+                            <p:outputLabel value="Lista de correos que reciben notificaciones:" style="width: 50%"/>
+                            <p:outputLabel value="#{mbConfiguracion.ceListaEmails.valor != '' ? mbConfiguracion.ceListaEmails.valor : 'No se han encontrado resultados'}" />
+                            <h:panelGrid columns="2" cellspacing="5">
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnModificarEmail" value="Modificar" onclick="PF('dialogModificarEmail').show();" actionListener="#{mbConfiguracion.reinit}" update=":form:emails" rendered="#{mbAcceso.BTN_MODIFICAR_NOTIFICACION}" icon="ui-icon-pencil" styleClass="boton"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:form>
+
+                <p:dialog header="Configuración de Notificaciones para XMLs" widgetVar="dialogModificarNotificaciones" modal="true" resizable="fasle" closable="false">
+
+                    <h:form id="frmChk">
+                        <h:panelGrid id="displayBooleanChk" columns="2" cellspacing="5">
+                            <p></p>
+                            <p:outputLabel/>
+                            <p:selectBooleanCheckbox value="#{mbConfiguracion.validoRemitente.valor}" />
+                            <p:outputLabel value="Enviar notificación de XML válido al remitente." />
+
+                            <p:selectBooleanCheckbox value="#{mbConfiguracion.invalidoRemitente.valor}" />
+                            <p:outputLabel value="Enviar notificación de XML inválido al remitente." />
+
+                            <p:selectBooleanCheckbox value="#{mbConfiguracion.validoEmail.valor}" />
+                            <p:outputLabel value="Enviar notificación de XML válido al correo registrado." />
+
+                            <p:selectBooleanCheckbox value="#{mbConfiguracion.invalidoEmail.valor}" />
+                            <p:outputLabel value="Enviar notificación de XML inválido al correo registrado." />
+                            <p></p>
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:commandButton id="btnCancelarNotificacion" value="Cancelar" onclick="dialogModificarNotificaciones.hide();" action="#{mbConfiguracion.reloadNotificacion}" icon="ui-icon-close" styleClass="boton" />
+                                <p:commandButton id="btnGuardarNotificacion" value="Guardar Configuración" actionListener="#{mbConfiguracion.checkConfiguracionEmpresa}" oncomplete="dialogModificarNotificaciones.hide()" icon="ui-icon-disk" styleClass="boton" update=":frmNotificacion:panelConfigNotificacion"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+
+                <p:dialog header="Lista de correos que reciben notificaciones" widgetVar="dialogModificarEmail" modal="true" resizable="fasle">
+
+                    <h:form id="form">
+
+                        <p:panel header="Inserte una nueva dirección de correo electrónico" style="margin-bottom:20px;">
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <h:outputLabel value="Correo Electrónico : *" for="txtEmail"/>
+                                <p:inputText id="txtEmail" value="#{mbConfiguracion.newEmail}" pt:placeholder="ejemplo@dominio.com" label="Correo Electrónico" validator="validarEmail" size="30" />
+                                <h:outputLabel />
+                                <p:commandButton id="btn_add" value="Agregar" actionListener="#{mbConfiguracion.insertNewEmail}" update=":form" styleClass="boton" style="float: right"/>
+                            </h:panelGrid>
+                        </p:panel>
+
+                        <p:outputPanel id="emails" >
+                            <p:dataTable value="#{mbConfiguracion.emails}" var="email" id="EmailsTable" rows="5" paginator="true" styleClass="tabla">
+                                <f:facet name="header"><p:outputLabel value="Lista de correos que reciben notificaciones" style="font-size: small"/></f:facet>
+                                <p:column headerText="Correo Electronico">
+                                    <h:outputText value="#{email}" />
+                                </p:column>
+
+                                <p:column headerText="Eliminar">
+                                    <p:commandButton icon="ui-icon-trash" update=":frmNotificacion:panelEmail, :form:emails" process=":frmNotificacion:panelEmail, :form:emails" actionListener="#{mbConfiguracion.removeEmail}" styleClass="boton">
+                                        <f:param name="emailRemove" value="#{email}" />
+                                    </p:commandButton>
+                                </p:column>
+
+                            </p:dataTable>
+                            <br/>
+                            <center>
+                                <h:panelGrid columns="4" cellspacing="5">
+                                    <p:commandButton id="btnCancelarEmail" value="Cancelar" onclick="dialogModificarEmail.hide()" icon="ui-icon-close" styleClass="boton" update=":frmNotificacion:panelEmail, :form:emails"/>
+                                    <p:panel style="visibility: hidden"/>
+                                    <p:commandButton id="btnGuardarEmail" value="Guardar" actionListener="#{mbConfiguracion.updateCE}" oncomplete="dialogModificarEmail.hide()" icon="ui-icon-disk" styleClass="boton" update=":frmNotificacion:panelEmail, :form:emails"/>
+                                </h:panelGrid>
+                            </center>
+                        </p:outputPanel>
+                    </h:form>
+
+                    <script type="text/javascript">
+                        function validaUpdateEmail(xhr, status, args) {
+                            if (!args.actualiza) {
+                                dialogModificarEmail.jq.effect("shake", {times: 5}, 500);
+                            }
+                            else {
+                                dialogModificarEmail.hide();
+                            }
+                        }
+                    </script>
+                </p:dialog>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

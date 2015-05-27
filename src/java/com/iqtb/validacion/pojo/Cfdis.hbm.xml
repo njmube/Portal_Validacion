@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.Cfdis" table="CFDIS" catalog="iqtb" optimistic-lock="version">
+        <id name="idCfdis" type="java.lang.Integer">
+            <column name="idCFDIS" />
+            <generator class="identity" />
+        </id>
+        <property name="idSucursal" type="int">
+            <column name="idSUCURSAL" not-null="true" />
+        </property>
+        <property name="idSocioComercial" type="int">
+            <column name="idSOCIO_COMERCIAL" not-null="true" />
+        </property>
+        <property name="idTipocfd" type="java.lang.Integer">
+            <column name="idTIPOCFD" />
+        </property>
+        <property name="serie" type="string">
+            <column name="SERIE" />
+        </property>
+        <property name="folio" type="java.lang.Long">
+            <column name="FOLIO" />
+        </property>
+        <property name="uuid" type="string">
+            <column name="UUID" length="36" />
+        </property>
+        <property name="fecha" type="timestamp">
+            <column name="FECHA" length="19" not-null="true" />
+        </property>
+        <property name="numeroAprobacion" type="java.lang.Long">
+            <column name="NUMERO_APROBACION" />
+        </property>
+        <property name="anioAprobacion" type="java.lang.Integer">
+            <column name="ANIO_APROBACION" />
+        </property>
+        <property name="subtotal" type="big_decimal">
+            <column name="SUBTOTAL" precision="16" scale="6" />
+        </property>
+        <property name="descuento" type="big_decimal">
+            <column name="DESCUENTO" precision="16" scale="6" />
+        </property>
+        <property name="total" type="big_decimal">
+            <column name="TOTAL" precision="16" scale="6" />
+        </property>
+        <property name="tipoMoneda" type="string">
+            <column name="TIPO_MONEDA" length="5" />
+        </property>
+        <property name="tipoCambio" type="big_decimal">
+            <column name="TIPO_CAMBIO" precision="10" scale="4" />
+        </property>
+        <property name="iva" type="big_decimal">
+            <column name="IVA" precision="16" scale="6" />
+        </property>
+        <property name="estadoFiscal" type="string">
+            <column name="ESTADO_FISCAL" length="9" />
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="13" />
+        </property>
+        <property name="fechaCancelacion" type="timestamp">
+            <column name="FECHA_CANCELACION" length="19" />
+        </property>
+        <property name="fechaModificacion" type="timestamp">
+            <column name="FECHA_MODIFICACION" length="19" />
+        </property>
+        <property name="tienePdf" type="java.lang.Boolean">
+            <column name="TIENE_PDF" />
+        </property>
+        <property name="estadoImpresion" type="string">
+            <column name="ESTADO_IMPRESION" length="15" />
+        </property>
+        <property name="idArchivoSincoronizacion" type="java.lang.Integer">
+            <column name="idARCHIVO_SINCORONIZACION" />
+        </property>
+        <property name="imprimirEn" type="java.lang.Integer">
+            <column name="IMPRIMIR_EN" />
+        </property>
+        <property name="idDireccion" type="java.lang.Integer">
+            <column name="idDIRECCION" />
+        </property>
+        <property name="idPlantilla" type="java.lang.Integer">
+            <column name="idPLANTILLA" />
+        </property>
+        <property name="tipoCfd" type="string">
+            <column name="TIPO_CFD" length="2" />
+        </property>
+        <property name="pedimento" type="string">
+            <column name="PEDIMENTO" length="300" />
+        </property>
+        <property name="fechaPedimento" type="string">
+            <column name="FECHA_PEDIMENTO" length="350" />
+        </property>
+        <property name="aduana" type="string">
+            <column name="ADUANA" length="600" />
+        </property>
+        <property name="generationDate" type="timestamp">
+            <column name="GENERATION_DATE" length="19" not-null="true" />
+        </property>
+        <property name="ticket" type="string">
+            <column name="TICKET" length="20" />
+        </property>
+        <property name="idConfiguracion" type="java.lang.Integer">
+            <column name="idCONFIGURACION" />
+        </property>
+        <property name="cadenaOriginal" type="string">
+            <column name="CADENA_ORIGINAL" length="65535" />
+        </property>
+        <property name="estadoContable" type="string">
+            <column name="ESTADO_CONTABLE" length="10" />
+        </property>
+        <property name="fechaVencimiento" type="timestamp">
+            <column name="FECHA_VENCIMIENTO" length="19" />
+        </property>
+        <property name="rfcEmisor" type="string">
+            <column name="RFC_EMISOR" length="13" />
+        </property>
+        <property name="rfcReceptor" type="string">
+            <column name="RFC_RECEPTOR" length="13" />
+        </property>
+        <property name="reportado" type="java.lang.Boolean">
+            <column name="REPORTADO" />
+        </property>
+    </class>
+</hibernate-mapping>

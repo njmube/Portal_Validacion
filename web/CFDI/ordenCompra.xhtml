@@ -1,0 +1,234 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl id="mGeneral" showDetail="true" sticky="false" autoUpdate="true"/>
+                <h:form id="frmOrdenCompra" >
+                    <p:dataTable id="tablaOrdenCompra" var="ordenCompra" value="#{mbOrdenCompra.lazyDataOrden}" rowKey="#{ordenCompra.idOrdenCompra}" paginator="true" rows="12" lazy="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 styleClass="tabla" emptyMessage="No se han encontrado resultados" style="font-size: x-small">
+                        <f:facet name="header">
+                            <p:outputLabel value="Ordenes de Compra" style="font-size: medium" />
+                        </f:facet>
+                        <p:column id="colNum" headerText="Número" sortBy="#{ordenCompra.numeroOc}" filterBy="#{ordenCompra.numeroOc}" >
+                            <f:facet name="header">
+                                <h:outputText value="Número" />
+                            </f:facet>
+                            <h:outputText value="#{ordenCompra.numeroOc}"/>
+                        </p:column>
+                        <p:column id="colSocio" headerText="Socio Comercial" filterBy="#{ordenCompra.rfcSocioComercial}" >
+                            <f:facet name="header">
+                                <h:outputText value="Socio Comercial" />
+                            </f:facet>
+                            <h:outputText value="#{ordenCompra.rfcSocioComercial}"/>
+                        </p:column>
+                        <p:column id="colEstado" headerText="Vendedor" sortBy="#{ordenCompra.rfcVendedor}" filterBy="#{ordenCompra.rfcVendedor}" >
+                            <f:facet name="header">
+                                <h:outputText value="Vendedor" />
+                            </f:facet>
+                            <h:outputText value="#{ordenCompra.rfcVendedor}"/>
+                        </p:column>
+                        <p:column id="colTotal" headerText="Total" sortBy="#{ordenCompra.total}" filterBy="#{ordenCompra.total}" >
+                            <f:facet name="header">
+                                <h:outputText value="Total" />
+                            </f:facet>
+                            <h:outputText value="#{ordenCompra.total}"/>
+                        </p:column>
+                        <p:column headerText="Tipo Moneda" sortBy="#{ordenCompra.tipoMoneda}" filterBy="#{ordenCompra.tipoMoneda}" >
+                            <f:facet name="header">
+                                <h:outputText value="Tipo Moneda" />
+                            </f:facet>
+                            <h:outputText value="#{ordenCompra.tipoMoneda}"/>
+                        </p:column>
+                        <p:column id="colCambio" headerText="Tipo Cambio" sortBy="#{ordenCompra.tipoCambio}" filterBy="#{ordenCompra.tipoCambio}" >
+                            <f:facet name="header">
+                                <h:outputText value="Tipo Cambio" />
+                            </f:facet>
+                            <h:outputText value="#{ordenCompra.tipoCambio}"/>
+                        </p:column>
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton update=":frmOrdenCompra:dialogView" actionListener="#{mbOrdenCompra.dataLazyCfdi}" oncomplete="PF('dialogVer').show()" icon="ui-icon-search" title="Ver">
+                                <f:setPropertyActionListener value="#{ordenCompra}" target="#{mbOrdenCompra.auxOrdenCompra}" />
+                            </p:commandButton>
+                        </p:column>
+                        <f:facet name="footer" >
+                            <h:panelGrid columns="4" style="border-style: hidden; text-align: center" >
+                                <p:commandButton id="btnCarcarOc" update=":frmOrdenCompra" value="Cargar" onclick="PF('dlgCargarOC').show()" icon="ui-icon-circle-plus" styleClass="boton" rendered="#{mbAcceso.BTN_NUEVO_ORDEN}"/>
+                                <p:commandButton id="btnNuevaOc" update=":frmOrdenCompra, :frmNuevaOC" value="Nueva" actionListener="#{mbOrdenCompra.obtenerRfcSociosComerciales}" oncomplete="PF('dlgNuevaOC').show()" icon="ui-icon-circle-plus" styleClass="boton" rendered="#{mbAcceso.BTN_NUEVO_ORDEN}"/>
+                            </h:panelGrid>
+                        </f:facet>
+                    </p:dataTable>
+                    <pe:keyFilter for="tablaOrdenCompra:colTotal" mask="pnum" />
+                    <pe:keyFilter for="tablaOrdenCompra:colCambio" mask="pnum" />
+                    <p:dialog id="dialogView" header="Orden de Compra número #{mbOrdenCompra.auxOrdenCompra.numeroOc}" widgetVar="dialogVer" modal="true" resizable="false" >
+                        <center>
+                            <h:panelGrid columns="6" cellspacing="5" >
+                                <h:panelGrid columns="1" cellspacing="5">
+                                    <f:facet name="header">
+                                        <h:outputText value="Número" />
+                                    </f:facet>
+                                    <p:outputLabel value="#{mbOrdenCompra.auxOrdenCompra.numeroOc}" />
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" cellspacing="5" >
+                                    <f:facet name="header">
+                                        <h:outputText value="Socio Comercial" />
+                                    </f:facet>
+                                    <p:outputLabel value="#{mbOrdenCompra.auxOrdenCompra.rfcSocioComercial}" />
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" cellspacing="5" >
+                                    <f:facet name="header">
+                                        <h:outputText value="Vendedor" />
+                                    </f:facet>
+                                    <p:outputLabel value="#{mbOrdenCompra.auxOrdenCompra.rfcVendedor}" />
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" cellspacing="5" >
+                                    <f:facet name="header">
+                                        <h:outputText value="Total" />
+                                    </f:facet>
+                                    <p:outputLabel value="#{mbOrdenCompra.auxOrdenCompra.total}" />
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" cellspacing="5" >
+                                    <f:facet name="header">
+                                        <h:outputText value="Tipo Moneda" />
+                                    </f:facet>
+                                    <p:outputLabel value="#{mbOrdenCompra.auxOrdenCompra.tipoMoneda}" />
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" cellspacing="5" >
+                                    <f:facet name="header">
+                                        <h:outputText value="Tipo Cambio" />
+                                    </f:facet>
+                                    <p:outputLabel value="#{mbOrdenCompra.auxOrdenCompra.tipoCambio}" />
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </center>
+                        <p:dataTable id="tableCfdis" var="cfdi" value="#{mbOrdenCompra.lazyDataCfdi}" paginator="true" rows="5" lazy="true"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     rowKey="#{cfdi.idCfdiRecibido}" 
+                                     styleClass="tabla" emptyMessage="No se han encontrado resultados" style="font-size: x-small">
+                            <f:facet name="header">
+                                <p:outputLabel value="Documentos relacionados con la Orden de Compra" style="font-size: small" />
+                            </f:facet>
+                            <p:column id="colFecha" headerText="Fecha Emisión" sortBy="#{cfdi.fecha}" filterBy="#{cfdi.fecha}" >
+                                <h:outputText value="#{cfdi.fecha}"/>
+                            </p:column>
+                            <p:column headerText="Serie" filterBy="#{cfdi.serie}" sortBy="#{cfdi.serie}" >
+                                <h:outputText value="#{cfdi.serie != null ? cfdi.serie : 'Sin Serie'}"/>
+                            </p:column>
+                            <p:column id="colFolio" headerText="Folio" sortBy="#{cfdi.folio}" filterBy="#{cfdi.folio}">
+                                <h:outputText value="#{cfdi.folio != null ? cfdi.folio : 'Sin Folio'}"/>
+                            </p:column>
+                            <p:column id="colFechaR" headerText="Fecha Recepción" sortBy="#{cfdi.fechaRecepcion}" filterBy="#{cfdi.fechaRecepcion}">
+                                <h:outputText value="#{cfdi.fechaRecepcion}" />
+                            </p:column>
+                            <p:column headerText="Total" filterBy="#{cfdi.total}" sortBy="#{cfdi.total}" >
+                                <h:outputText value="#{cfdi.total}" />
+                            </p:column>
+                            <p:column headerText="Estado" filterBy="#{cfdi.estado}" sortBy="#{cfdi.estado}" >
+                                <h:outputText value="#{cfdi.estado}" />
+                                <br/>
+                                <h:outputText value="#{cfdi.tiposWarn}" />
+                            </p:column>
+                            <p:column headerText="PDF Socio Comercial" exportable="false">
+                                <h:commandLink id="PDFSocio" actionListener="#{mbOrdenCompra.descargarPDFSocio}" title="PDF Socio Comercial">
+                                    <f:param name="idCfdi" value="#{cfdi.idCfdiRecibido}" />
+                                    <p:graphicImage value="/resources/images/pdf.jpg" width="35" styleClass="boton"/>
+                                </h:commandLink>
+                            </p:column>
+                            <p:column headerText="Descargar" exportable="fasle">
+                                <h:panelGrid columns="2" style="border-style: hidden;">
+
+                                    <h:commandLink id="downPDF" actionListener="#{mbOrdenCompra.downloadPDF}" immediate="true" title="PDF Genérico">
+                                        <f:param name="idCfdi" value="#{cfdi.idCfdiRecibido}" />
+                                        <p:graphicImage value="/resources/images/pdf.jpg" width="35" styleClass="boton"/>
+                                    </h:commandLink>
+
+                                    <h:commandLink actionListener="#{mbOrdenCompra.downloadXML}" immediate="true" title="XML">
+                                        <f:param name="idCfdi" value="#{cfdi.idCfdiRecibido}" />
+                                        <p:graphicImage value="/resources/images/xml.jpg" width="35" styleClass="boton"/>
+                                    </h:commandLink>
+                                </h:panelGrid>
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="frmCargarOC">
+                    <p:dialog header="Seleccione uno o varios archivos TXT" widgetVar="dlgCargarOC" modal="true" resizable="false">
+                        <p:fileUpload fileUploadListener="#{mbOrdenCompra.handleFileUpload}" mode="advanced" update=":frmOrdenCompra" auto="true"
+                                      multiple="true" oncomplete="dlgCargarOC.hide()" label="Seleccione"/>
+                    </p:dialog> 
+                </h:form>
+
+                <h:form id="frmNuevaOC">
+                    <p:dialog header="Nueva Orden de Compra" widgetVar="dlgNuevaOC" modal="true" resizable="false">
+                        <h:panelGrid columns="2" cellspacing="5" >
+                            <h:outputLabel/>
+                            <p:outputLabel value="*Datos Requeridos" style="font-size: x-small; float: right"/>
+                            <h:outputLabel/><h:outputLabel/>
+                            <p:outputLabel for="Socio" value="Socio Comercial:*" />
+                            <p:selectOneMenu id="Socio" value="#{mbOrdenCompra.ordenCompra.idSocioComercial}" filter="true">
+                                <f:selectItem itemLabel="- Seleccione -" itemValue="0" />
+                                <f:selectItems value="#{mbOrdenCompra.itemsSocioComercial}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="numOrden" value="Número:*" />
+                            <p:inputText id="numOrden" value="#{mbOrdenCompra.ordenCompra.numeroOc}" />
+                            <p:outputLabel for="totalOrden" value="Total:*" />
+                            <p:inputText id="totalOrden" value="#{mbOrdenCompra.ordenCompra.total}"/>
+                            <p:outputLabel for="monedaOrden" value="Tipo de Moneda:" />
+                            <p:inputText id="monedaOrden" value="#{mbCfdisRecibidos.ordenCompra.tipoMoneda}" pt:placeholder="Ejemplo: MXN">
+                                <pe:keyFilter for="monedaOrden" mask="alpha" />
+                                <f:validateLength minimum="3" maximum="3" />
+                            </p:inputText>
+                            <p:outputLabel for="cambioOrden" value="Tipo de Cambio:" />
+                            <p:inputText id="cambioOrden" value="#{mbOrdenCompra.ordenCompra.tipoCambio}" >
+                                <pe:keyFilter for="cambioOrden" mask="pnum" />
+                            </p:inputText>
+                            <p:outputLabel for="rfcOrden" value="RFC Vendedor:*" />
+                            <p:inputText id="rfcOrden" value="#{mbOrdenCompra.ordenCompra.rfcVendedor}" validator="validarRfc"/>
+                            <p:outputLabel />
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:commandButton value="Cancelar" onclick="PF('dlgNuevaOC').hide();" update=":frmOrdenCompra" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnGuardarOrden" value="Guardar" actionListener="#{mbOrdenCompra.saveOrdenCompra}" oncomplete="validaInsertOc(xhr, status, args)" icon="ui-icon-disk" styleClass="boton" update=":frmOrdenCompra"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:dialog> 
+                </h:form>
+
+                <script type='text/javascript'>
+                    function validaInsertOc(xhr, status, args) {
+                        if (!args.insertOc) {
+                            dlgNuevaOC.jq.effect("shake", {times: 5}, 500);
+                        }
+                        else {
+                            dlgNuevaOC.hide();
+                        }
+                    }
+                </script>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

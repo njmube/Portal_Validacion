@@ -1,0 +1,336 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="formPlantillas">
+                    <p:dataTable id="tablaPlantillas" var="plantilla" paginator="true" rows="10" 
+                                 value="#{mbPlantilla.listaPlantillas}" rowKey="#{plantilla.idPlantillas}" selection="#{mbPlantilla.plantillasSeleccionadas}" 
+                                 resizableColumns="false" style=" text-align: center; font-size: x-small">
+                        <f:facet name="header"><p:outputLabel value="Plantillas" style="font-size: large"/></f:facet>
+
+                        <p:column selectionMode="multiple" style="width: 2%" />
+                        <p:column headerText="Nombre">
+                            <h:outputText value="#{plantilla.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Empresa" >
+                            <h:outputText value="#{plantilla.rfcEmpresa}"/>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <center>
+                                <h:panelGrid columns="4" cellpadding="10px" cellspacing="10px" rendered="#{mbAcceso.CONFIGURAR_PLANTILLA}" style="border-style: hidden; width: 70%; text-align: center">
+                                    <p:commandButton id="btnInsertaPlantilla" value="Nueva" icon="ui-icon-plusthick" update=":formInsertPlantilla:panelInsertPlantilla"  disabled="#{!mbPlantilla.existePlantilla}"
+                                                     oncomplete="wizard.loadStep (wizard.cfg.steps [0], true);  dialogPlantillaCreate.show()" actionListener="#{mbPlantilla.resetPlantilla}" styleClass="boton"/>
+                                    <p:commandButton id="btnActualizaPlantilla" value="Modificar" icon="ui-icon-pencil" update=":formUpdatePlantilla:panelUpdatePlantilla" 
+                                                     oncomplete="mostrarDialogUpdate(xhr, status, args)" actionListener="#{mbPlantilla.resetPlantilla}" action="#{mbPlantilla.existeSeleccionPlantilla}" styleClass="boton"/>
+                                    <p:commandButton id="btnEliminaPlantilla" value="Eliminar" update=":formDeletePlantilla:confirmDialog" 
+                                                     oncomplete="mostrarDialogDelete(xhr, status, args)" icon="ui-icon-trash" actionListener="#{mbPlantilla.existeSeleccionPlantilla}" styleClass="boton">
+                                        <f:param name="nombreParametro" value="eliminar"/>
+                                    </p:commandButton>
+                                </h:panelGrid>
+                            </center> 
+                        </f:facet>
+                        <p:ajax event="page" listener="#{mbPlantilla.listaPlantillas}" update="tablaPlantillas"/>
+                    </p:dataTable>
+                    <p:dialog header="Detalles de Plantilla" widgetVar="plantillaDialog" resizable="false"  
+                              width="460" showEffect="fade" hideEffect="fade" id="dialog" modal="true">  
+                        <h:panelGrid id="display" columns="2" cellspacing="5">  
+                            <h:outputText value="Nombre de la Plantilla:" />  
+                            <h:outputText value="#{mbPlantilla.plantilla.nombre}" />  
+                        </h:panelGrid>  
+                    </p:dialog> 
+
+                    <script type="text/javascript">
+                        function mostrarDialogVisualizar(xhr, status, args) {
+                            if (args.estadoPlantilla) {
+                                plantillaDialog.show();
+                            }
+                        }
+                        function mostrarDialogDelete(xhr, status, args) {
+                            if (args.estadoPlantilla) {
+                                dialogPlantillaDelete.show();
+                            }
+                        }
+                        function mostrarDialogUpdate(xhr, status, args) {
+                            if (args.estadoPlantilla) {
+                                wizardUpdatePlantilla.loadStep(wizardUpdatePlantilla.cfg.steps [0], true)
+                                dlgPlantillaUpdate.show();
+                            }
+                        }
+                    </script>
+                </h:form>
+
+                <h:form id="formInsertPlantilla" enctype="multipart/form-data">
+                    <p:panel id="panelInsertPlantilla" style="visibility: hidden;">
+                        <p:dialog id="dlgPlantillaCreate" header="Inserta Plantilla" widgetVar="dialogPlantillaCreate" 
+                                  resizable="false" showEffect="fade" hideEffect="fold" modal="true" closable="true" >
+                            <p:wizard style="font-size: small; height: 80px" showNavBar="true" id="wizard" 
+                                      widgetVar="wizard" flowListener="#{mbPlantilla.onFlowProcess}" > 
+                                <p:tab id="ReportePrincipal" title="Reporte Principal">  
+                                    <p:panel header="Seleccion Reporte Principal" style="height: 350px;"> 
+                                        <p:outputLabel for="nombrePlantilla" value="Nombre de la Plantilla: " />
+                                        <p:inputText id="nombrePlantilla" value="#{mbPlantilla.nombrePlantilla}" />
+                                        <h:panelGrid columns="2" cellspacing="5">
+                                            <p:fileUpload  label="Seleccionar Reporte" uploadLabel="subir" cancelLabel="cancelar" id="subirReporte" fileUploadListener="#{mbPlantilla.uploadPrincipal}" mode="advanced" auto="true" style="width: 600px; height: 50px" 
+                                                           sizeLimit="50000000" allowTypes="/(\.|\/)(xprint)$/" update=":formInsertPlantilla:reportePrincipal" >
+                                            </p:fileUpload>
+                                            <p></p><p:outputLabel/><p:outputLabel/><p></p><p:outputLabel/><p:outputLabel/><p></p><p:outputLabel/><p:outputLabel/>
+                                            <h:panelGrid columns="3" cellpadding="5" cellspacing="5">
+                                                <p></p><p:outputLabel/><p:outputLabel/><p></p><p:outputLabel/><p:outputLabel/><p></p><p:outputLabel/><p:outputLabel/>
+                                                <h:outputText value="Reporte: " style="font-weight: bold"/>
+                                                <h:inputText id="reportePrincipal" value="#{mbPlantilla.principal}" readonly="true" pt:placeholder="Seleccione un reporte" style="color: #045491; font-style: italic; font-weight: bold; width: 200px "/>
+                                                <p:commandButton icon="ui-icon-trash" actionListener="#{mbPlantilla.asignarReportePrincipalPNulo}" update=":formInsertPlantilla:reportePrincipal"/>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </p:panel>  
+                                </p:tab> 
+                                <p:tab id="Subreportes" title="Subreportes">  
+                                    <p:panel header="Agregar Subreporte" style="height: 350px;"> 
+                                        <p:fileUpload label="Seleccionar Subreportes" uploadLabel="subir" cancelLabel="cancelar" id="subirSubreporte" fileUploadListener="#{mbPlantilla.uploadSubreportes}" mode="advanced" multiple="true" auto="true" dragDropSupport="true" style="width: 620px; height: 40px" 
+                                                      sizeLimit="50000000" allowTypes="/(\.|\/)(xprint)$/" update=":formInsertPlantilla:tablaSubreportes" widgetVar="subirSubreportes"/>  
+                                        <p></p><br/><br/><p></p><center>
+                                            <p:panel style="width: 70%; border-style: hidden">
+                                                <p:dataTable id="tablaSubreportes" var="sub" rows="3" paginator="true" value="#{mbPlantilla.listaSubreportes}" 
+                                                             rowKey="#{sub.nombre}" selectionMode="single">
+                                                    <!--                                                    <f:facet name="header">
+                                                                                                            Subreportes cargados
+                                                                                                        </f:facet>-->
+                                                    <p:column headerText="Subreporte">
+                                                        #{sub.nombre}
+                                                    </p:column>
+
+                                                    <p:column style="width: 11%; text-align: center">
+                                                        <p:commandButton icon="ui-icon-trash" action="#{mbPlantilla.borrarSubreporte}" update=":formInsertPlantilla:tablaSubreportes">
+                                                            <f:setPropertyActionListener value="#{sub}" target="#{mbPlantilla.subreporteSeleccionado}"/>
+                                                        </p:commandButton>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:panel>
+                                        </center>
+                                    </p:panel> 
+                                </p:tab>
+                                <p:tab id="Imagenes" title="Imagenes">  
+                                    <p:panel header="Subir Imagenes" style="height: 350px;">    
+                                        <p:fileUpload label="Seleccionar imagenes" uploadLabel="subir" cancelLabel="cancelar" id="subirImagenes" fileUploadListener="#{mbPlantilla.uploadImagenes}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" mode="advanced" multiple="true" auto="true" style="width: 620px; height: 40px" update=":formInsertPlantilla:tablaImagenes"/><br/><br/><br/>
+                                        <center>  
+                                            <p:dataTable var="ima" value="#{mbPlantilla.listaImagenes}" rows="5" paginator="true" id="tablaImagenes" style="width: 350px">
+                                                <!--                                                <f:facet name="header">
+                                                                                                    Imagenes
+                                                                                                </f:facet>-->
+                                                <p:column headerText="Imagen" style="width: 50%">
+                                                    #{ima.nombre}
+                                                </p:column>
+
+                                                <p:column headerText="Ubicación" style="width: 30%">
+                                                    #{ima.carpeta}
+                                                </p:column>
+
+                                                <p:column headerText="Estado" >
+                                                    #{ima.estado}
+                                                </p:column>
+                                            </p:dataTable>
+                                        </center>
+                                    </p:panel>  
+                                </p:tab>
+                                <p:tab id="confirmacion" title="Confirmación">
+                                    <p:panel header="Datos ingresados" style="height: 350px;">
+                                        <p:messages  id="mensajes3" showDetail="true" autoUpdate="true" closable="true" />
+                                        <h:panelGrid id="grid" columns="2" cellpadding="5px" cellspacing="5px">
+                                            <h:outputText value="Plantilla Principal: " style="font-size: large; color: #045491"/>
+                                            <h:outputText styleClass="outputLabel" value="#{mbPlantilla.principal}" style="font-size: large; font-weight: bold"/>
+
+                                        </h:panelGrid>
+                                        <p:panel style="border-style: hidden">
+                                            <h:panelGrid columns="3" cellspacing="5">
+                                                <p:panel style="border-style: hidden; width: 300px">
+                                                    <p:dataTable var="imagen" rows="4" paginator="true" value="#{mbPlantilla.listaImagenes}" style="width: 300px">
+                                                        <f:facet name="header">
+                                                            Imagenes
+                                                        </f:facet>
+
+                                                        <p:column headerText="Imagen"> 
+                                                            #{imagen.nombre}
+                                                        </p:column>
+
+                                                        <p:column headerText="Estado">
+                                                            #{imagen.estado}
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                </p:panel>
+                                                <p:panel style="border-style: hidden; width: 50px"/>
+                                                <p:panel style="border-style: hidden">
+                                                    <p:dataTable var="sub" rows="4" paginator="true" value="#{mbPlantilla.listaSubreportes}" style="width: 300px ">
+                                                        <f:facet name="header">
+                                                            Subreportes
+                                                        </f:facet>
+
+                                                        <p:column headerText="Subreporte"> 
+                                                            #{sub.nombre}
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                </p:panel>
+                                            </h:panelGrid>
+                                            <br/>
+                                            <center><p:commandButton value="Guardar Plantilla" style="float: start" actionListener="#{mbPlantilla.guardarPlantilla}" update=":formInsertPlantilla:mensajes3, :formPlantillas:tablaPlantillas" oncomplete="dialogPlantillaCreate.hide(), wizard.loadStep (wizard.cfg.steps [0], true);" styleClass="boton"/></center>
+                                        </p:panel>
+                                    </p:panel>
+                                </p:tab>
+
+                            </p:wizard>
+                        </p:dialog>
+                    </p:panel>
+                </h:form>
+
+                <h:form id="formUpdatePlantilla" enctype="multipart/form-data">
+                    <p:panel id="panelUpdatePlantilla" style="visibility: hidden;">
+                        <p:dialog id="dlgPlantillaUpdate" header="Inserta Plantilla" widgetVar="dlgPlantillaUpdate" 
+                                  resizable="false" showEffect="fade" hideEffect="fold" modal="true" closable="true" >
+                            <p:wizard style="font-size: small; height: 80px" showNavBar="true" id="wizardActualizaPlantilla" 
+                                      widgetVar="wizardUpdatePlantilla" flowListener="#{mbPlantilla.onFlowProcess}" > 
+                                <p:tab id="updateReportePrincipal" title="Reporte Principal">  
+                                    <p:panel header="Seleccion Reporte Principal" style="height: 350px;"> 
+                                        <p:outputLabel for="nombrePlantilla" value="Nombre de la Plantilla: " />
+                                        <p:inputText id="nombrePlantilla" value="#{mbPlantilla.nombrePlantilla}" />
+                                        <h:panelGrid columns="2" cellspacing="5">
+                                            <p:fileUpload  label="Seleccionar Reporte" uploadLabel="subir" cancelLabel="cancelar" id="subirReporte" fileUploadListener="#{mbPlantilla.uploadPrincipal}" mode="advanced" auto="true" style="width: 600px; height: 50px" 
+                                                           sizeLimit="50000000" allowTypes="/(\.|\/)(xprint)$/" update=":formUpdatePlantilla:reportePrincipalUpdate"/>
+                                            <p></p><p:outputLabel/><p:outputLabel/><p></p><p:outputLabel/><p:outputLabel/><p></p><p:outputLabel/><p:outputLabel/>
+                                            <h:panelGrid columns="3" cellpadding="5" cellspacing="5">
+                                                <p></p><p:outputLabel/><p:outputLabel/><p></p><p:outputLabel/><p:outputLabel/><p></p><p:outputLabel/><p:outputLabel/>
+                                                <h:outputText value="Reporte: " style="font-weight: bold"/>
+                                                <h:inputText id="reportePrincipalUpdate" value="#{mbPlantilla.principal}" readonly="true" pt:placeholder="Seleccione un reporte" style="color: #045491; font-style: italic; font-weight: bold; width: 200px "/>
+                                                <p:commandButton icon="ui-icon-trash" actionListener="#{mbPlantilla.asignarReportePrincipalPNulo}" update=":formUpdatePlantilla:reportePrincipalUpdate"/>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </p:panel>  
+                                </p:tab> 
+                                <p:tab id="updateSubreportes" title="Subreportes">  
+                                    <p:panel header="Agregar Subreporte" style="height: 350px;"> 
+                                        <p:fileUpload label="Seleccionar Subreportes" uploadLabel="subir" cancelLabel="cancelar" id="subirSubreporte" fileUploadListener="#{mbPlantilla.uploadSubreportes}" mode="advanced" multiple="true" auto="true" dragDropSupport="true" style="width: 620px; height: 40px" 
+                                                      sizeLimit="50000000" allowTypes="/(\.|\/)(xprint)$/" update=":formUpdatePlantilla:tablaSubreportesUpdate" widgetVar="subirSubreportes"/>  
+                                        <p></p><br/><br/><p></p><center>
+                                            <p:panel style="width: 70%; border-style: hidden">
+                                                <p:dataTable id="tablaSubreportesUpdate" var="sub" rows="3" paginator="true" value="#{mbPlantilla.listaSubreportes}" 
+                                                             rowKey="#{sub.nombre}" selectionMode="single">
+                                                    <p:column headerText="Subreporte">
+                                                        #{sub.nombre}
+                                                    </p:column>
+
+                                                    <p:column style="width: 11%; text-align: center">
+                                                        <p:commandButton icon="ui-icon-trash" action="#{mbPlantilla.borrarSubreporte}" update=":formUpdatePlantilla:tablaSubreportesUpdate">
+                                                            <f:setPropertyActionListener value="#{sub}" target="#{mbPlantilla.subreporteSeleccionado}"/>
+                                                        </p:commandButton>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:panel>
+                                        </center>
+                                    </p:panel> 
+                                </p:tab>
+                                <p:tab id="updateImagenes" title="Imagenes">  
+                                    <p:panel header="Subir Imagenes" style="height: 350px;">    
+                                        <p:fileUpload label="Seleccionar imagenes" uploadLabel="subir" cancelLabel="cancelar" id="subirImagenes" fileUploadListener="#{mbPlantilla.uploadImagenes}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" mode="advanced" multiple="true" auto="true" style="width: 620px; height: 40px" update=":formUpdatePlantilla:tablaImagenes"/><br/><br/><br/>
+                                        <center>  
+                                            <p:dataTable var="ima" value="#{mbPlantilla.listaImagenes}" rows="5" paginator="true" id="tablaImagenes" style="width: 350px">
+                                                <!--                                                <f:facet name="header">
+                                                                                                    Imagenes
+                                                                                                </f:facet>-->
+                                                <p:column headerText="Imagen" style="width: 50%">
+                                                    #{ima.nombre}
+                                                </p:column>
+
+                                                <p:column headerText="Ubicación" style="width: 30%">
+                                                    #{ima.carpeta}
+                                                </p:column>
+
+                                                <p:column headerText="Estado" >
+                                                    #{ima.estado}
+                                                </p:column>
+                                            </p:dataTable>
+                                        </center>
+                                    </p:panel>  
+                                </p:tab>
+                                <p:tab id="updateConfirmacion" title="Confirmación">
+                                    <p:panel header="Datos ingresados" style="height: 350px;">
+                                        <p:messages  id="mensajes3" showDetail="true" autoUpdate="true" closable="true" />
+                                        <h:panelGrid id="grid" columns="2" cellpadding="5px" cellspacing="5px">
+                                            <h:outputText value="Plantilla Principal: " style="font-size: large; color: #045491"/>
+                                            <h:outputText styleClass="outputLabel" value="#{mbPlantilla.principal}" style="font-size: large; font-weight: bold"/>
+
+                                        </h:panelGrid>
+                                        <p:panel style="border-style: hidden">
+                                            <h:panelGrid columns="3" cellspacing="5">
+                                                <p:panel style="border-style: hidden; width: 300px">
+                                                    <p:dataTable var="imagen" rows="4" paginator="true" value="#{mbPlantilla.listaImagenes}" style="width: 300px">
+                                                        <f:facet name="header">
+                                                            Imagenes
+                                                        </f:facet>
+
+                                                        <p:column headerText="Imagen"> 
+                                                            #{imagen.nombre}
+                                                        </p:column>
+
+                                                        <p:column headerText="Estado">
+                                                            #{imagen.estado}
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                </p:panel>
+                                                <p:panel style="border-style: hidden; width: 50px"/>
+                                                <p:panel style="border-style: hidden">
+                                                    <p:dataTable var="sub" rows="4" paginator="true" value="#{mbPlantilla.listaSubreportes}" style="width: 300px ">
+                                                        <f:facet name="header">
+                                                            Subreportes
+                                                        </f:facet>
+
+                                                        <p:column headerText="Subreporte"> 
+                                                            #{sub.nombre}
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                </p:panel>
+                                            </h:panelGrid>
+                                            <br/>
+                                            <center><p:commandButton value="Guardar Plantilla" styleClass="boton" actionListener="#{mbPlantilla.updatePlantilla}" update=":formUpdatePlantilla:mensajes3, :formPlantillas:tablaPlantillas" oncomplete="dlgPlantillaUpdate.hide(), wizardUpdatePlantilla.loadStep (wizardUpdatePlantilla.cfg.steps [0], true)"/></center>
+                                        </p:panel>
+                                    </p:panel>
+                                </p:tab>
+
+                            </p:wizard>
+                        </p:dialog>
+                    </p:panel>
+                </h:form>
+
+                <h:form id="formDeletePlantilla">
+                    <p:confirmDialog id="confirmDialog" message="¿Desea eliminar la Plantilla?" header="Eliminar Plantilla" 
+                                     severity="alert" widgetVar="dialogPlantillaDelete"  showEffect="fade" hideEffect="fade" closable="false">
+                        <p:commandButton id="declineDeletePlantilla" value="Cancelar" onclick="dialogPlantillaDelete.hide()" icon="ui-icon-close"/>
+                        <p:commandButton id="confirmDeletePlantilla" value="Aceptar" update=":formPlantillas:tablaPlantillas" 
+                                         oncomplete="dialogPlantillaDelete.hide()" actionListener="#{mbPlantilla.eliminarPlantilla}" icon="ui-icon-check"/>
+                    </p:confirmDialog>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

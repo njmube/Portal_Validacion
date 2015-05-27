@@ -1,0 +1,272 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+        <ui:composition template="./Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide()"/>  
+
+                <p:dialog modal="true" widgetVar="statusDialog" showHeader="false"  
+                          draggable="false" closable="false" resizable="false">  
+                    <p:graphicImage value="/resources/images/ajax-loader.gif" /> 
+                </p:dialog>
+                <p:growl id="mGeneral" showDetail="true" sticky="false"/>
+                <center>
+                    <br/>
+                    <h2><p:outputLabel value="Bienvenido" /></h2>
+                </center>
+                <p:separator />
+                <!--                <p:outputLabel value="Sin Validar " style="font-size: medium"/>
+                                            <p:outputLabel value=" {mbAcceso.cfdisSinValidar}" style="font-size: large" />
+                -->
+                <p:accordionPanel >
+                    <p:tab title="Resumen de Documentos Recibidos" rendered="#{!mbAcceso.rolServidor and (mbAcceso.VER_ESTADISTICAS_EMPRESA || mbAcceso.VER_ESTADISTICAS_SOCIO)}">
+                        <h:panelGrid columns="2" cellspacing="5" >
+                            <p:outputLabel value="CFDIs" style="font-size: medium"/>
+                            <!--<p:outputLabel value="Total" style="font-size: medium"/>-->
+                            <p:outputLabel value="Total " style="font-size: medium"/>
+                            <p:outputLabel value=" #{mbAcceso.cfdisTotal}" style="font-size: large"/>
+                            <p:outputLabel value="Válidos " style="font-size: medium"/>
+                            <p:outputLabel value=" #{mbAcceso.cfdisValidos}" style="font-size: large" />
+                            <p:outputLabel value="Inválidos " style="font-size: medium"/>
+                            <p:outputLabel value=" #{mbAcceso.cfdisInvalidos}" style="font-size: large" />
+                            <p:outputLabel value="Cancelados " style="font-size: medium"/>
+                            <p:outputLabel value=" #{mbAcceso.cfdisCancelados}" style="font-size: large" />
+                            <p:outputLabel value="Eliminados " style="font-size: medium"/>
+                            <p:outputLabel value=" #{mbAcceso.cfdisEliminados}" style="font-size: large" />
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Configurar el logo de la Empresa" rendered="#{mbAcceso.CARGAR_LOGOS}">
+                        <h:form enctype="multipart/form-data">
+                            <h:panelGrid columns="2">
+                                <p:panel header="Configurar el logo de la Empresa">
+                                    <h:panelGrid columns="2" cellspacing="5">
+                                        <p:fileUpload id="uploadLogo" fileUploadListener="#{mbServicios.uploadLogo}" label="Cambiar Logo de la Página" mode="advanced" auto="true" update=":mGeneral"/>
+                                        <p:fileUpload id="uploadIco" fileUploadListener="#{mbServicios.uploadIco}" label="Cambiar icono de la Pestana" mode="advanced" auto="true" update=":mGeneral" /> 
+                                        <!--// disabled="{mbServicios.btnFavicon}"-->
+                                        <p/><p/><p/>
+                                        <p:commandButton ajax="false" icon="ui-icon-refresh" styleClass="boton" style="float: right;"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:tab>
+                    <p:tab title="CFDIs Recibidos" rendered="#{mbAcceso.rolEmpresa}">
+                        <h:panelGrid >
+                            <ul type="square">
+                                <p>
+                                    <li>Visualiza una tabla con los CFDIs recibidos, para ver los detalles de cada CFDI haga clic en el botón que se encuentra en la columna Estado. 
+                                        En la columna Descargar se muestra las opciones para descargar el documento en formato XML o PDF.</li>
+                                    En la parte inferior de la tabla encontrara los siguientes botones:<br/>
+                                    <ul>
+                                        <li>Nuevo: Brinda la opción de subir uno o varios archivos con extensión .xml, para ser validados.</li>
+                                        <li>Validar: Como primer paso seleccione uno o varios CFDIs, y al hacer clic los archivos seleccionados serán validados nuevamente.</li>
+                                        <li>Eliminar: Como primer paso seleccione uno o varios CFDIs, y al hacer clic se abre una ventana de confirmación, al aceptar se eliminaran los CFDIs seleccionados.<br/>
+                                            NOTA: Los CFD(I) inválidos, duplicados eliminados aparecerán en la pestaña Eliminados y será posible restaurarlos.</li>
+                                        <li>Reporte: Permite obtener un reporte personalizado en formato Excel de los CFD(I) recibidos. Este reporte contiene las columnas (Fecha de Emisión, Serie, Folio, Fecha de Recepción, UUID, Total, Estado, Error). Para obtener un reporte con las mismas columnas que se muestran en la tabla, haga clic en el icono de MS Excel que se encuentra en la parte superior derecha.</li>
+                                    </ul>
+                                </p>
+                            </ul>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="CFDIs Eliminados/Cancelados" rendered="#{mbAcceso.rolEmpresa}">
+                        <h:panelGrid >
+                            <ul type="square">
+                                <p>
+                                    <li>Visualiza una tabla con los CFDIs eliminados, para ver los detalles de cada CFDI haga clic en el botón que se encuentra en la columna Estado.</li>
+                                    En la parte inferior de la tabla encontrara los siguientes botones:<br/>
+                                    <ul>
+                                        <li>Restaurar: Como primer paso seleccione uno o varios CFDIs, y al hacer clic los archivos seleccionados serán Restaurados y podrà visualizarlos en la pestaña Recibidos.<br/>
+                                            NOTA: Los documentos Cancelados no se pueden Restaurar.</li>
+                                        <li>Eliminar: Como primer paso seleccione uno o varios CFDIs, y al hacer clic se abre una ventana de confirmación, al aceptar se eliminaran permanentemente los CFDIs seleccionados.</li>
+                                        <li>Reporte: Permite obtener un reporte personalizado en formato Excel de los CFD(I) recibidos. Este reporte contiene las columnas (Fecha de Emisión, Serie, Folio, Fecha de Recepción, UUID, Total, Estado, Error). Para obtener un reporte con las mismas columnas que se muestran en la tabla, haga clic en el icono de MS Excel que se encuentra en la parte superior derecha.</li>
+                                    </ul>
+                                </p>
+                            </ul>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="CFDIs Emitidos" rendered="#{mbAcceso.rolSocioComercial}">
+                        <h:panelGrid >
+                            <ul type="square">
+                                <p>
+                                    <li>Visualiza una tabla con los CFDIs emitidos, para ver los detalles de cada CFDI haga clic en el botón que se encuentra en la columna Estado. 
+                                        En la columna Descargar se muestra las opciones para descargar el documento en formato XML o PDF.</li>
+                                    En la parte inferior de la tabla encontrara los siguientes botones:<br/>
+                                    <ul>
+                                        <li>Nuevo: Brinda la opción de subir uno o varios archivos con extensión .xml, para ser validados.</li>
+                                        <li>Validar: Como primer paso seleccione uno o varios CFDIs, y al hacer clic los archivos seleccionados serán validados nuevamente.</li>
+                                        <li>Notificar Cancelación: Podrá informar a su cliente que el comprobante seleccionado ha sido cancelado en su solución de emisión de factura electrónica.<br/>
+                                            NOTA: El botón Notificar Cancelación únicamente envía una notificación de cancelación de (los) documento(s) elegido(s) como parte de la comunicación comercial, pero aún será necesario que realice la cancelación del CFD(I) en su solución de facturación electrónica.</li>
+                                        <li>Eliminar: Como primer paso seleccione uno o varios CFDIs, y al hacer clic se abre una ventana de confirmación, al aceptar se eliminaran los CFDIs seleccionados.<br/>
+                                            NOTA: Los CFD(I) inválidos o cancelados eliminados aparecerán en la pestaña Eliminados y será posible restaurarlos.</li>
+                                        <li>Reporte: Permite obtener un reporte personalizado en formato Excel de los CFD(I) recibidos. Este reporte contiene las columnas (Fecha de Emisión, Serie, Folio, Fecha de Recepción, UUID, Total, Estado, Error). Para obtener un reporte con las mismas columnas que se muestran en la tabla, haga clic en el icono de MS Excel que se encuentra en la parte superior derecha.</li>
+                                    </ul>
+                                </p>
+                            </ul>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="CFDIs Eliminados/Cancelados" rendered="#{rolSocioComercial.rolSocio}">
+                        <h:panelGrid >
+                            <ul type="square">
+                                <p>
+                                    <li>Visualiza una tabla con los CFDIs eliminados, para ver los detalles de cada CFDI haga clic en el botón que se encuentra en la columna Estado.</li>
+                                    En la parte inferior de la tabla encontrara los siguientes botones:<br/>
+                                    <ul>
+                                        <li>Restaurar: Como primer paso seleccione uno o varios CFDIs, y al hacer clic los archivos seleccionados serán Restaurados y podrà visualizarlos en la pestaña Recibidos.<br/>
+                                            NOTA: Los documentos Cancelados no se pueden Restaurar.</li>
+                                        <li>Eliminar: Como primer paso seleccione uno o varios CFDIs, y al hacer clic se abre una ventana de confirmación, al aceptar se eliminaran permanentemente los CFDIs seleccionados.</li>
+                                        <li>Reporte: Permite obtener un reporte personalizado en formato Excel de los CFD(I) recibidos. Este reporte contiene las columnas (Fecha de Emisión, Serie, Folio, Fecha de Recepción, UUID, Total, Estado, Error). Para obtener un reporte con las mismas columnas que se muestran en la tabla, haga clic en el icono de MS Excel que se encuentra en la parte superior derecha.</li>
+                                    </ul>
+                                </p>
+                            </ul>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Socios Comerciales" rendered="#{mbAcceso.rolEmpresa}">
+                        <h:panelGrid >
+                            <ul type="square">
+                                <p>
+                                    <li>Visualiza una tabla con los detalles de cada Socio Comercial.</li>
+                                    En la parte inferior de la tabla encontrara los siguientes botones:<br/>
+                                    <ul>
+                                        <li>Nuevo: Brinda la opción de agregar un Socio Comercial.</li>
+                                        <li>Ver: Como primer paso seleccione un socio comercial, y al hacer clic se mostraran todos los datos del socio comercial.</li>
+                                        <li>Modificar: Como primer paso seleccione un socio comercial, y al hacer clic se abre una ventana emergente, donde puede modificar los datos del socio comercial.</li>
+                                        <li>Eliminar: Como primer paso seleccione uno o varios socios comerciales, y al hacer clic se abre una ventana de confirmación, al aceptar se eliminaran los socios seleccionados.</li>
+                                    </ul>
+                                </p>
+                            </ul>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Contabilidad Electrónica" rendered="#{mbAcceso.rolEmpresa}">
+                        <h:panelGrid >
+                            <ul type="square">
+                                <p>
+                                    <li>Visualiza una tabla con los datos de Contabilidad Electrónica, para ver los detalles de cada archivo de contabilidad Electrónica, haga clic en el botón que se encuentra en la columna Estado.
+                                        En la columna Archivo Fuente se encuntra una liga para descargar el archivo en formato TXT. En la columna XML Generado se encuntra una liga para descargar el archivo generado en formato XML.</li>
+                                    En la parte inferior de la tabla encontrara los siguientes botones:<br/>
+                                    <ul>
+                                        <li>Nuevo Catálogo/Balanza/Póliza: Al hacer clic se abre una ventana que le brinda la opcion de cargar uno o varios archivos de texto de tipo Catálogo/Balanza/Páliza. Cuando termine de seleccionar los archivos que desea subir haga clic en el botón subir.</li>
+                                        <li>Reprocesar: Como primer paso seleccione uno o varios archivos de contabilidad electrónica, y al hacer clic los archivos seleccionados seran procesados nuevamente.</li>
+                                        <li>Eliminar: Como primer paso seleccione uno o varios archivos de contabilidad electrónica, y al hacer clic se abre una ventana de confirmación, al aceptar se eliminaran los archivos seleccionados.</li>
+                                    </ul>
+                                </p>
+                            </ul>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Configuración" rendered="#{mbAcceso.rolEmpresa}">
+                        <h:panelGrid >
+                            <ul type="square">
+                                <p>
+                                    Validación de CFDIs
+                                    <li>Empresa: Se muestran los datos de la Empresa, dando la opción a ser modificados.</li>
+                                    <li>Notificaciones: Se muestran las configuraciones, para realizar la notificación de CFDIs válidos e inválidos a la dirección de correo del remitente o a una lista de correos que puede ser agregada o modificada en esta misma pestaña.</li>
+                                    <li>Plantilla: Visualiza una tabla donde se muestra los datos de la Plantilla. En la parte inferior de la tabla encontrara los siguientes botones:</li>
+                                    <ul>
+                                        <li>Nuevo: Le permite cargar una Plantilla, empezando con el reporte principal, en el siguiente paso cargara los subreportes, a contunuación agregara las imágenes necesarias para el reporte y por ultimo Guardara la plantilla.</li>
+                                        <li>Modificar: Brinda la opción de modificar la Plantilla existente.</li>
+                                        <li>Eliminar Comprobantes: Como primer paso seleccione la plantilla, y al hacer clic, la plantilla será eliminada.</li>
+                                    </ul>
+                                    <li>Correo Electrónico: Muestra la configuración de servidor SMTP y IMAP/POP3.</li>
+                                    <ul>
+                                        <li>Configuración SMTP: Permite configurar un servidor SMTP para el envío de correos electrónicos.</li>
+                                        <li>Configuración IMAP/POP3: Permita configurar un servidor IMAP/POP3 para recepción de correo electrónico.</li>
+                                    </ul>
+                                    <li>Usuario FTP: Visualiza si existe el usuario FTP para CFDI's validación.</li>
+                                    <ul>
+                                        <li>Agregar: Cuando no exista un usuario FTP, le permite agregar un usuario.</li>
+                                        <li>Eliminar: Elimina el usuario FTP existente.</li>
+                                    </ul>
+                                    Contabilidad Electrónica
+                                    <li>Adaptador/Conector: En esta pestaña visualiza si existen adaptadores y conectores para Balanza, Catálogo y Póliza.</li>
+                                    <ul>
+                                        <li>Haciendo clic en el botón Agregar/Modificar, le permite subir el adaptador/conector correspondiente.</li>
+                                    </ul>
+                                    <li>Usuarios FTP: Visualiza si existen usuarios FTP para recepción de textos de tipo Balanza, Catálogo y Póliza.</li>
+                                    <ul>
+                                        <li>Agregar: Cuando no exista un usuario FTP, le permite agregar un usuario.</li>
+                                        <li>Eliminar: Elimina el usuario FTP existente.</li>
+                                    </ul>
+                                </p>
+                            </ul>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Configuración de Servicios" rendered="#{mbAcceso.rolServidor}">
+                        <ul type="square">
+                            <p>
+                                NOTA: Se recomienda configurar todos los servicios la primera vez que se accede, para que estos funcione correctamente.
+                                <li>Recepción: Muestra los valores configurados para el servicio. Haciendo clic en el botón modificar, se abre una ventana que permite modificar estos valores.</li>
+                                <li>Validación: Muestra los valores configurados para el servicio. Haciendo clic en el botón modificar, se abre una ventana que permite modificar estos valores.</li>
+                                <li>Notificaciones: Muestra los valores configurados para el servicio. Haciendo clic en el botón modificar, se abre una ventana que permite modificar estos valores.</li>
+                                <li>Cuentas de Usuario: Muestra los valores configurados para el servicio. Haciendo clic en el botón modificar, se abre una ventana que permite modificar estos valores.</li>
+                                <li>Servidor SMTP: Muestra los valores configurados para el servicio. Haciendo clic en el botón modificar, se abre una ventana que permite modificar estos valores.</li>
+                                <li>Contabilidad Electrónica: Muestra los valores configurados para el servicio. Haciendo clic en el botón modificar, se abre una ventana que permite modificar estos valores.</li>
+                                <li>Sincronizar CFDIs: Muestra los valores configurados para el servicio. Haciendo clic en el botón modificar, se abre una ventana que permite modificar estos valores.</li>
+                                <li>Retorno ERP: Muestra los valores configurados para el servicio. Haciendo clic en el botón modificar, se abre una ventana que permite modificar estos valores.</li>
+                                <li>Configuraciones XSA: Muestra los valores configurados para el servicio. Haciendo clic en el botón modificar, se abre una ventana que permite modificar estos valores.</li>
+                            </p>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="Usuarios" rendered="#{mbAcceso.rolServidor}">
+                        <ul type="square">
+                            <p>
+                                <li>Usuarios: Visualiza una tabla con datos de los usuarios.</li>
+                                En la parte inferior de la tabla encontrara los siguientes botones:<br/>
+                                <ul>
+                                    <li>Nuevo: Brinda la opción de agregar un usuario. Los usuarios pueden pertenecer a un Rol de Empresa, Rol de Servidor, Rol Socio Comercial.</li>
+                                    <li>Ver: Como primer paso seleccione un usuario, y al hacer clic se muestran todos los datos del usuario.</li>
+                                    <li>Modificar: Como primer paso seleccione un usuario, y al hacer clic se abre una ventana donde permite modificar los datos del usuario, asi como su Rol y/o Empresas asignadas.</li>
+                                    <li>Eliminar: Como primer paso seleccione uno o varios usuarios, y al hacer clic se abre una ventana de confirmación, al aceptar se eliminaran los usuarios seleccionados.</li>
+                                </ul>
+                                <li>Roles: Visualiza una tabla con datos de los Roles.</li>
+                                <ul>
+                                    <li>Roles tipo Empresa: Este tipo de rol se le asigna una o varias empresas. El usuario visualizara los CFDIs recibidos para esta empresa, podrá administrar estos CFDIs, Modificar los datos de la empresa, las configuraciones de notificaciones, 
+                                        la plantilla para descarga de PDF, servidor SMTP, el servidor IMAP/POP3, crear o modificar usuarios FTP para CFDIS de validación y para textos de tipo balanza, catálogo y póliza, modificar adaptador/conector de contabilidad electrónica.</li>
+                                    <li>Roles tipo Servidor: Este tipo de rol es el que se encarga de crear/modificar usuarios, roles, empresas y configurar a sus necesidades los servicios de recepción, validación, notificaciones, servidor SMTP, contabilidad electrónica, sincronización de CFDIs.</li>
+                                    <li>Rol Socio Comercial: Este tipo de rol se le asigna una empresa y un socio comercial, le permite ver los CFDIs que ha emitido, así como validarlos y cargar nuevos archivos.</li>
+                                </ul>
+                                En la parte inferior de la tabla encontrara los siguientes botones:<br/>
+                                <ul>
+                                    <li>Nuevo: Brinda la opción de crear un Rol, eligiendo que permisos tendrá dicho rol.</li>
+                                    <li>Ver: Como primer paso seleccione un rol, y al hacer clic se muestran todos los datos del rol.</li>
+                                    <li>Modificar: Como primer paso seleccione un rol, y al hacer clic se abre una ventana donde permite modificar los datos del rol, así como los permisos que tiene.</li>
+                                    <li>Eliminar: Como primer paso seleccione uno o varios roles, y al hacer clic se abre una ventana de confirmación, al aceptar se eliminaran los roles seleccionados.</li>
+                                </ul>
+                            </p>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="Empresas" rendered="#{mbAcceso.rolServidor}">
+                        <ul type="square">
+                            <p>
+                                <li>Visualiza una tabla con datos de las Empresas.</li>
+                                En la parte inferior de la tabla encontrara los siguientes botones:<br/>
+                                <ul>
+                                    <li>Nuevo: Brinda la opción de agregar una Empresa, al hacer clic se abre un asistente donde agregara los datos de la Empresa, configurara las notificaciones y direcciones de correo que reciben estas, el servidor SMTP y servidor IMAP/POP3 para esta empresa.</li>
+                                    <li>Ver: Como primer paso seleccione una Empresa, y al hacer clic se abre una ventana donde se muestran todos los datos de la Empresa.</li>
+                                    <li>Modificar: Como primer paso seleccione una Empresa, y al hacer clic se abre una ventana donde se muestran los datos de la Empresa y permite modificarlos.</li>
+                                    <li>Eliminar: Como primer paso seleccione una o varias Empresas, y al hacer clic se abre una ventana de confirmación, al aceptar se eliminaran las Empresas seleccionadas, así como sus configuraciones.</li>
+                                </ul>
+                            </p>
+                        </ul>
+                    </p:tab>
+                </p:accordionPanel>
+
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>
+

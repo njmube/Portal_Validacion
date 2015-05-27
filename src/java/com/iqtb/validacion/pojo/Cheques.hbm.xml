@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.Cheques" table="CHEQUES" catalog="iqtb" optimistic-lock="version">
+        <id name="idCheque" type="java.lang.Integer">
+            <column name="idCHEQUE" />
+            <generator class="identity" />
+        </id>
+        <property name="idMetodosPago" type="int">
+            <column name="idMETODOS_PAGO" not-null="true" unique="true" />
+        </property>
+        <property name="numero" type="string">
+            <column name="NUMERO" length="20" />
+        </property>
+        <property name="bancoEmisorNal" type="string">
+            <column name="BANCO_EMISOR_NAL" length="200" not-null="true" />
+        </property>
+        <property name="bancoEmisorExt" type="string">
+            <column name="BANCO_EMISOR_EXT" length="200" />
+        </property>
+        <property name="cuentaOrigen" type="string">
+            <column name="CUENTA_ORIGEN" length="50" not-null="true" />
+        </property>
+        <property name="fecha" type="timestamp">
+            <column name="FECHA" length="19" not-null="true" />
+        </property>
+        <property name="beneficiario" type="string">
+            <column name="BENEFICIARIO" length="300" not-null="true" />
+        </property>
+        <property name="rfc" type="string">
+            <column name="RFC" length="13" not-null="true" />
+        </property>
+        <property name="monto" type="big_decimal">
+            <column name="MONTO" precision="16" scale="6" not-null="true" />
+        </property>
+        <property name="moneda" type="string">
+            <column name="MONEDA" length="3" />
+        </property>
+        <property name="tipoCambio" type="big_decimal">
+            <column name="TIPO_CAMBIO" precision="16" scale="6" />
+        </property>
+    </class>
+</hibernate-mapping>

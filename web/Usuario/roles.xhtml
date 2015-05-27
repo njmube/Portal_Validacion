@@ -1,0 +1,191 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmRoles">
+                    <p:dataTable id="tablaRoles" var="rol" paginator="true" rows="10" 
+                                 value="#{mbRoles.listaRoles}" rowKey="#{rol.idRol}" selection="#{mbRoles.rolesSeleccionados}" 
+                                 style="text-align: center; font-size: x-small" emptyMessage="No se han encontrado resultados">
+                        <f:facet name="header"><p:outputLabel value="Roles" style="font-size: large"/></f:facet>
+                        <p:column selectionMode="multiple" style="width: 2%" />
+                        <p:column headerText="Nombre de Rol" filterBy="#{rol.nombre}">
+                            <h:outputText value="#{rol.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Tipo de Rol" filterBy="#{rol.tipo}" filterOptions="#{mbUsuario.tipoRolSelectItems}">
+                            <h:outputText value="#{rol.tipo}"/>
+                        </p:column>
+                        <f:facet name="footer" >
+                            <center>
+                                <h:panelGrid id="pgUsuarios" columns="5" cellpadding="10" cellspacing="10" rendered="#{mbAcceso.ADMINISTRAR_ROLES}" style="border-style: hidden; text-align: center; width: 80%" class="btn">
+                                    <p:commandButton value="Nuevo" update=":frmRoles:tablaRoles, :frmInsertRol:displayRol" icon="ui-icon-plusthick" oncomplete="dialogRolCreate.show()" actionListener="#{mbRoles.limpiarRol}" styleClass="boton"/>
+                                    <p:commandButton value="Ver" update=":frmRoles:dialogRol" oncomplete="mostrarDialogVisualizar(xhr, status, args)" icon="ui-icon-search" actionListener="#{mbRoles.existeSeleccionRol}" styleClass="boton" />
+                                    <p:commandButton value="Modificar" update=":frmUpdateRol:displayUpdateRol" oncomplete="mostrarDialogUpdate(xhr, status, args)" icon="ui-icon-pencil" actionListener="#{mbRoles.existeSeleccionRol}" styleClass="boton" />
+                                    <p:commandButton value="Eliminar" update=":frmDeleteRol:confirmDialog" oncomplete="mostrarDialogDelete(xhr, status, args)" actionListener="#{mbRoles.existeSeleccionRol}" icon="ui-icon-trash" styleClass="boton">
+                                        <f:param name="parametro" value="eliminar"/> 
+                                    </p:commandButton>
+                                </h:panelGrid>
+                            </center>
+                        </f:facet>
+                    </p:dataTable>
+                    <p:dialog header="Detalles de Rol" widgetVar="dialogRol" resizable="false" showEffect="fade" hideEffect="fade" id="dialogRol" modal="true" closable="true" style="font-size: small">  
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4">  
+
+                            <p:outputLabel value="Nombre:" />  
+                            <p:outputLabel value="#{mbRoles.rol.nombre}" />
+                            <p:outputLabel value="Tipo:" />  
+                            <p:outputLabel value="#{mbRoles.rol.tipo}" />
+                        </h:panelGrid>
+                        <p:dataList value="#{mbRoles.opcionesSeleccionadas}" var="opcion" type="unordered" itemType="disc" paginator="true" rows="10">
+                            <f:facet name="header">
+                                Opciones
+                            </f:facet>
+                            <p:outputLabel value="#{opcion.descripcion}" />
+                        </p:dataList>
+
+                    </p:dialog>
+                    <script type="text/javascript">
+                        function mostrarDialogVisualizar(xhr, status, args) {
+                            if (args.estadoRol) {
+                                dialogRol.show();
+                            }
+                        }
+
+                        function mostrarDialogDelete(xhr, status, args) {
+                            if (args.estadoRol) {
+                                dialogRolDelete.show();
+                            }
+                        }
+                        function mostrarDialogUpdate(xhr, status, args) {
+                            if (args.estadoRol) {
+                                dialogRolUpdate.show();
+                            }
+                        }
+                    </script>
+                </h:form>
+
+                <p:dialog id="dlgURolCreate" header="Crear Rol" widgetVar="dialogRolCreate" resizable="false"  showEffect="fade" hideEffect="fade" modal="true" style="font-size: small">
+                    <h:form id="frmInsertRol">
+                        <h:panelGrid id="displayRol" columns="2" cellpadding="4">
+                            <p:outputLabel value="Nombre: " />
+                            <p:inputText value="#{mbRoles.rol.nombre}" label="Nombre" size="35"/>
+                            <p:outputLabel for="tipo" value="Tipo: " />
+                            <p:selectOneMenu id="tipo" value="#{mbRoles.rol.tipo}">
+                                <f:selectItem itemLabel="- Seleccione -" itemValue="" />
+                                <f:selectItem itemLabel="Empresa" itemValue="EMPRESA" />
+                                <f:selectItem itemLabel="Servidor" itemValue="SERVIDOR" />
+                                <!--<f:selectItem itemLabel="Socio Comercial" itemValue="SOCIO_COMERCIAL" />-->
+                                <p:ajax listener="#{mbRoles.updateOpciones}" update="PojoPickList" />
+                            </p:selectOneMenu>
+                            <p:outputLabel />
+                            <p:pickList id="PojoPickList" value="#{mbRoles.dualListOpciones}" var="opcion" effect="fade" showCheckbox="true"
+                                        itemValue="#{opcion}" itemLabel="#{opcion}" filterMatchMode="contains">
+                                <f:facet name="sourceCaption">Opciones</f:facet>
+                                <f:facet name="targetCaption">Opciones Permitidas</f:facet>
+                                <p:column>
+                                    <h:outputText value="#{opcion}" />
+                                </p:column>
+                            </p:pickList>
+
+                            <f:facet name="footer">
+                                <center>
+                                    <h:panelGrid columns="2" cellpadding="5" cellspacing="5">
+                                        <p:commandButton id="btnCreateCancelar" value="Cancelar" icon="ui-icon-close" update=":frmRoles:tablaRoles, :frmInsertRol:displayRol" oncomplete="dialogRolCreate.hide()" />
+                                        <p:commandButton id="btnCreateAceptar"  value="Guardar" icon="ui-icon-disk" update=":frmRoles:tablaRoles, :frmInsertRol:displayRol" oncomplete="validaInsertRol(xhr, status, args)" actionListener="#{mbRoles.insertRol}"/>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <script type="text/javascript">
+                    function validaInsertRol(xhr, status, args) {
+                        if (!args.insertRol) {
+                            dialogRolCreate.jq.effect("shake", {times: 5}, 500);
+                        }
+                        else {
+                            dialogRolCreate.hide();
+                        }
+                    }
+                </script>
+
+                <p:dialog id="dlgRolUpdate" header="Modificar Rol" widgetVar="dialogRolUpdate" resizable="false" showEffect="fade" hideEffect="fade" modal="true" style="font-size: small">
+                    <h:form id="frmUpdateRol">
+
+                        <h:panelGrid id="displayUpdateRol" columns="2" >
+                            <h:outputText value="Nombre: " />
+                            <p:inputText value="#{mbRoles.rol.nombre}" label="Nombre" >
+                                <f:validateLength maximum="50" />
+                            </p:inputText>
+                            <p:outputLabel for="tipo" value="Tipo: " />
+                            <p:inputText id="tipo" value="#{mbRoles.rol.tipo}" label="Tipo" readonly="true"/>
+                            <p:outputLabel />
+                            <p:pickList id="PojoPickList" value="#{mbRoles.dualListOpciones}" var="opcion" effect="fade" 
+                                        itemValue="#{opcion}" itemLabel="#{opcion}" filterMatchMode="contains">
+                                <f:facet name="sourceCaption">Opciones</f:facet>
+                                <f:facet name="targetCaption">Opciones Permitidas</f:facet> <!-- rendered="{mbRoles.tipoOpcion(mbRoles.rol.tipo, opcion)}"-->
+                                <p:column>
+                                    <h:outputText value="#{opcion}"/>
+                                </p:column>
+                            </p:pickList>
+
+                            <f:facet name="footer">
+                                <center>
+                                    <h:panelGrid columns="2" cellpadding="5" cellspacing="5">
+                                        <p:commandButton id="btnCreateCancelar" value="Cancelar" icon="ui-icon-close" update=":frmRoles:tablaRoles, :frmUpdateRol:displayUpdateRol" oncomplete="dialogRolUpdate.hide()" />    
+                                        <p:commandButton id="btnUpdateAceptar" value="Guardar" icon="ui-icon-disk" update=":frmRoles:tablaRoles, :frmUpdateRol:displayUpdateRol" oncomplete="validaUpdateRol(xhr, status, args)" actionListener="#{mbRoles.updateRol}" />
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <script type="text/javascript">
+                    function validaUpdateRol(xhr, status, args) {
+                        if (!args.updateRol) {
+                            dialogRolUpdate.jq.effect("shake", {times: 5}, 500);
+                        } else {
+                            dialogRolUpdate.hide();
+                        }
+                    }
+                </script>
+
+                <h:form id="frmDeleteRol">
+                    <p:confirmDialog id="confirmDialog" message="¿Está seguro que desea eliminar el(los) registro(s) seleccionado(s)?" header="Eliminar Rol"
+                                     severity="alert" widgetVar="dialogRolDelete" showEffect="fade" hideEffect="fade" closable="false" style="font-size: small">
+                        <center>
+                            <h:panelGrid columns="3" cellspacing="5" >
+                                <p:commandButton id="decline" value="Cancelar" onclick="dialogRolDelete.hide()" icon="ui-icon-close"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="confirm" value="Aceptar" update=":frmRoles:tablaRoles" oncomplete="dialogRolDelete.hide()" actionListener="#{mbRoles.deleteRol}" icon="ui-icon-check"/>
+                            </h:panelGrid>
+                        </center>    
+                    </p:confirmDialog>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

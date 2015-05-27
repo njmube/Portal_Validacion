@@ -1,0 +1,380 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide()"/>  
+
+                <p:dialog modal="true" widgetVar="statusDialog" showHeader="false"  
+                          draggable="false" closable="false" resizable="false">  
+                    <p:graphicImage value="/resources/images/ajax-loader.gif" />
+                </p:dialog>
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmUsuarios">
+                    <p:dataTable id="tablaUsuarios" var="user" paginator="true" rows="10" lazy="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 value="#{mbUsuario.lazyDataUsuario}" rowKey="#{user.idUsuario}" selection="#{mbUsuario.usuariosSeleccionados}" 
+                                 style="text-align: center; font-size: x-small" emptyMessage="No se han encontrado resultados">
+                        <f:facet name="header"><p:outputLabel value="Usuarios" style="font-size: large"/></f:facet>
+
+                        <p:column selectionMode="multiple" style="width: 2%" />
+                        <p:column headerText="Nombre" filterBy="#{user.nombre}" sortBy="#{user.nombre}">
+                            <h:outputText value="#{user.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Identificador de Usuario" filterBy="#{user.userid}" sortBy="#{user.userid}">
+                            <h:outputText value="#{user.userid}"/>
+                        </p:column>
+                        <p:column headerText="Correo Electrónico" filterBy="#{user.email}" sortBy="#{user.email}">
+                            <h:outputText value="#{user.email}"/>
+                        </p:column>
+                        <p:column headerText="Rol">
+                            <h:outputText value="#{user.nombreoRol}"/>
+                        </p:column>
+                        <p:column headerText="Tipo de Rol" filterBy="#{user.tipoRol}" filterOptions="#{mbUsuario.tipoRolSelectItems}">
+                            <h:outputText value="#{user.tipoRol}"/>
+                        </p:column>
+                        <p:column headerText="Estado" filterBy="#{user.estado}" sortBy="#{user.estado}" filterOptions="#{mbUsuario.estadoSelectItems}">
+                            <h:outputText value="#{user.estado}"/>
+                        </p:column>
+                        <f:facet name="footer" >
+                            <center>
+                                <h:panelGrid id="pgUsuarios" columns="5" cellpadding="10" cellspacing="10" rendered="#{mbAcceso.ADMINISTRAR_USUARIOS}" style="border-style: hidden; text-align: center; width: 80%" class="btn">
+                                    <p:commandButton value="Nuevo" update=":frmUsuarios:tablaUsuarios, :frmInsertUsuario:pGrid" icon="ui-icon-plusthick" oncomplete="dialogUsuarioCreate.show()" actionListener="#{mbUsuario.limpiar}" styleClass="boton"/>
+                                    <p:commandButton value="Ver" update=":frmUsuarios:display" oncomplete="mostrarDialogVisualizar(xhr, status, args)" icon="ui-icon-search" actionListener="#{mbUsuario.existeSeleccionUsuario}" styleClass="boton" />
+                                    <p:commandButton value="Modificar" update=":frmUpdateUsuario:displayUpdateUsuario" oncomplete="mostrarDialogUpdate(xhr, status, args)" icon="ui-icon-pencil" actionListener="#{mbUsuario.btnModificarUsuario}" styleClass="boton" />
+                                    <p:commandButton value="Eliminar" update=":frmDeleteUsuario:confirmDialog" oncomplete="mostrarDialogDelete(xhr, status, args)" actionListener="#{mbUsuario.existeSeleccionUsuario}" icon="ui-icon-trash" styleClass="boton">
+                                        <f:param name="nombreParametro" value="eliminar"/> 
+                                    </p:commandButton>
+                                </h:panelGrid>
+                            </center>
+                        </f:facet>
+                    </p:dataTable>
+                    <p:dialog header="Detalles de Usuario" widgetVar="usuarioDialog" resizable="false" showEffect="fade" hideEffect="fade" id="dialog" modal="true" closable="true" style="font-size: small">  
+
+                        <h:panelGrid id="display" columns="2" cellpadding="4">  
+
+                            <p:outputLabel value="Nombre:" />  
+                            <p:outputLabel value="#{mbUsuario.usuario.nombre}" />
+                            <p:outputLabel value="Apellido paterno:" />  
+                            <p:outputLabel value="#{mbUsuario.usuario.apaterno}" />
+                            <p:outputLabel value="Apellido materno:" />  
+                            <p:outputLabel value="#{mbUsuario.usuario.amaterno}" /> 
+                            <p:outputLabel value="Correo Electrónico:" />  
+                            <p:outputLabel value="#{mbUsuario.usuario.email}" />
+                            <p:outputLabel value="Estado:" />  
+                            <p:outputLabel value="#{mbUsuario.usuario.estado}" />
+                            <p:outputLabel value="Identificador de Usuario:" />  
+                            <p:outputLabel value="#{mbUsuario.usuario.userid}" />
+                            <p:outputLabel value="Fecha alta:" />  
+                            <p:outputLabel value="#{mbUsuario.usuario.fechaAlta}" />
+                            <p:outputLabel value="Fecha expiracion de contraseña:" />  
+                            <p:outputLabel value="#{mbUsuario.usuario.dateExpirationPass}" />
+                            <p:outputLabel value="Fecha ultima accion:" />  
+                            <p:outputLabel value="#{mbUsuario.usuario.lastAction}" />
+
+                        </h:panelGrid>  
+                    </p:dialog>
+                    <script type="text/javascript">
+                        function mostrarDialogVisualizar(xhr, status, args) {
+                            if (args.estadoUsuario) {
+                                usuarioDialog.show();
+                            }
+                        }
+
+                        function mostrarDialogDelete(xhr, status, args) {
+                            if (args.estadoUsuario) {
+                                dialogUsuarioDelete.show();
+                            }
+                        }
+                        function mostrarDialogUpdate(xhr, status, args) {
+                            if (args.estadoUsuario) {
+                                dialogUsuarioUpdate.show();
+                            }
+                        }
+                    </script>
+                </h:form>
+
+                <p:dialog id="dlgUsuarioCreate" header="Registrar Usuario" widgetVar="dialogUsuarioCreate" resizable="false"  showEffect="fade" hideEffect="fade" modal="true" style="font-size: small">
+                    <h:form id="frmInsertUsuario">
+                        <h:panelGrid id="pGrid" columns="2" cellspacing="5">
+                            <h:panelGrid id="display1" columns="2" cellspacing="5" >
+                                <p:outputLabel value="Nombre:" />
+                                <p:inputText value="#{mbUsuario.usuario.nombre}" label="Nombre" size="35" disabled="#{mbUsuario.crearSocio}"/>
+                                <p:outputLabel value="Apellido Paterno:" />
+                                <p:inputText value="#{mbUsuario.usuario.apaterno}" label="Apellido Paterno" size="35" disabled="#{mbUsuario.crearSocio}"/>
+                                <p:outputLabel value="Apellido Materno:" />
+                                <p:inputText value="#{mbUsuario.usuario.amaterno}" label="Apellido Materno" size="35" disabled="#{mbUsuario.crearSocio}"/>
+                                <p:outputLabel value="Correo Electrónico:" />
+                                <p:inputText value="#{mbUsuario.usuario.email}" label="Correo Electrónico" validator="validarEmail" size="35" disabled="#{mbUsuario.crearSocio}"/>
+                                <p:outputLabel value="Identificador de Usuario:" />
+                                <p:inputText value="#{mbUsuario.usuario.userid}" size="35" disabled="#{mbUsuario.crearSocio}"/>
+                                <p:outputLabel for="rol" value="Rol: " />
+                                <p:selectOneMenu id="rol" value="#{mbUsuario.usuario.idRol}" disabled="#{mbUsuario.crearSocio}">
+                                    <f:selectItem itemLabel="- Seleccione -" itemValue="0" />
+                                    <f:selectItems value="#{mbUsuario.selectOneItemsRol}" />
+                                    <p:ajax listener="#{mbUsuario.renderRol}" update="opcionRol"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="txtPass" value="Contraseña:" />
+                                <p:password id="txtPass" value="#{mbUsuario.pass}" label="Contraseña" size="35" disabled="#{mbUsuario.crearSocio}"/>
+                                <p:outputLabel for="txtCPass" value="Confirmar Contraseña:" />
+                                <p:password id="txtCPass" value="#{mbUsuario.confirmarPass}" label="Confirmar contraseña" size="35" disabled="#{mbUsuario.crearSocio}"/>
+                                <p:outputLabel />
+                                <p:outputPanel id="opcionRol" >
+                                    <h:panelGrid columns="2" cellpadding="5" cellspacing="5">
+                                        <p:outputLabel id="txtEmp" value="Empresa:" for="emp" rendered="#{mbUsuario.rolSocio}"/>
+                                        <p:selectOneMenu id="emp" value="#{mbUsuario.idEmpresa}" filter="true" rendered="#{mbUsuario.rolSocio}" disabled="#{mbUsuario.crearSocio}">
+                                            <p:ajax listener="#{mbUsuario.onEmpresaChange}" update="sc"/>
+                                            <f:selectItem itemLabel="- Seleccione -" itemValue="0" />
+                                            <f:selectItems value="#{mbUsuario.selectOneItemsEmpresa}" />
+                                        </p:selectOneMenu>
+                                        <p:outputLabel id="txtSc" value="Socio Comercial:" for="sc" rendered="#{mbUsuario.rolSocio}"/>
+                                        <h:panelGrid columns="2" cellspacing="5" rendered="#{mbUsuario.rolSocio}">
+                                            <p:selectOneMenu id="sc" value="#{mbUsuario.usuario.idSocioComercial}" filter="true" rendered="#{mbUsuario.rolSocio}" disabled="#{mbUsuario.crearSocio}">
+                                                <f:selectItem itemLabel="- Seleccione -" itemValue="0" />
+                                                <f:selectItems value="#{mbUsuario.selectOneItemsSocio}" />
+                                            </p:selectOneMenu>
+                                            <p:commandButton id="btnNuevoSocio" actionListener="#{mbUsuario.crearSocioComercial}" icon="ui-icon-plusthick" style="float: right;" rendered="#{mbUsuario.rolSocio}" update=":frmInsertUsuario:pGrid" disabled="#{mbUsuario.crearSocio}"/>
+                                        </h:panelGrid>
+                                        <p:outputLabel rendered="#{mbUsuario.rolEmpresa}"/>
+                                        <p:pickList id="PojoPickList" value="#{mbUsuario.dualListEmpresas}" var="empresa1" effect="fade" showCheckbox="true"
+                                                    itemValue="#{empresa1}" itemLabel="#{empresa1}" filterMatchMode="contains" disabled="#{!mbUsuario.rolEmpresa}" rendered="#{mbUsuario.rolEmpresa}">
+                                            <f:facet name="sourceCaption">Empresas</f:facet>
+                                            <f:facet name="targetCaption">Acceso a</f:facet>
+                                            <p:column>
+                                                <h:outputText value="#{empresa1}" />
+                                            </p:column>
+                                        </p:pickList>
+                                    </h:panelGrid>
+                                </p:outputPanel>
+
+                                <f:facet name="footer">
+                                    <center>
+                                        <h:panelGrid columns="2" cellpadding="5" cellspacing="5">
+                                            <p:commandButton id="btnCreateCancelar" value="Cancelar" icon="ui-icon-close" update=":frmUsuarios:tablaUsuarios, :frmInsertUsuario:display1" oncomplete="dialogUsuarioCreate.hide()" disabled="#{mbUsuario.crearSocio}"/>
+                                            <p:commandButton id="btnCreateAceptar"  value="Guardar" icon="ui-icon-disk" update=":frmUsuarios:tablaUsuarios, :frmInsertUsuario:display1" oncomplete="validaInsertUsuario(xhr, status, args)" actionListener="#{mbUsuario.insertUsuario}" disabled="#{mbUsuario.crearSocio}"/>
+                                        </h:panelGrid>
+                                    </center>
+                                </f:facet>
+                            </h:panelGrid> 
+                            <h:panelGrid id="displayCreate" columns="1" rendered="#{mbUsuario.crearSocio}">
+                                <h:panelGrid columns="1" cellspacing="5">
+                                    <h:panelGrid columns="2" >
+                                        <p:outputLabel for="txtNombre" value="Nombre:" />
+                                        <p:inputText id="txtNombre" label="Nombre" value="#{mbUsuario.socioComercial.nombre}" size="40">
+                                            <f:validator validatorId="validarVacio"/>
+                                        </p:inputText>
+
+                                        <p:outputLabel id="txtEmpresa" value="Empresa:" for="empresa" />
+                                        <h:panelGrid columns="3" >
+                                            <p:selectOneMenu id="empresa" value="#{mbUsuario.idEmpresa}" filter="true">
+                                                <f:selectItem itemLabel="- Seleccione -" itemValue="0" />
+                                                <f:selectItems value="#{mbUsuario.selectOneItemsEmpresa}" />
+                                            </p:selectOneMenu>
+                                            <p:outputLabel for="txtRFC" value="RFC:" />
+                                            <p:inputText id="txtRFC" label="RFC" value="#{mbUsuario.socioComercial.rfc}" size="17" >
+                                                <f:validateLength minimum="12" maximum="13" />
+                                                <f:validator validatorId="validarRfc"/>
+                                            </p:inputText>
+                                        </h:panelGrid>
+
+                                        <p:outputLabel for="txtCalle" value="Calle:" />
+                                        <p:inputText id="txtCalle" label="Calle" value="#{mbUsuario.socioComercial.calle}" size="40">
+                                            <f:validator validatorId="validarVacio"/>
+                                        </p:inputText>
+
+                                        <p:outputLabel for="txtNoExterior" value="No. Ext:" />
+                                        <h:panelGrid columns="3" >
+                                            <p:inputText id="txtNoExterior" label="No. Ext" value="#{mbUsuario.socioComercial.numExterior}" size="14"/>
+                                            <p:outputLabel for="txtNoInterior" value="No. Int:" />
+                                            <p:inputText id="txtNoInterior" label="No. Int" value="#{mbUsuario.socioComercial.numInterior}" size="14" />
+                                        </h:panelGrid>
+
+                                        <p:outputLabel for="txtColonia" value="Colonia:" />
+                                        <p:inputText id="txtColonia" label="Colonia" value="#{mbUsuario.socioComercial.colonia}" size="40"/>
+
+                                        <p:outputLabel for="txtLocalidad" value="Localidad:" />
+                                        <p:inputText id="txtLocalidad" label="Localidad" value="#{mbUsuario.socioComercial.localidad}" size="40"/>
+
+                                        <p:outputLabel for="txtReferencia" value="Referencia:" />
+                                        <p:inputText id="txtReferencia" label="Referencia" value="#{mbUsuario.socioComercial.referencia}" size="40"/>
+
+                                        <p:outputLabel for="txtMunicipio" value="Municipio:" />
+                                        <p:inputText id="txtMunicipio" label="Municipio" value="#{mbUsuario.socioComercial.municipio}" size="40"/>
+
+                                        <p:outputLabel for="txtEstado" value="Estado:" />
+                                        <h:panelGrid columns="4" >
+                                            <p:inputText id="txtEstado" label="Estado" value="#{mbUsuario.socioComercial.estado}" size="16"/>
+
+                                            <p:outputLabel for="txtPais" value="País:" />
+                                            <p:inputText id="txtPais" label="País"  value="#{mbUsuario.socioComercial.pais}" size="15"/>
+                                        </h:panelGrid>
+
+                                        <p:outputLabel for="txtCP" value="CP:" />
+                                        <h:panelGrid columns="3" >
+                                            <p:inputText id="txtCP" label="Código Postal" value="#{mbUsuario.socioComercial.cp}" size="10"/>
+
+                                            <p:outputLabel for="txtGNL" value="Código GNL:" />
+                                            <p:inputText id="txtGNL" label="Código GNL" value="#{mbUsuario.socioComercial.codigogln}" size="15"/>
+                                        </h:panelGrid>
+
+                                        <p:outputLabel for="txtEmail" value="Email:" />
+                                        <p:inputText id="txtEmail" label="Correo Electrónico" value="#{mbUsuario.socioComercial.email}" size="40" validator="validarEmail"/>
+
+                                        <p:outputLabel for="txtTelefono" value="Teléfono:" />
+                                        <h:panelGrid columns="3" >
+                                            <p:inputText id="txtTelefono" label="Teléfono" value="#{mbUsuario.socioComercial.telefono}" size="15"/>
+
+                                            <p:outputLabel for="txtCURP" value="CURP:" />
+                                            <p:inputText id="txtCURP" label="CURP" value="#{mbUsuario.socioComercial.curp}" size="15"/>
+                                        </h:panelGrid>
+
+                                        <p:outputLabel/>
+                                        <h:panelGrid columns="4" cellspacing="5">
+                                            <p:panel style="visibility: hidden"/>
+                                            <p:commandButton id="btnCancelarSocio" value="Cancelar" actionListener="#{mbUsuario.cancelarSocio}" icon="ui-icon-close" styleClass="boton" update=":frmInsertUsuario:pGrid"/>
+                                            <p:panel style="visibility: hidden"/>
+                                            <p:commandButton id="btnGuardarSocio" value="Guardar" actionListener="#{mbUsuario.insertSocioComercial}" icon="ui-icon-disk" styleClass="boton" update=":frmInsertUsuario:pGrid"/>
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+
+
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <script type="text/javascript">
+                    function validaInsertUsuario(xhr, status, args) {
+                        if (!args.validarUsuario) {
+                            dialogUsuarioCreate.jq.effect("shake", {times: 5}, 500);
+                        }
+                        else {
+                            dialogUsuarioCreate.hide();
+                        }
+                    }
+                </script>
+
+                <p:dialog id="dlgUsuarioUpdate" header="Modificar Usuario" widgetVar="dialogUsuarioUpdate" resizable="false" showEffect="fade" hideEffect="fade" modal="true" style="font-size: small">
+                    <h:form id="frmUpdateUsuario">
+                        <h:panelGrid id="displayUpdateUsuario" columns="2" >
+                            <h:outputText value="Nombre: " />
+                            <p:inputText value="#{mbUsuario.usuario.nombre}" label="Nombre" size="35"/>
+                            <h:outputText value="Apellido Paterno: " />
+                            <p:inputText value="#{mbUsuario.usuario.apaterno}" label="Apellido Paterno" size="35"/>
+                            <h:outputText value="Apellido Materno: " />
+                            <p:inputText value="#{mbUsuario.usuario.amaterno}" label="Apellido Materno" size="35"/>
+                            <h:outputText value="Identificador de Usuario: " />
+                            <p:inputText value="#{mbUsuario.usuario.userid}" label="Identificador de Usuario:" readonly="true" size="35"/>
+                            <h:outputText value="Correo Electrónico: " />
+                            <p:inputText value="#{mbUsuario.usuario.email}" label="Email" validator="validarEmail" size="35"/> 
+                            <p:outputLabel for="rol" value="Rol: " />
+                            <p:selectOneMenu id="rol" value="#{mbUsuario.usuario.idRol}" label="Rol">
+                                <f:selectItems value="#{mbUsuario.selectOneItemsRol}" />
+                                <p:ajax listener="#{mbUsuario.renderRol}" update="opcionRol"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="estado" value="Estado: " />
+                            <p:selectOneMenu id="estado" value="#{mbUsuario.usuario.estado}" label="Estado">
+                                <f:selectItem itemLabel="- Seleccione" itemValue="" />
+                                <f:selectItem itemLabel="EXPIRADO" itemValue="EXPIRADO" />
+                                <f:selectItem itemLabel="NUEVO" itemValue="NUEVO" />
+                                <f:selectItem itemLabel="ACTIVO" itemValue="ACTIVO" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="INACTIVO" />
+                                <f:selectItem itemLabel="BLOQUEADO" itemValue="BLOQUEADO" />
+                                <f:selectItem itemLabel="AUTENTICADO" itemValue="AUTENTICADO" />
+                                <f:selectItem itemLabel="BAJA" itemValue="BAJA" />
+                            </p:selectOneMenu>
+                            <p:outputLabel />
+                            <p:outputPanel id="opcionRol" >
+                                <h:panelGrid columns="2" cellpadding="5" cellspacing="5">
+                                    <p:outputLabel id="txtEmp" value="Empresa" for="emp" rendered="#{mbUsuario.rolSocio}"/>
+                                    <p:selectOneMenu id="emp" value="#{mbUsuario.idEmpresa}" filter="true" rendered="#{mbUsuario.rolSocio}">
+                                        <p:ajax listener="#{mbUsuario.onEmpresaChange}" update="sc"/>
+                                        <f:selectItem itemLabel="- Seleccione -" itemValue="0" />
+                                        <f:selectItems value="#{mbUsuario.selectOneItemsEmpresa}" />
+                                    </p:selectOneMenu>
+                                    <p:outputLabel id="txtSc" value="Socio Comercial" for="sc" rendered="#{mbUsuario.rolSocio}"/>
+                                    <p:selectOneMenu id="sc" value="#{mbUsuario.usuario.idSocioComercial}" filter="true" rendered="#{mbUsuario.rolSocio}">
+                                        <f:selectItem itemLabel="- Seleccione -" itemValue="0" />
+                                        <f:selectItems value="#{mbUsuario.selectOneItemsSocio}" />
+                                    </p:selectOneMenu>
+                                    <p:outputLabel rendered="#{mbUsuario.rolEmpresa}"/>
+                                    <p:pickList id="PojoPickList" value="#{mbUsuario.dualListEmpresas}" var="empresa1" effect="fade" showCheckbox="true"
+                                                itemValue="#{empresa1}" itemLabel="#{empresa1}" filterMatchMode="contains" disabled="#{!mbUsuario.rolEmpresa}" rendered="#{mbUsuario.rolEmpresa}">
+                                        <f:facet name="sourceCaption">Empresas</f:facet>
+                                        <f:facet name="targetCaption">Acceso a</f:facet>
+                                        <p:column>
+                                            <h:outputText value="#{empresa1}" />
+                                        </p:column>
+                                    </p:pickList>
+                                </h:panelGrid>
+                            </p:outputPanel>
+                            <p:outputLabel />
+                            <h:panelGrid columns="2" >
+                                <p:selectBooleanCheckbox id="chk" value="#{mbUsuario.chkPass}">
+                                    <p:ajax event="change" process="chk" update="txtNewPass, txtCPass"/>
+                                </p:selectBooleanCheckbox>
+                                <p:outputLabel value="Cambiar contraseña"/>
+                            </h:panelGrid>
+                            <p:outputLabel for="txtNewPass" value="Nueva Contraseña:" />
+                            <p:password id="txtNewPass" value="#{mbUsuario.newPass}" disabled="#{!mbUsuario.chkPass}" label="Nueva Contraseña" size="35"/>
+                            <p:outputLabel for="txtCPass" value="Confirmar Contraseña:" />
+                            <p:password id="txtCPass" value="#{mbUsuario.confirmarPass}" disabled="#{!mbUsuario.chkPass}" label="Confirmar contraseña" size="35"/>
+
+                            <f:facet name="footer">
+                                <center>
+                                    <h:panelGrid columns="2" cellpadding="5" cellspacing="5">
+                                        <p:commandButton id="btnUpdateCancelar" value="Cancelar" icon="ui-icon-close" update=":frmUsuarios:tablaUsuarios" oncomplete="dialogUsuarioUpdate.hide()" />    
+                                        <p:commandButton id="btnUpdateAceptar" value="Guardar" icon="ui-icon-disk" update=":frmUsuarios:tablaUsuarios, :frmUpdateUsuario:displayUpdateUsuario" oncomplete="validaUpdateUsuario(xhr, status, args)" actionListener="#{mbUsuario.updateUsuario}" ajax="false"/>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <script type="text/javascript">
+                    function validaUpdateUsuario(xhr, status, args) {
+                        if (!args.updateUsuario) {
+                            dialogUsuarioUpdate.jq.effect("shake", {times: 5}, 500);
+                        } else {
+                            dialogUsuarioUpdate.hide();
+                        }
+                    }
+                </script>
+
+                <h:form id="frmDeleteUsuario">
+                    <p:confirmDialog id="confirmDialog" message="¿Está seguro que desea eliminar el(los) registro(s) seleccionado(s)?" header="Eliminar Usuario"
+                                     severity="alert" widgetVar="dialogUsuarioDelete" showEffect="fade" hideEffect="fade" closable="false" style="font-size: small">
+                        <center>
+                            <h:panelGrid columns="3" cellspacing="5" >
+                                <p:commandButton id="decline" value="Cancelar" onclick="dialogUsuarioDelete.hide()" icon="ui-icon-close"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="confirm" value="Aceptar" update=":frmUsuarios:tablaUsuarios" oncomplete="dialogUsuarioDelete.hide()" actionListener="#{mbUsuario.deleteUsuario}" icon="ui-icon-check"/>
+                            </h:panelGrid>
+                        </center>
+                    </p:confirmDialog>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,214 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl id="mGeneral" showDetail="true" sticky="false" autoUpdate="true"/>
+                <h:form id="frmEmitidos" >
+                    <p:dataTable id="tablaEmitidos" var="cfdi" value="#{mbCfdisEmitidos.lazyDataCfdis}" rowKey="#{cfdi.idCfdis}" paginator="true" rows="12" lazy="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 styleClass="tabla" emptyMessage="No se han encontrado resultados" style="font-size: x-small">
+                        <f:facet name="header">
+                            <p:outputLabel value="CFDI Emitidos" style="font-size: medium" />
+                            <p:outputPanel rendered="#{mbAcceso.LINK_REPORTE_EMITIDOS}" style="text-align: right">
+                                <h:commandLink title="Reporte EXCEL">
+                                    <p:graphicImage value="/resources/images/Excel.png" width="24" style="text-align: right"/>
+                                    <p:dataExporter type="xls" target="tablaEmitidos" fileName="ReporteCFDIsEmitidos" encoding="UTF-8"/>
+                                </h:commandLink>
+                            </p:outputPanel>
+                        </f:facet>
+                        <p:column id="colFecha" headerText="Fecha" sortBy="#{cfdi.fecha}" filterBy="#{cfdi.fecha}" filterStyle="width: 70px" width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Fecha" />
+                            </f:facet>
+                            <h:outputText value="#{cfdi.fecha}"/>
+                        </p:column>
+                        <p:column id="colSerie" sortBy="#{cfdi.serie}" filterBy="#{cfdi.serie}" filterStyle="width: 50px" width="50">
+                            <f:facet name="header">
+                                <h:outputText value="Serie" />
+                            </f:facet>
+                            <h:outputText value="#{cfdi.serie}"/>
+                        </p:column>
+                        <p:column id="colFolio" sortBy="#{cfdi.folio}" filterBy="#{cfdi.folio}" filterStyle="width: 50px" width="50">
+                            <f:facet name="header">
+                                <h:outputText value="Folio" />
+                            </f:facet>
+                            <h:outputText value="#{cfdi.folio}"/>
+                        </p:column>
+                        <p:column id="colRFCR" headerText="RFC Receptor" sortBy="#{cfdi.rfcReceptor}" filterBy="#{cfdi.rfcReceptor}" filterStyle="width: 80px" width="80">
+                            <f:facet name="header">
+                                <h:outputText value="RFC Receptor" />
+                            </f:facet>
+                            <h:outputText value="#{cfdi.rfcReceptor}"/>
+                        </p:column>
+                        <p:column filterBy="#{cfdi.nombreSocioComercial}">
+                            <f:facet name="header">
+                                <h:outputText value="Socio Comercial" />
+                            </f:facet>
+                            <h:outputText value="#{cfdi.nombreSocioComercial}"/>
+                        </p:column>
+                        <p:column id="colSucursal" headerText="Sucursal" filterBy="#{cfdi.nombreSucursal}" >
+                            <f:facet name="header">
+                                <h:outputText value="Sucursal" />
+                            </f:facet>
+                            <h:outputText value="#{cfdi.nombreSucursal}"/>
+                        </p:column>
+                        <p:column id="colEstado" headerText="Estado" sortBy="#{cfdi.estado}" filterBy="#{cfdi.estado}" filterOptions="#{mbCfdisEmitidos.itemsEstado}" filterStyle="width: 50px" width="50">
+                            <f:facet name="header">
+                                <h:outputText value="Estado" />
+                            </f:facet>
+                            <h:outputText value="#{cfdi.estado}"/>
+                        </p:column>
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton update=":frmEmitidos:dialogView" oncomplete="PF('dialogVer').show()" icon="ui-icon-search" title="Ver">
+                                <f:setPropertyActionListener value="#{cfdi}" target="#{mbCfdisEmitidos.cfdiEmitido}" />
+                            </p:commandButton>
+                        </p:column>
+                        <f:facet name="footer" >
+                            <h:panelGrid columns="1" style="border-style: hidden; text-align: center" >
+                                <p:commandButton id="btnReporte" update=":frmEmitidos" value="Reporte" actionListener="#{mbCfdisEmitidos.obtenerRfcSocios}" oncomplete="PF('dlgReporte').show()" rendered="#{mbAcceso.BTN_REPORTE_EMITIDOS}" icon="ui-icon-arrowthickstop-1-s" styleClass="boton" />
+                            </h:panelGrid>
+                        </f:facet>
+                    </p:dataTable>
+                    <pe:keyFilter for="tablaEmitidos:colFecha" mask="int" preventPaste="fasle"/>
+                    <pe:keyFilter for="tablaEmitidos:colFolio" mask="pint" preventPaste="fasle"/>
+
+                    <p:dialog id="dialogView" header="Detalles CFDI Emitido" widgetVar="dialogVer" modal="true" resizable="false" >
+                        <h:panelGrid id="panelVer" columns="5" cellspacing="5" >
+                            <p:outputLabel value="Sucursal:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.nombreSucursal}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="RFC Receptor:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.rfcReceptor}" />
+
+                            <p:outputLabel value="Socio Comercial:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.nombreSocioComercial}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Serie:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.serie}" />
+
+                            <p:outputLabel value="Folio:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.folio}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Fecha:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.fecha}" />
+
+                            <p:outputLabel value="UUID:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.uuid}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Número Aprobación:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.numeroAprobacion}" />
+
+                            <p:outputLabel value="Año Aprobación:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.anioAprobacion}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Subtotal:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.subtotal}" />
+
+                            <p:outputLabel value="Descuento:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.descuento}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Total:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.total}" />
+
+                            <p:outputLabel value="Tipo de Moneda:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.tipoMoneda}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Tipo de Cambio:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.tipoCambio}" />
+
+                            <p:outputLabel value="IVA:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.iva}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Estado Fiscal:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.estadoFiscal}" />
+
+                            <p:outputLabel value="Estado:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.estado}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Fecha Cancelación:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.fechaCancelacion}" />
+
+                            <p:outputLabel value="Fecha Modificación:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.fechaModificacion}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Estado Impresión:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.estadoImpresion}" />
+
+                            <p:outputLabel value="Pedimento:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.pedimento}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Fecha Pedimento:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.fechaPedimento}" />
+
+                            <p:outputLabel value="Aduana:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.aduana}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Fecha de Generación:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.generationDate}" />
+
+                            <p:outputLabel value="Ticket:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.ticket}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="Estado Contable:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.estadoContable}" />
+
+                            <p:outputLabel value="Fecha Vencimineto:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.fechaVencimiento}" />
+                            <p:panel style="visibility: hidden"/>
+                            <p:outputLabel value="RFC Emisor:" />
+                            <p:outputLabel value="#{mbCfdisEmitidos.cfdiEmitido.rfcEmisor}" />
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="frmReporte">
+                    <p:dialog header="Descargar reporte de CFDIs Emitidos" widgetVar="dlgReporte" modal="true" resizable="false">
+                        <h:panelGrid columns="2" cellspacing="5">
+                            <p:outputLabel for="rep" value="Generar reporte:" />
+                            <p:selectOneRadio id="rep" value="#{mbCfdisEmitidos.reporteTodos}">
+                                <p:ajax event="change" process="rep" update="fechaMin, fechaMax"/>
+                                <f:selectItem itemLabel="Todos" itemValue="true" />
+                                <f:selectItem itemLabel="Filtrar por" itemValue="false" />
+                            </p:selectOneRadio>
+                            <h:outputLabel id="txtSc" value="Socio Comercial:" for="sc"/>
+                            <p:selectOneMenu id="sc" value="#{mbCfdisEmitidos.intIdSocio}" filter="true" disabled="#{mbCfdisEmitidos.reporteTodos}">
+                                <f:selectItem itemLabel="- Seleccione -" itemValue="0" />
+                                <f:selectItems value="#{mbCfdisEmitidos.selectOneItemsSocio}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="fechaMin" value="Desde:" />
+                            <p:calendar id="fechaMin" value="#{mbCfdisEmitidos.fechaMin}" navigator="true" locale="es" disabled="#{mbCfdisEmitidos.reporteTodos}" />
+                            <p:outputLabel for="fechaMax" value="Hasta:" />
+                            <p:calendar id="fechaMax" value="#{mbCfdisEmitidos.fechaMax}" navigator="true" locale="es" disabled="#{mbCfdisEmitidos.reporteTodos}" />
+                            <h:outputLabel />
+                            <h:panelGrid columns="2" cellspacing="5">
+                                <p:commandButton value="Cancelar" onclick="dlgReporte.hide()" icon="ui-icon-close" styleClass="boton" update=":frmEmitidos"/>
+                                <p:commandButton value="Descargar" action="#{mbCfdisEmitidos.descargarReporte}" icon="ui-icon-arrowthickstop-1-s" styleClass="boton" ajax="false"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:dialog> 
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

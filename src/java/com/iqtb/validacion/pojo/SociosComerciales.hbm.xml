@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.SociosComerciales" table="SOCIOS_COMERCIALES" catalog="iqtb" optimistic-lock="version">
+        <id name="idSocioComercial" type="java.lang.Integer">
+            <column name="idSOCIO_COMERCIAL" />
+            <generator class="identity" />
+        </id>
+        <property name="idEmpresa" type="int">
+            <column name="idEMPRESA" not-null="true" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" not-null="true" />
+        </property>
+        <property name="rfc" type="string">
+            <column name="RFC" length="13" not-null="true" />
+        </property>
+        <property name="calle" type="string">
+            <column name="CALLE" not-null="true" />
+        </property>
+        <property name="numExterior" type="string">
+            <column name="NUM_EXTERIOR" />
+        </property>
+        <property name="numInterior" type="string">
+            <column name="NUM_INTERIOR" />
+        </property>
+        <property name="colonia" type="string">
+            <column name="COLONIA" length="65535" />
+        </property>
+        <property name="localidad" type="string">
+            <column name="LOCALIDAD" length="65535" />
+        </property>
+        <property name="referencia" type="string">
+            <column name="REFERENCIA" length="65535" />
+        </property>
+        <property name="municipio" type="string">
+            <column name="MUNICIPIO" />
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" />
+        </property>
+        <property name="pais" type="string">
+            <column name="PAIS" />
+        </property>
+        <property name="cp" type="string">
+            <column name="CP" length="15" />
+        </property>
+        <property name="codigogln" type="string">
+            <column name="CODIGOGLN" length="45" />
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="TELEFONO" />
+        </property>
+        <property name="curp" type="string">
+            <column name="CURP" length="18" />
+        </property>
+        <property name="idClienteXsa" type="java.lang.Integer">
+            <column name="idCLIENTE_XSA" />
+        </property>
+    </class>
+</hibernate-mapping>

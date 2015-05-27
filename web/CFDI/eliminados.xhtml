@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="frmCFDIs" >
+                    <p:growl id="mGeneral" showDetail="true" sticky="false"/>
+                    <p:panel id="panelCFDIs" style="width: 100%; font-size: x-small; background: border-box; border: hidden">
+                        <p:dataTable id="tableCfdis" var="item" value="#{mbCfdisRecibidos.lazyCfdisEliminados}" paginator="true" rows="12" lazy="true"
+                                     paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                                     selection="#{mbCfdisRecibidos.cfdisSeleccionados}" rowKey="#{item.idCfdiRecibido}"
+                                     styleClass="tabla" emptyMessage="No se han encontrado resultados" widgetVar="cfdisTable">
+                            <f:facet name="header">
+                                <p:outputLabel value="CFDI Eliminados/Cancelados" style="font-size: medium" />
+                                <p:outputPanel rendered="#{mbAcceso.LINK_REPORTE_ELIMINADOS || mbAcceso.LINK_REPORTE_ELIMINADOS_SC}" style="text-align: right">
+                                    <h:commandLink title="Reporte de recepción EXCEL">
+                                        <p:graphicImage value="/resources/images/Excel.png" width="24" style="text-align: right"/>
+                                        <p:dataExporter type="xls" target="tableCfdis" fileName="ReporteCFDIsEliminados" encoding="UTF-8"/>
+                                    </h:commandLink>
+                                </p:outputPanel>
+                            </f:facet>
+
+                            <p:column selectionMode="multiple" exportable="false" style="width: 2%"/>
+                            <p:column id="colFecha" sortBy="#{item.fecha}" filterBy="#{item.fecha}" filterStyle="width: 85px" width="85">
+                                <f:facet name="header">
+                                    <h:outputText value="Fecha Emisión" />
+                                </f:facet>
+                                <h:outputText value="#{item.fecha}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.serie}" sortBy="#{item.serie}" filterStyle="width: 50px" width="50">
+                                <f:facet name="header">
+                                    <h:outputText value="Serie" />
+                                </f:facet>
+                                <h:outputText value="#{item.serie != null ? item.serie : 'Sin Serie'}"/>
+                            </p:column>
+                            <p:column id="colFolio" sortBy="#{item.folio}" filterBy="#{item.folio}" filterStyle="width: 50px" width="50">
+                                <f:facet name="header">
+                                    <h:outputText value="Folio" />
+                                </f:facet>
+                                <h:outputText value="#{item.folio != null ? item.folio : 'Sin Folio'}"/>
+                            </p:column>
+                            <p:column id="colFechaR" sortBy="#{item.fechaRecepcion}" filterBy="#{item.fechaRecepcion}" filterStyle="width: 95px" width="95">
+                                <f:facet name="header">
+                                    <h:outputText value="Fecha Recepción" />
+                                </f:facet>
+                                <h:outputText value="#{item.fechaRecepcion}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.rfcSocioComercial}" filterStyle="width: 75px" width="75">
+                                <f:facet name="header">
+                                    <h:outputText value="Socio Comercial" />
+                                </f:facet>
+                                <h:outputText value="#{item.rfcSocioComercial}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.nombreSocioComercial}">
+                                <f:facet name="header">
+                                    <h:outputText value="Socio Comercial" />
+                                </f:facet>
+                                <h:outputText value="#{item.nombreSocioComercial}"/>
+                            </p:column>                       
+                            <p:column filterBy="#{item.estado}" sortBy="#{item.estado}" filterOptions="#{mbCfdisRecibidos.cfdiSelectItems}" filterStyle="width: 50px" width="50">
+                                <f:facet name="header">
+                                    <h:outputText value="Estado" />
+                                </f:facet>
+                                <p:commandLink value="#{item.estado}" actionListener="#{mbCfdisRecibidos.verCFDI}" oncomplete="showDialogVer(xhr, status, args)" update=":frmVerCFDI">
+                                    <f:param name="idCfdi" value="#{item.idCfdiRecibido}" />
+                                </p:commandLink>
+                            </p:column>
+                            <f:facet name="footer" >
+                                <center>
+                                    <h:panelGrid columns="3" style="border-style: hidden; width: 70%; text-align: center" >
+                                        <p:commandButton id="btnRestaurarCFDI" update=":frmCFDIs" actionListener="#{mbCfdisRecibidos.existeSeleccionCFDI}" oncomplete="showDialogRestaurar(xhr, status, args)" icon="ui-icon-circle-check" value="Restaurar" styleClass="boton" rendered="#{mbAcceso.BTN_RESTAURAR_ELIMINADO}"/>
+                                        <p:commandButton id="btnDeleteCFDI" value="Eliminar" actionListener="#{mbCfdisRecibidos.existeSeleccionCFDI}" update=":frmCFDIs" oncomplete="showDialogDelete(xhr, status, args)" icon="ui-icon-trash"  styleClass="boton" rendered="#{mbAcceso.BTN_DELETE_CFDI}">
+                                            <f:param name="nombreParametro" value="eliminarCFDI"/>
+                                        </p:commandButton>
+                                        <p:commandButton id="btnReporte" update=":frmCFDIs" icon="ui-icon-arrowthickstop-1-s" onclick="PF('dlgReporte').show();" value="Reporte" styleClass="boton" rendered="#{mbAcceso.BTN_REPORTE_ELIMINADOS}"/>
+                                        <p:commandButton id="btnReporteSocio" update=":frmCFDIs" icon="ui-icon-arrowthickstop-1-s" onclick="PF('dlgReporteSocio').show();" value="Reporte" styleClass="boton" rendered="#{mbAcceso.BTN_REPORTE_ELIMINADOS_SC}"/>
+                                    </h:panelGrid>
+                                </center>
+                            </f:facet> 
+                        </p:dataTable>
+                        <pe:keyFilter for="tableCfdis:colFecha" mask="int"/>
+                        <pe:keyFilter for="tableCfdis:colFechaR" mask="int"/>
+                        <pe:keyFilter for="tableCfdis:colFolio" mask="pint"/>
+                    </p:panel>
+                </h:form>
+
+                <script type='text/javascript'>
+                    function showDialogDelete(xhr, status, args) {
+                        if (args.estadoCFDI) {
+                            dialogCFDIDelete.show();
+                        }
+                    }
+                    function showDialogRestaurar(xhr, status, args) {
+                        if (args.estadoCFDI) {
+                            dialogCFDIRes.show();
+                        }
+                    }
+                    function showDialogVer(xhr, status, args) {
+                        if (args.estadoCFDI) {
+                            DialogVer.show();
+                        }
+                    }
+                    function validaDescargaReporte(xhr, status, args) {
+                        if (!args.descarga) {
+                            dlgReporte.jq.effect("shake", {times: 5}, 500);
+                        }
+                        else {
+                            dlgReporte.hide();
+                        }
+                    }
+                </script>
+
+                <h:form id="frmVerCFDI">
+                    <p:dialog id="DialogVer" header="Detalles CFDI" widgetVar="DialogVer" showEffect="fade" hideEffect="fade" modal="true" resizable="false" width="600px">
+                        <h:panelGrid columns="2" cellspacing="5" >
+                            <p:outputLabel value="Serie:" />
+                            <p:outputLabel value="#{mbCfdisRecibidos.cfdiRecibido.serie}" />
+                            <p:outputLabel value="Folio:" />
+                            <p:outputLabel value="#{mbCfdisRecibidos.cfdiRecibido.folio}" />
+                            <p:outputLabel value="Fecha:" />
+                            <p:outputLabel value="#{mbCfdisRecibidos.cfdiRecibido.fecha}" />
+                            <p:outputLabel value="Fecha de Recepción:" />
+                            <p:outputLabel value="#{mbCfdisRecibidos.cfdiRecibido.fechaRecepcion}" />
+                            <p:outputLabel value="UUID:" />
+                            <p:outputLabel value="#{mbCfdisRecibidos.cfdiRecibido.uuid}" />
+                            <p:outputLabel value="Monto Total:" />
+                            <p:outputLabel value="#{mbCfdisRecibidos.cfdiRecibido.total}" />
+                            <p:outputLabel value="Estado:" />
+                            <p:outputLabel value="#{mbCfdisRecibidos.cfdiRecibido.estado}" />
+                            <p:outputLabel value="Error:" />
+                            <p:outputLabel value="#{mbCfdisRecibidos.cfdiRecibido.error}" />
+                            <p:outputLabel value="Estado de Notificación:" />
+                            <p:outputLabel value="#{mbCfdisRecibidos.cfdiRecibido.estadoNotificacion}" />
+
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="frmDeleteCFDI">
+                    <p:confirmDialog id="confirmDialog" message="¿Está seguro que desea eliminar el(los) registro(s) seleccionado(s)?" header="Eliminar CFDIs" 
+                                     severity="alert" widgetVar="dialogCFDIDelete"  showEffect="fade" hideEffect="fade" closable="false">
+                        <center>
+                            <h:panelGrid columns="3" cellspacing="5" >
+                                <p:commandButton id="declineDelete" value="Cancelar" onclick="dialogCFDIDelete.hide()" icon="ui-icon-close"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="confirmDelete" value="Aceptar" update=":frmCFDIs:tableCfdis" 
+                                                 oncomplete="dialogCFDIDelete.hide()" action="#{mbCfdisRecibidos.deleteCFDIs}" icon="ui-icon-check" ajax="false"/>
+                            </h:panelGrid>
+                        </center>
+                    </p:confirmDialog>
+                </h:form>
+
+                <h:form id="frmRestaurar">
+                    <p:confirmDialog id="confirmDialogR" message="¿Está seguro que desea restaurar el(los) registro(s) seleccionado(s)?" header="Restaurar CFDIs" 
+                                     severity="alert" widgetVar="dialogCFDIRes"  showEffect="fade" hideEffect="fade" closable="false" >
+                        <center>
+                            <h:panelGrid columns="3" cellspacing="5" >
+                                <p:commandButton id="declineDelete" value="Cancelar" onclick="dialogCFDIRes.hide()" icon="ui-icon-close"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="confirmDelete" value="Aceptar" update=":frmCFDIs:tableCfdis" 
+                                                 oncomplete="dialogCFDIRes.hide()" action="#{mbCfdisRecibidos.restaurar}" icon="ui-icon-check" ajax="false"/>
+                            </h:panelGrid>
+                        </center>
+                    </p:confirmDialog>
+                </h:form>
+
+                <h:form id="frmReporte">
+                    <p:dialog header="Descargar reporte de CFDIs" widgetVar="dlgReporte" modal="true" resizable="false">
+                        <h:panelGrid columns="2" cellspacing="5">
+                            <p:outputLabel for="rep" value="Generar reporte:" />
+                            <p:selectOneRadio id="rep" value="#{mbCfdisRecibidos.reportarTodos}">
+                                <p:ajax event="change" process="rep" update="sc, fechaMin, fechaMax"/>
+                                <f:selectItem itemLabel="Todos" itemValue="true" />
+                                <f:selectItem itemLabel="Filtrar por" itemValue="false" />
+                            </p:selectOneRadio>
+                            <h:outputLabel id="txtSc" value="Socio Comercial" for="sc"/>
+                            <p:selectOneMenu id="sc" value="#{mbCfdisRecibidos.intIdSocio}" filter="true" disabled="#{mbCfdisRecibidos.reportarTodos}">
+                                <f:selectItem itemLabel="- Seleccione -" itemValue="0" />
+                                <f:selectItems value="#{mbCfdisRecibidos.selectOneItemsSocio}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel for="fechaMin" value="Desde:" />
+                            <p:calendar id="fechaMin" value="#{mbCfdisRecibidos.fechaMin}" navigator="true" locale="es" disabled="#{mbCfdisRecibidos.reportarTodos}" />
+                            <p:outputLabel for="fechaMax" value="Hasta:" />
+                            <p:calendar id="fechaMax" value="#{mbCfdisRecibidos.fechaMax}" navigator="true" locale="es" disabled="#{mbCfdisRecibidos.reportarTodos}" />
+                            <h:outputLabel />
+                            <h:panelGrid columns="2" cellspacing="5">
+                                <p:commandButton value="Cancelar" onclick="dlgReporte.hide()" icon="ui-icon-close" styleClass="boton" update=":frmCFDIs"/>
+                                <p:commandButton value="Descargar" action="#{mbCfdisRecibidos.descargarReporteEliminados}" icon="ui-icon-arrowthickstop-1-s" styleClass="boton" ajax="false"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:dialog> 
+                </h:form>
+
+                <h:form id="frmReporteSocio">
+                    <p:dialog header="Descargar reporte de CFDIs" widgetVar="dlgReporteSocio" modal="true" resizable="false">
+                        <h:panelGrid columns="2" cellspacing="5">
+                            <p:outputLabel for="rep" value="Generar reporte:" />
+                            <p:selectOneRadio id="rep" value="#{mbCfdisRecibidos.reportarTodos}">
+                                <p:ajax event="change" process="rep" update="fechaMin, fechaMax"/>
+                                <f:selectItem itemLabel="Todos" itemValue="true" />
+                                <f:selectItem itemLabel="Filtrar por" itemValue="false" />
+                            </p:selectOneRadio>
+                            <p:outputLabel for="fechaMin" value="Desde:" />
+                            <p:calendar id="fechaMin" value="#{mbCfdisRecibidos.fechaMin}" navigator="true" locale="es" disabled="#{mbCfdisRecibidos.reportarTodos}" />
+                            <p:outputLabel for="fechaMax" value="Hasta:" />
+                            <p:calendar id="fechaMax" value="#{mbCfdisRecibidos.fechaMax}" navigator="true" locale="es" disabled="#{mbCfdisRecibidos.reportarTodos}" />
+                            <h:outputLabel />
+                            <h:panelGrid columns="2" cellspacing="5">
+                                <p:commandButton value="Cancelar" onclick="dlgReporteSocio.hide()" icon="ui-icon-close" styleClass="boton" update=":frmCFDIs"/>
+                                <p:commandButton value="Descargar" action="#{mbCfdisRecibidos.descargarReporteEliminadosSocio}" icon="ui-icon-arrowthickstop-1-s" styleClass="boton" ajax="false"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:dialog> 
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl id="mGeneral" showDetail="true" sticky="false" autoUpdate="true"/>
+                <h:form id="frmScript" >
+                    <p:dataTable id="tablaScript" var="script" value="#{mbScript.lazyDataScript}" rowKey="#{script.idScript}" paginator="true" rows="12" lazy="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 styleClass="tabla" emptyMessage="No se han encontrado resultados" style="font-size: x-small">
+                        <f:facet name="header">
+                            <p:outputLabel value="Script" style="font-size: medium" />
+                        </f:facet>
+                        <p:column headerText="Nombre" sortBy="#{script.nombre}" filterBy="#{script.nombre}" >
+                            <h:outputText value="#{script.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Última Ejecución" sortBy="#{script.ultimaFecha}" filterBy="#{script.ultimaFecha}" >
+                            <h:outputText value="#{script.ultimaFecha}"/>
+                        </p:column>
+                        <p:column headerText="Próxima Ejecución" sortBy="#{script.proximaFecha}" filterBy="#{script.proximaFecha}" >
+                            <h:outputText value="#{script.proximaFecha}"/>
+                        </p:column>
+                        <p:column headerText="Estado" sortBy="#{script.habilitado}" filterBy="#{script.habilitado}" filterOptions="#{mbScript.itemsHabilitado}">
+                            <h:outputText value="#{script.habilitado eq true ? 'Habilitado' : 'Deshabilitado'}"/>
+                        </p:column>
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton update=":frmScript:dialogView" actionListener="#{mbScript.verScript}" oncomplete="PF('dialogVer').show()" icon="ui-icon-search" title="Ver">
+                                <f:setPropertyActionListener value="#{script}" target="#{mbScript.script}" />
+                            </p:commandButton>
+                        </p:column>
+                        <f:facet name="footer" >
+                            <h:panelGrid columns="2" style="border-style: hidden; text-align: center" >
+                                <p:commandButton id="btnNuevo" update=":frmScript" value="Nuevo" oncomplete="PF('dialogNuevo').show()" icon="ui-icon-plusthick" styleClass="boton" />
+                                <p:commandButton id="btnModificar" update=":frmScript" value="Reporte" actionListener="#{mbCfdisEmitidos.obtenerRfcSocios}" oncomplete="PF('dlgReporte').show()" icon="ui-icon-arrowthickstop-1-s" styleClass="boton" />
+                            </h:panelGrid>
+                        </f:facet>
+                    </p:dataTable>
+                    <!--                    <pe:keyFilter for="tablaEmitidos:colFecha" mask="int" preventPaste="fasle"/>
+                                        <pe:keyFilter for="tablaEmitidos:colFolio" mask="pint" preventPaste="fasle"/>-->
+
+                    <p:dialog id="dialogView" header="Detalles Script" widgetVar="dialogVer" modal="true" resizable="false" width="600px">
+                        <h:panelGrid id="panelVer" columns="2" cellspacing="5" >
+                            <p:outputLabel value="Nombre:" />
+                            <p:outputLabel value="#{mbScript.script.nombre}" />
+                            <p:outputLabel value="Estado:" />
+                            <p:outputLabel value="#{mbScript.script.habilitado eq true ? 'Habilitado' : 'Deshabilitado'}" />
+                            <p:outputLabel value="Ejecutar:" />
+                            <p:outputLabel value="#{mbScript.script.ejecutar}" />
+                            <p:outputLabel value="Día:" />
+                            <p:outputLabel value="#{mbScript.script.dia}" />
+                            <p:outputLabel value="Hora:" />
+                            <p:outputLabel value="#{mbScript.script.hora}" />
+                            <p:outputLabel value="Minuto:" /> 
+                            <p:outputLabel value="#{mbScript.script.minuto}" />
+                            <p:outputLabel value="Segundo:" />
+                            <p:outputLabel value="#{mbScript.script.segundo}" />
+                            <p:outputLabel value="Última Ejecución:" />
+                            <p:outputLabel value="#{mbScript.script.ultimaFecha}" />
+                            <p:outputLabel value="Próxima Ejecución:" />
+                            <p:outputLabel value="#{mbScript.script.proximaFecha}" />
+                            <p:outputLabel value="Descripción:" />
+                            <p:outputLabel value="#{mbScript.script.descripcion}" />
+                            <p:outputLabel value="Ruta:" />
+                            <p:outputLabel value="#{mbScript.script.ruta}" />
+                        </h:panelGrid>
+                    </p:dialog>
+
+                    <p:dialog id="dialogNew" header="Nuevo Script" widgetVar="dialogNuevo" modal="true" resizable="false" >
+
+                        <h:panelGrid id="panelNuevo" columns="2" style="margin-bottom:10px" cellpadding="5" columnClasses="label, value" >
+                            <h:outputLabel value="Nombre: " />
+                            <p:inputText value="#{mbScript.script.nombre}"/>
+                            <h:outputLabel value="Descripción: " />
+                            <p:inputText value="#{mbScript.script.descripcion}"/>
+
+                            <h:outputLabel for="dia" value="Días: "/>
+                            <p:selectCheckboxMenu id="dia" value="#{mbScript.listaDias}" label="- Seleccione -" panelStyle="width:150px" >
+                                <f:selectItem itemLabel="Lunes" itemValue="1" />
+                                <f:selectItem itemLabel="Martes" itemValue="2" />
+                                <f:selectItem itemLabel="Miercoles" itemValue="3" />
+                                <f:selectItem itemLabel="Jueves" itemValue="4" />
+                                <f:selectItem itemLabel="Viernes" itemValue="5" />
+                                <f:selectItem itemLabel="Sabado" itemValue="6" />
+                                <f:selectItem itemLabel="Domingo" itemValue="0" />
+                            </p:selectCheckboxMenu>
+                            <p:outputLabel for="ejecutar" value="Ejecutar"/>
+                            <p:selectOneRadio id="ejecutar" value="#{mbScript.script.ejecutar}">
+                                <f:selectItem itemLabel="Cada" itemValue="CADA" />
+                                <f:selectItem itemLabel="Cuando" itemValue="CUANDO" />
+                            </p:selectOneRadio>
+
+                            <h:outputLabel value="Hora: " />
+                            <p:inputText value="#{mbScript.script.hora}"/>
+                            <h:outputLabel value="Minuto: " />
+                            <p:inputText value="#{mbScript.script.minuto}"/>
+                            <h:outputLabel value="Segundo: " />
+                            <p:inputText value="#{mbScript.script.segundo}"/>
+
+                            <p:outputLabel />
+                            <p:fileUpload label="Cargar Script" mode="advanced" auto="true" />
+
+                            <p:outputLabel/><p:outputLabel/><p:outputLabel/>
+                            <h:panelGrid columns="4" cellspacing="5">
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnCancelar" value="Cancelar" onclick="PF('dialogNuevo').hide();" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnGuardar" value="Guardar" actionListener="#{mbScript.crearScript}" oncomplete="validaNuevo(xhr, status, args)" icon="ui-icon-disk" styleClass="boton" update="frmScript"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+                <script type="text/javascript">
+                    function validaNuevo(xhr, status, args) {
+                        if (!args.nuevo) {
+                            dialogNuevo.jq.effect("shake", {times: 5}, 500);
+                        }
+                        else {
+                            dialogNuevo.hide();
+                        }
+                    }
+                </script>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

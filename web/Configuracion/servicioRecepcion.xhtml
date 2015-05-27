@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmRe">
+                    <p:panel id="panelRe" header="Servicio de Recepción" style="margin-bottom:20px;font-size: medium">
+                        <h:panelGrid columns="2" style="font-size: small">
+                            <p:outputLabel value="Tiempo de espera entre cada ciclo:" />
+                            <p:outputLabel value="#{mbServicios.teRecepcion.valor} ms" />
+                            <p:outputLabel value="Tiempo de espera para recargar configuración:" />
+                            <p:outputLabel value="#{mbServicios.trcRecepcion.valor} ms" />
+                            <p></p>
+                            <p:outputLabel />
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <p:commandButton id="btnModificarRe" value="Modificar" onclick="PF('dialogModificarRecepcion').show();" update=":frmRe:displayRe" icon="ui-icon-pencil" rendered="#{mbAcceso.CONFIG_SERVICIOS}" styleClass="boton"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:dialog header="Servicio de Recepción" widgetVar="dialogModificarRecepcion" modal="true" resizable="fasle" style="font-size: small">
+                        <h:panelGrid id="displayRe" columns="2">
+                            <p:outputLabel value="Tiempo de espera entre cada ciclo (milisegundos):" />
+                            <p:inputText value="#{mbServicios.teRecepcion.valor}" label="Tiempo de espera entre cada ciclo" validator="validarVacio">
+                                <f:validateLongRange minimum="1000" />
+                            </p:inputText>
+                            <p:outputLabel value="Tiempo de espera para recargar configuración (milisegundos):" />
+                            <p:inputText value="#{mbServicios.trcRecepcion.valor}" label="Tiempo de espera para recargar configuración" validator="validarVacio">
+                                <f:validateLongRange minimum="1000" />
+                            </p:inputText>
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <h:panelGrid columns="4" cellspacing="5">
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnCancelarRe" value="Cancelar" action="#{mbServicios.reloadRecepcion}" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnGuardarRe" value="Guardar" actionListener="#{mbServicios.updateServRecepcion}" oncomplete="validaServRecepcion(xhr, status, args)" update=":frmRe:panelRe, :frmRe:displayRe" icon="ui-icon-disk" styleClass="boton"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <script type="text/javascript">
+                            function validaServRecepcion(xhr, status, args) {
+                                if (!args.servicioRecepcion) {
+                                    dialogModificarRecepcion.jq.effect("shake", {times: 5}, 500);
+                                } else {
+                                    dialogModificarRecepcion.hide();
+                                }
+                            }
+                        </script>
+
+                    </p:dialog>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

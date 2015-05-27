@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.ConfiguracionesServicios" table="CONFIGURACIONES_SERVICIOS" catalog="iqtb" optimistic-lock="version">
+        <id name="idConfiguracionServicio" type="java.lang.Integer">
+            <column name="idCONFIGURACION_SERVICIO" />
+            <generator class="identity" />
+        </id>
+        <property name="idServicio" type="int">
+            <column name="idSERVICIO" not-null="true" />
+        </property>
+        <property name="propiedad" type="string">
+            <column name="PROPIEDAD" length="45" not-null="true" />
+        </property>
+        <property name="valor" type="string">
+            <column name="VALOR" length="512" not-null="true" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="80" not-null="true" />
+        </property>
+        <property name="tipo" type="string">
+            <column name="TIPO" length="8" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

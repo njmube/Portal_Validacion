@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.Opciones" table="OPCIONES" catalog="iqtb" optimistic-lock="version">
+        <id name="idOpcion" type="java.lang.Integer">
+            <column name="idOPCION" />
+            <generator class="identity" />
+        </id>
+        <property name="idPestania" type="int">
+            <column name="idPESTANIA" not-null="true" />
+        </property>
+        <property name="opcion" type="string">
+            <column name="OPCION" length="50" not-null="true" />
+        </property>
+        <property name="href" type="string">
+            <column name="HREF" length="45" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="100" />
+        </property>
+        <property name="tipo" type="string">
+            <column name="TIPO" length="15" />
+        </property>
+    </class>
+</hibernate-mapping>

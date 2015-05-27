@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmSocioC">
+                    <p:panel id="panelConfigSocio" header="#{mbSociosComerciales.userSocio.nombre}" style="font-size: large">
+                        <h:panelGrid id="panelSocio" columns="2" style="font-size: small">
+                            <p:outputLabel value="Nombre:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.nombre}" />
+                            <p:outputLabel value="RFC:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.rfc}" />
+                            <p:outputLabel value="Calle:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.calle}" />
+                            <p:outputLabel value="Número interior:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.numInterior}" />
+                            <p:outputLabel value="Número exterior:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.numExterior}" />
+                            <p:outputLabel value="Colonia:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.colonia}" />
+                            <p:outputLabel value="Localidad:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.localidad}" />
+                            <p:outputLabel value="Referencia:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.referencia}" />
+                            <p:outputLabel value="Municipio / Delegación:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.municipio}" />
+                            <p:outputLabel value="Estado:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.estado}" />
+                            <p:outputLabel value="País:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.pais}" />
+                            <p:outputLabel value="Código Postal:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.cp}" />
+                            <p:outputLabel value="Correo Electrónico:" />
+                            <p:outputLabel value="#{mbSociosComerciales.userSocio.email}"/>
+                            <p></p>
+                            <p:outputLabel/>
+                            <p:outputLabel/>
+                            <p:commandButton id="btnModificarEmpresa" value="Modificar" onclick="PF('dialogModificarSocio').show();" type="button" icon="ui-icon-pencil" styleClass="boton" update="frmSocioC"/>
+                        </h:panelGrid>
+                        <p:dialog header="#{mbSociosComerciales.userSocio.nombre}" widgetVar="dialogModificarSocio" modal="true" resizable="fasle" style="font-size: medium">
+                            <h:panelGrid id="displayUpdate" columns="2" style="font-size: small">
+                                <p:outputLabel for="txtNombre" value="Nombre:" />
+                                <p:inputText id="txtNombre" label="Nombre" value="#{mbSociosComerciales.userSocio.nombre}" size="50">
+                                    <f:validator validatorId="validarVacio"/>
+                                </p:inputText>
+
+                                <p:outputLabel for="txtRFC" value="RFC:" />
+                                <p:inputText id="txtRFC" label="RFC" value="#{mbSociosComerciales.userSocio.rfc}" size="50" readonly="true"/>
+
+                                <p:outputLabel for="txtCalle" value="Calle:" />
+                                <p:inputText id="txtCalle" label="Calle" value="#{mbSociosComerciales.userSocio.calle}" size="50">
+                                    <f:validator validatorId="validarVacio"/>
+                                </p:inputText>
+
+                                <p:outputLabel for="txtNoInterior" value="Número interior:" />
+                                <p:inputText id="txtNoInterior" label="Número Interior" value="#{mbSociosComerciales.userSocio.numInterior}" size="50"/>
+
+                                <p:outputLabel for="txtNoExterior" value="Número exterior:" />
+                                <p:inputText id="txtNoExterior" label="Número Exterior" value="#{mbSociosComerciales.userSocio.numExterior}" size="50"/>
+
+                                <p:outputLabel for="txtColonia" value="Colonia:" />
+                                <p:inputText id="txtColonia" label="Colonia" value="#{mbSociosComerciales.userSocio.colonia}" size="50"/>
+
+                                <p:outputLabel for="txtLocalidad" value="Localidad:" />
+                                <p:inputText id="txtLocalidad" label="Localidad" value="#{mbSociosComerciales.userSocio.localidad}" size="50"/>
+
+                                <p:outputLabel for="txtReferencia" value="Referencia:" />
+                                <p:inputText id="txtReferencia" label="Referencia" value="#{mbSociosComerciales.userSocio.referencia}" size="50"/>
+
+                                <p:outputLabel for="txtMunicipio" value="Municipio / Delegación:" />
+                                <p:inputText id="txtMunicipio" label="Municipio" value="#{mbSociosComerciales.userSocio.municipio}" size="50"/>
+
+                                <p:outputLabel for="txtEstado" value="Estado:" />
+                                <p:inputText id="txtEstado" label="Estado" value="#{mbSociosComerciales.userSocio.estado}" size="50"/>
+
+                                <p:outputLabel for="txtPais" value="País:" />
+                                <p:inputText id="txtPais" label="País"  value="#{mbSociosComerciales.userSocio.pais}" size="50"/>
+
+                                <p:outputLabel for="txtCP" value="Código Postal:" />
+                                <p:inputText id="txtCP" label="Código Postal" value="#{mbSociosComerciales.userSocio.cp}" size="50"/>
+
+                                <p:outputLabel for="txtGNL" value="Código GNL:" />
+                                <p:inputText id="txtGNL" label="Código GNL" value="#{mbSociosComerciales.userSocio.codigogln}" size="50"/>
+
+                                <p:outputLabel for="txtEmail" value="Correo Electrónico:" />
+                                <p:inputText id="txtEmail" label="Correo Electrónico" value="#{mbSociosComerciales.userSocio.email}" size="50" validator="validarEmail"/>
+
+                                <p:outputLabel for="txtTelefono" value="Teléfono:" />
+                                <p:inputText id="txtTelefono" label="Teléfono" value="#{mbSociosComerciales.userSocio.telefono}" size="50"/>
+
+                                <p:outputLabel for="txtCURP" value="CURP:" />
+                                <p:inputText id="txtCURP" label="CURP" value="#{mbSociosComerciales.userSocio.curp}" size="50"/>
+
+                                <p:outputLabel/>
+                                <p:outputLabel/>
+                                <p:outputLabel/>
+                                <h:panelGrid columns="4" cellspacing="5">
+                                    <p:panel style="visibility: hidden"/>
+                                    <p:commandButton id="btnCancelar" value="Cancelar" onclick="dialogModificarSocio.hide()" icon="ui-icon-close" styleClass="boton" update="frmSocioC:panelSocio, frmSocioC:displayUpdate"/>
+                                    <p:panel style="visibility: hidden"/>
+                                    <p:commandButton id="btnGuardar" value="Guardar" actionListener="#{mbSociosComerciales.updateUserSocio}" oncomplete="validaUpdateSocio(xhr, status, args)" icon="ui-icon-disk" styleClass="boton" update=":frmSocioC:panelConfigSocio, frmSocioC:panelSocio, frmSocioC:displayUpdate"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+
+                            <script type="text/javascript">
+                                function validaUpdateSocio(xhr, status, args) {
+                                    if (!args.updateSocio) {
+                                        dialogModificarSocio.jq.effect("shake", {times: 5}, 500);
+                                    }
+                                    else {
+                                        dialogModificarSocio.hide();
+                                    }
+                                }
+                            </script>
+                        </p:dialog>
+                    </p:panel>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>Validación</title>
+        <link rel="stylesheet" href="/Validacion/resources/css/cssLogin.css"/>
+        <link rel="shortcut icon" href="/Validacion/resources/images/favicon.ico" type="image/x-icon"/>
+    </h:head>
+    <h:body>
+
+        <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide()"/>  
+
+        <p:dialog modal="true" widgetVar="statusDialog" showHeader="false"  
+                  draggable="false" closable="false" resizable="false" style="font-size: small">  
+            <center><p:graphicImage value="/resources/images/ajax-loader.gif" />  </center>
+        </p:dialog>
+        <p:growl showDetail="true" autoUpdate="true" life="9000"/>
+
+        <section class="contenedorLogin">
+            <h:form id="frmAcceso" class="formulario">  
+                <h:panelGrid columns="2" cellpadding="1" cellspacing="5">
+                    <p:panel style="border-style: hidden; background: border-box " >
+                        <p:graphicImage value="/resources/images/logo.png" width="80px"/>  
+                    </p:panel>        
+                    <h2>Validación</h2>
+                </h:panelGrid>
+                <p></p>
+                <p><h:inputText pt:placeholder="Usuario" value="#{mbAcceso.user}" /></p>
+                <p><h:inputSecret pt:placeholder="Contraseña" value="#{mbAcceso.pass}" /></p>
+                <section class="seccionBotones">
+                    <p:commandButton id="btn" style="font-size: medium;" value="Ingresar" action="#{mbAcceso.login}" styleClass="btnLogin" update=":frmAcceso, :formSeleccionEmpresas:somEmpresas, :formSeleccionEmpresas:itUsuario" oncomplete="mostrarDialogEmpresas(xhr, status, args)"/>
+                    <br/>
+                    <br/>
+                    <p:commandLink style="font-size: x-small; color: #036fab;" value="¿Olvidó su contraseña?" action="#{mbAcceso.recuperarContrasenia}"/>
+                </section>
+                <p:outputLabel value="Versión 0.2" style="font-size: xx-small; color: #036fab; font-weight: bold"/>
+            </h:form>
+        </section>
+
+        <h:form id="formSeleccionEmpresas">
+            <p:panel style="visibility: hidden">
+                <p:dialog header="Selección de Empresa" widgetVar="dialogSeleccionEmpresa" resizable="false" modal="true" closable="false">
+                    <h:panelGrid columns="2" cellpadding="5" cellspacing="5">
+                        <h:outputText value="Usuario"/>
+                        <p:inputText id="itUsuario" value="#{mbAcceso.usuario.userid}" readonly="true" style="width: 220px"/>
+                        <p:outputLabel value="Empresa"/>
+                        <p:selectOneMenu id="somEmpresas" value="#{mbAcceso.empresaSeleccionada}" label="Empresas" var="emp" style="width: 250px"> 
+                            <f:selectItem itemLabel="Seleccione una empresa" itemValue="vacio" id="clienteVacio"/>  
+                            <f:selectItems value="#{mbAcceso.listaEmpresas}"/>  
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                    <center>
+                        <p:commandButton value="Aceptar" style="height: 35px" action="#{mbAcceso.existeSeleccionEmpresa}" oncomplete="existeSeleccionEmpresa(xhr, status, args)" styleClass="boton"/>
+                    </center>
+                </p:dialog>
+            </p:panel>
+        </h:form>
+
+        <script type="text/javascript">
+            function mostrarDialogEmpresas(xhr, status, args) {
+                if (args.mostarDialog) {
+                    PF('dialogSeleccionEmpresa').show();
+//                    dialogSeleccionEmpresa.show();
+                }
+            }
+            function existeSeleccionEmpresa(xhr, status, args) {
+                if (!args.existeSeleccionEmpresa) {
+                    dialogSeleccionEmpresa.jq.effect("shake", {times: 5}, 500);
+                }
+            }
+        </script>
+
+    </h:body>
+</html>
+

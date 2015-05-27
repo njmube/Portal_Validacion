@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmReportar">
+                    <p:panel id="panelReportar" header="Reportar CFDI Recibidos" style="margin-bottom:20px; font-size: large">
+                        <h:panelGrid columns="2" style="font-size: small">
+                            <p:outputLabel for="confR" value="Reportar: " />
+                            <p:selectOneMenu id="confR" value="#{mbConfiguracionReportar.reportarA.valor}" >
+                                <p:ajax listener="#{mbConfiguracionReportar.onReportarChange}" update="panelReportar" />
+                                <f:selectItem itemValue="" itemLabel="No Reportar"  />
+                                <f:selectItem itemValue="ERP" itemLabel="Reportar a ERP (SAP, Oracle)"/>
+                                <f:selectItem itemValue="ENVIAR_FTP" itemLabel="Enviar archivo de texto a FTP"/>
+                                <f:selectItem itemValue="DISPONIBLE_FTP" itemLabel="Archivo de texto descargable por FTP"/>
+                            </p:selectOneMenu>
+                            <p/>
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:commandButton id="btnCancelar" value="Cancelar" action="#{mbConfiguracionReportar.reloadReportar}" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnGuardar" value="Guardar" actionListener="#{mbConfiguracionReportar.updateConfigReportar}" oncomplete="validaServRetorno(xhr, status, args)" update=":frmReportar:panelReportar" rendered="#{mbAcceso.CONFIGURAR_REPORTAR}" icon="ui-icon-disk" styleClass="boton"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <p:panel style="visibility: hidden"/>
+                        <p:panel id="panelERP" header="Configuración de Retorno ERP" style="margin-bottom:20px; font-size: small" rendered="#{mbConfiguracionReportar.opErp}">
+                            <h:panelGrid id="opERP" columns="2" style="font-size: small">
+                                <p:outputLabel value="IP: " />
+                                <p:outputLabel value="#{mbConfiguracionReportar.ipRetorno.valor}" />
+                                <p:outputLabel value="Puerto: " />
+                                <p:outputLabel value="#{mbConfiguracionReportar.portRetorno.valor}" />
+                                <p:outputLabel value="Service Name: " />
+                                <p:outputLabel value="#{mbConfiguracionReportar.sidNameRetorno.valor}" />
+                                <p:outputLabel value="Usuario: " />
+                                <p:outputLabel value="#{mbConfiguracionReportar.userRetorno.valor}" />
+                                <p:outputLabel value="Tiempo de espera entre cada ciclo: " />
+                                <p:outputLabel value="#{mbConfiguracionReportar.teRetorno.valor} ms" />
+                                <p:outputLabel value="Tiempo de espera para recargar configuración: " />
+                                <p:outputLabel value="#{mbConfiguracionReportar.trcRetorno.valor} ms" />
+                                <p/>
+                                <p:outputLabel />
+                                <p:outputLabel />
+                                <p:commandButton id="btnModificarERP" value="Modificar" onclick="PF('dialogModificarRetorno').show();" update=":frmReportar:displayERP" rendered="#{mbAcceso.CONFIGURAR_REPORTAR}" icon="ui-icon-pencil" styleClass="boton"/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:panel id="panelEnviar" header="Configuración de Envio FTP" style="margin-bottom:20px; font-size: medium" rendered="#{mbConfiguracionReportar.opEnviarFtp}">
+                            <h:panelGrid id="opEnviar" columns="2" style="font-size: small">
+                                <p:outputLabel value="Servidor: " />
+                                <p:outputLabel value="#{mbConfiguracionReportar.hostFtp.valor}" />
+                                <p:outputLabel value="Usuario: " />
+                                <p:outputLabel value="#{mbConfiguracionReportar.userFtp.valor}" />
+                                <p:outputLabel value="Puerto: " />
+                                <p:outputLabel value="#{mbConfiguracionReportar.portFtp.valor}" />
+                                <p:outputLabel value="Directorio: " />
+                                <p:outputLabel value="#{mbConfiguracionReportar.dirFtp.valor}" />
+                                <p/>
+                                <p:outputLabel />
+                                <p:outputLabel />
+                                <p:commandButton id="btnModificarFTP" value="Modificar" onclick="PF('dialogModificarEnvioFTP').show();" rendered="#{mbAcceso.CONFIGURAR_REPORTAR}" icon="ui-icon-pencil" styleClass="boton"/>
+                            </h:panelGrid>
+                        </p:panel>
+
+                    </p:panel>
+                    <p:dialog header="Configuración de Retorno ERP" widgetVar="dialogModificarRetorno" modal="true" resizable="fasle" style="font-size: small" closable="false">
+                        <h:panelGrid id="displayERP" columns="2">
+                            <p:outputLabel value="IP: " />
+                            <p:inputText value="#{mbConfiguracionReportar.ipRetorno.valor}" label="IP Oracle" size="30" />
+                            <p:outputLabel value="Puerto: " />
+                            <p:inputText value="#{mbConfiguracionReportar.portRetorno.valor}" label="Puerto Oracle" size="30" />
+                            <p:outputLabel value="Service name: " />
+                            <p:inputText value="#{mbConfiguracionReportar.sidNameRetorno.valor}" label="Service Name" size="30" />
+                            <p:outputLabel value="Usuario: " />
+                            <p:inputText value="#{mbConfiguracionReportar.userRetorno.valor}" label="Usaurio" size="30" />
+                            <p:outputLabel value="Contraseña: " />
+                            <p:password value="#{mbConfiguracionReportar.pwRetorno}" label="Contraseña" size="30" />
+                            <p:outputLabel value="Tiempo de espera entre cada ciclo (milisegundos): " />
+                            <p:inputText value="#{mbConfiguracionReportar.teRetorno.valor}" label="Tiempo de espera entre cada ciclo" size="30" >
+                                <f:validateLongRange minimum="1000" />
+                            </p:inputText>
+                            <p:outputLabel value="Tiempo de espera para recargar configuración (milisegundos): " />
+                            <p:inputText value="#{mbConfiguracionReportar.trcRetorno.valor}" label="Tiempo de espera para recargar configuración" size="30" >
+                                <f:validateLongRange minimum="1000" />
+                            </p:inputText>
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:commandButton id="btnCancelarGen" value="Cancelar" action="#{mbConfiguracionReportar.reloadReportar}" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnGuardarGen" value="Guardar" actionListener="#{mbConfiguracionReportar.updateConfRetorno}" oncomplete="validaServRetorno(xhr, status, args)" update=":frmReportar:panelReportar, :frmReportar:displayERP" icon="ui-icon-disk" styleClass="boton"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <script type="text/javascript">
+                            function validaServRetorno(xhr, status, args) {
+                                if (!args.servicioRetorno) {
+                                    dialogModificarRetorno.jq.effect("shake", {times: 5}, 500);
+                                } else {
+                                    dialogModificarRetorno.hide();
+                                }
+                            }
+                        </script>
+                    </p:dialog>
+                    <p:dialog header="Configuración de Envío por FTP" widgetVar="dialogModificarEnvioFTP" modal="true" resizable="fasle" style="font-size: small" closable="false">
+                        <h:panelGrid id="displayEnvioFtp" columns="2">
+                            <p:outputLabel value="Servidor: " />
+                            <p:inputText value="#{mbConfiguracionReportar.hostFtp.valor}" label="Servidor" size="30" />
+                            <p:outputLabel value="Usuario: " />
+                            <p:inputText value="#{mbConfiguracionReportar.userFtp.valor}" label="Usuario" size="30" />
+                            <p:outputLabel value="Contraseña: " />
+                            <p:password value="#{mbConfiguracionReportar.pwFtp}" label="Contraseña" size="30" />
+                            <p:outputLabel value="Puerto: " />
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:inputText id="puertoFtp" value="#{mbConfiguracionReportar.portFtp.valor}" label="puerto" size="10" disabled="#{mbConfiguracionReportar.defaultPort}">
+                                    <pe:keyFilter for="puertoFtp" mask="pint"/>
+                                </p:inputText>
+                                <p:selectBooleanCheckbox id="dafaultPort" value="#{mbConfiguracionReportar.defaultPort}" >
+                                    <p:ajax event="change" process="dafaultPort" update="puertoFtp"/>
+                                </p:selectBooleanCheckbox>
+                                <h:outputText value="Usar Puerto default" />
+                            </h:panelGrid>
+                            <p:outputLabel value="Directorio: " />
+                            <p:inputText value="#{mbConfiguracionReportar.dirFtp.valor}" label="Directorio" size="30" />
+                            <p></p>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <h:panelGrid columns="3" cellspacing="5">
+                                <p:commandButton id="btnCancelarEnvio" value="Cancelar" action="#{mbConfiguracionReportar.reloadReportar}" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden"/>
+                                <p:commandButton id="btnGuardarEnvio" value="Guardar" actionListener="#{mbConfiguracionReportar.updateConfigEnvioFTP}" oncomplete="validaConfEnvioFTP(xhr, status, args)" update=":frmReportar:panelReportar, :frmReportar:displayEnvioFtp" icon="ui-icon-disk" styleClass="boton"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <script type="text/javascript">
+                            function validaConfEnvioFTP(xhr, status, args) {
+                                if (!args.envioFtp) {
+                                    dialogModificarEnvioFTP.jq.effect("shake", {times: 5}, 500);
+                                } else {
+                                    dialogModificarEnvioFTP.hide();
+                                }
+                            }
+                        </script>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

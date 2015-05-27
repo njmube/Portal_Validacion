@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.Usuarios" table="USUARIOS" catalog="iqtb" optimistic-lock="version">
+        <id name="idUsuario" type="java.lang.Integer">
+            <column name="idUSUARIO" />
+            <generator class="identity" />
+        </id>
+        <property name="idSocioComercial" type="java.lang.Integer">
+            <column name="idSOCIO_COMERCIAL" />
+        </property>
+        <property name="idRol" type="int">
+            <column name="idROL" not-null="true" />
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL" not-null="true" unique="true" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="NOMBRE" not-null="true" />
+        </property>
+        <property name="apaterno" type="string">
+            <column name="APATERNO" not-null="true" />
+        </property>
+        <property name="amaterno" type="string">
+            <column name="AMATERNO" />
+        </property>
+        <property name="passkey" type="string">
+            <column name="PASSKEY" not-null="true" />
+        </property>
+        <property name="salt" type="string">
+            <column name="SALT" length="50" not-null="true" />
+        </property>
+        <property name="dateExpirationPass" type="timestamp">
+            <column name="DATE_EXPIRATION_PASS" length="19" not-null="true" />
+        </property>
+        <property name="lastAction" type="timestamp">
+            <column name="LAST_ACTION" length="19" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="ESTADO" length="11" not-null="true" />
+        </property>
+        <property name="userid" type="string">
+            <column name="USERID" length="45" not-null="true" unique="true" />
+        </property>
+        <property name="fechaAlta" type="timestamp">
+            <column name="FECHA_ALTA" length="19" not-null="true" />
+        </property>
+        <property name="intentosFallidos" type="int">
+            <column name="INTENTOS_FALLIDOS" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

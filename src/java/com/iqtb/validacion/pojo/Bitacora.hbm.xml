@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.Bitacora" table="BITACORA" catalog="iqtb" optimistic-lock="version">
+        <id name="idBitacora" type="java.lang.Integer">
+            <column name="idBITACORA" />
+            <generator class="identity" />
+        </id>
+        <property name="idUsuario" type="java.lang.Integer">
+            <column name="idUSUARIO" />
+        </property>
+        <property name="idServicio" type="java.lang.Integer">
+            <column name="idSERVICIO" />
+        </property>
+        <property name="idEmpresa" type="java.lang.Integer">
+            <column name="idEMPRESA" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="DESCRIPCION" length="1000" not-null="true" />
+        </property>
+        <property name="fecha" type="timestamp">
+            <column name="FECHA" length="19" not-null="true" />
+        </property>
+        <property name="tipo" type="string">
+            <column name="TIPO" length="7" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

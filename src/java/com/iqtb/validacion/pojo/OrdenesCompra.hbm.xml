@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.OrdenesCompra" table="ORDENES_COMPRA" catalog="iqtb" optimistic-lock="version">
+        <id name="idOrdenCompra" type="java.lang.Integer">
+            <column name="idORDEN_COMPRA" />
+            <generator class="identity" />
+        </id>
+        <property name="idEmpresa" type="int">
+            <column name="idEMPRESA" not-null="true" />
+        </property>
+        <property name="idSocioComercial" type="java.lang.Integer">
+            <column name="idSOCIO_COMERCIAL" />
+        </property>
+        <property name="numeroOc" type="string">
+            <column name="NUMERO_OC" length="100" not-null="true" />
+        </property>
+        <property name="total" type="big_decimal">
+            <column name="TOTAL" precision="16" scale="6" not-null="true" />
+        </property>
+        <property name="tipoMoneda" type="string">
+            <column name="TIPO_MONEDA" length="3" />
+        </property>
+        <property name="tipoCambio" type="big_decimal">
+            <column name="TIPO_CAMBIO" precision="16" scale="6" />
+        </property>
+        <property name="rfcVendedor" type="string">
+            <column name="RFC_VENDEDOR" length="13" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

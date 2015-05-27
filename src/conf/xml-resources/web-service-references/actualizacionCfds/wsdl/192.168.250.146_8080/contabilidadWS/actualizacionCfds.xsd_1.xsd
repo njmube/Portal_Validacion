@@ -1,0 +1,326 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2-hudson-740-. --><xs:schema xmlns:tns="http://ws.iqtb.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws.iqtb.com/">
+
+<xs:element name="AgregarCliente" type="tns:AgregarCliente" />
+
+<xs:element name="AgregarClienteResponse" type="tns:AgregarClienteResponse" />
+
+<xs:element name="ObtenerNombreEmpresa" type="tns:ObtenerNombreEmpresa" />
+
+<xs:element name="ObtenerNombreEmpresaResponse" type="tns:ObtenerNombreEmpresaResponse" />
+
+<xs:element name="agregarCfdiValido" type="tns:agregarCfdiValido" />
+
+<xs:element name="agregarCfdiValidoResponse" type="tns:agregarCfdiValidoResponse" />
+
+<xs:element name="obtenerCancelados" type="tns:obtenerCancelados" />
+
+<xs:element name="obtenerCanceladosResponse" type="tns:obtenerCanceladosResponse" />
+
+<xs:element name="obtenerCfds" type="tns:obtenerCfds" />
+
+<xs:element name="obtenerCfdsResponse" type="tns:obtenerCfdsResponse" />
+
+<xs:element name="obtenerCliente" type="tns:obtenerCliente" />
+
+<xs:element name="obtenerClienteResponse" type="tns:obtenerClienteResponse" />
+
+<xs:element name="obtenerListaCfds" type="tns:obtenerListaCfds" />
+
+<xs:element name="obtenerListaCfdsResponse" type="tns:obtenerListaCfdsResponse" />
+
+<xs:element name="obtenerSucursal" type="tns:obtenerSucursal" />
+
+<xs:element name="obtenerSucursalResponse" type="tns:obtenerSucursalResponse" />
+
+<xs:element name="verificarConexion" type="tns:verificarConexion" />
+
+<xs:element name="verificarConexionResponse" type="tns:verificarConexionResponse" />
+
+<xs:complexType name="obtenerSucursal">
+<xs:sequence>
+<xs:element name="idSucursal" type="xs:int" minOccurs="0" />
+<xs:element name="key" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obtenerSucursalResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:sucursales" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="sucursales">
+<xs:sequence>
+<xs:element name="calle" type="xs:string" minOccurs="0" />
+<xs:element name="claveSucursal" type="xs:string" minOccurs="0" />
+<xs:element name="codigogln" type="xs:string" minOccurs="0" />
+<xs:element name="colonia" type="xs:string" minOccurs="0" />
+<xs:element name="cp" type="xs:string" minOccurs="0" />
+<xs:element name="email" type="xs:string" minOccurs="0" />
+<xs:element name="esFrontera" type="xs:boolean" />
+<xs:element name="estado" type="xs:string" minOccurs="0" />
+<xs:element name="extras" type="xs:string" minOccurs="0" />
+<xs:element name="idCertificado" type="xs:int" minOccurs="0" />
+<xs:element name="idEmpresa" type="xs:int" />
+<xs:element name="idSucursal" type="xs:int" minOccurs="0" />
+<xs:element name="localidad" type="xs:string" minOccurs="0" />
+<xs:element name="lugarExpedicion" type="xs:string" minOccurs="0" />
+<xs:element name="municipio" type="xs:string" minOccurs="0" />
+<xs:element name="nombre" type="xs:string" minOccurs="0" />
+<xs:element name="numExterior" type="xs:string" minOccurs="0" />
+<xs:element name="numInterior" type="xs:string" minOccurs="0" />
+<xs:element name="pais" type="xs:string" minOccurs="0" />
+<xs:element name="printWhenSend" type="xs:boolean" minOccurs="0" />
+<xs:element name="referencia" type="xs:string" minOccurs="0" />
+<xs:element name="telefono" type="xs:string" minOccurs="0" />
+<xs:element name="tiposucursal" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obtenerListaCfds">
+<xs:sequence>
+<xs:element name="RFC" type="xs:string" minOccurs="0" />
+<xs:element name="Fecha" type="xs:string" minOccurs="0" />
+<xs:element name="idCFD" type="xs:int" minOccurs="0" />
+<xs:element name="key" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obtenerListaCfdsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:cfdsRetorno" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="cfdsRetorno">
+<xs:sequence>
+<xs:element name="aduana" type="xs:string" minOccurs="0" />
+<xs:element name="anioAprobacion" type="xs:int" minOccurs="0" />
+<xs:element name="cadenaOriginal" type="xs:string" minOccurs="0" />
+<xs:element name="clientes" type="tns:clientes" minOccurs="0" />
+<xs:element name="descuento" type="xs:decimal" minOccurs="0" />
+<xs:element name="estado" type="xs:string" minOccurs="0" />
+<xs:element name="estadoContable" type="xs:string" minOccurs="0" />
+<xs:element name="estadoFiscal" type="xs:string" minOccurs="0" />
+<xs:element name="estadoImpresion" type="xs:string" minOccurs="0" />
+<xs:element name="fecha" type="xs:dateTime" minOccurs="0" />
+<xs:element name="fechaCancelacion" type="xs:dateTime" minOccurs="0" />
+<xs:element name="fechaModificacion" type="xs:dateTime" minOccurs="0" />
+<xs:element name="fechaPedimento" type="xs:string" minOccurs="0" />
+<xs:element name="fechaVencimiento" type="xs:dateTime" minOccurs="0" />
+<xs:element name="folio" type="xs:long" minOccurs="0" />
+<xs:element name="generationDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="idCfd" type="xs:int" minOccurs="0" />
+<xs:element name="idConfiguracion" type="xs:int" minOccurs="0" />
+<xs:element name="idDireccion" type="xs:int" minOccurs="0" />
+<xs:element name="idPlantilla" type="xs:int" minOccurs="0" />
+<xs:element name="iva" type="xs:decimal" minOccurs="0" />
+<xs:element name="numeroAprobacion" type="xs:long" minOccurs="0" />
+<xs:element name="pedimento" type="xs:string" minOccurs="0" />
+<xs:element name="rfcEmisor" type="xs:string" minOccurs="0" />
+<xs:element name="rfcReceptor" type="xs:string" minOccurs="0" />
+<xs:element name="serie" type="xs:string" minOccurs="0" />
+<xs:element name="subtotal" type="xs:decimal" minOccurs="0" />
+<xs:element name="sucursal" type="tns:sucursales" minOccurs="0" />
+<xs:element name="ticket" type="xs:string" minOccurs="0" />
+<xs:element name="tienePdf" type="xs:boolean" minOccurs="0" />
+<xs:element name="tipoCambio" type="xs:decimal" minOccurs="0" />
+<xs:element name="tipoCfd" type="xs:string" minOccurs="0" />
+<xs:element name="tipoMoneda" type="xs:string" minOccurs="0" />
+<xs:element name="total" type="xs:decimal" minOccurs="0" />
+<xs:element name="uuid" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="clientes">
+<xs:sequence>
+<xs:element name="alias" type="xs:string" minOccurs="0" />
+<xs:element name="calle" type="xs:string" minOccurs="0" />
+<xs:element name="codigogln" type="xs:string" minOccurs="0" />
+<xs:element name="colonia" type="xs:string" minOccurs="0" />
+<xs:element name="condicionesPago" type="xs:string" minOccurs="0" />
+<xs:element name="contacto" type="xs:string" minOccurs="0" />
+<xs:element name="cp" type="xs:string" minOccurs="0" />
+<xs:element name="emailContacto" type="xs:string" minOccurs="0" />
+<xs:element name="esFrontera" type="xs:byte" minOccurs="0" />
+<xs:element name="estado" type="xs:string" minOccurs="0" />
+<xs:element name="idCliente" type="xs:int" minOccurs="0" />
+<xs:element name="idEmpresa" type="xs:int" />
+<xs:element name="identificador" type="xs:string" minOccurs="0" />
+<xs:element name="localidad" type="xs:string" minOccurs="0" />
+<xs:element name="modoEnvio" type="xs:string" minOccurs="0" />
+<xs:element name="municipio" type="xs:string" minOccurs="0" />
+<xs:element name="nombre" type="xs:string" minOccurs="0" />
+<xs:element name="numExterior" type="xs:string" minOccurs="0" />
+<xs:element name="numInterior" type="xs:string" minOccurs="0" />
+<xs:element name="pais" type="xs:string" minOccurs="0" />
+<xs:element name="referencia" type="xs:string" minOccurs="0" />
+<xs:element name="requiereAddenda" type="xs:boolean" minOccurs="0" />
+<xs:element name="requiereAperak" type="xs:boolean" minOccurs="0" />
+<xs:element name="requiereContrl" type="xs:boolean" minOccurs="0" />
+<xs:element name="requiereEdifact" type="xs:boolean" minOccurs="0" />
+<xs:element name="rfc" type="xs:string" minOccurs="0" />
+<xs:element name="telefono" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obtenerCfds">
+<xs:sequence>
+<xs:element name="rfc" type="xs:string" minOccurs="0" />
+<xs:element name="fecha" type="xs:dateTime" minOccurs="0" />
+<xs:element name="key" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obtenerCfdsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:cfds" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="cfds">
+<xs:sequence>
+<xs:element name="aduana" type="xs:string" minOccurs="0" />
+<xs:element name="anioAprobacion" type="xs:int" minOccurs="0" />
+<xs:element name="cadenaOriginal" type="xs:string" minOccurs="0" />
+<xs:element name="descuento" type="xs:decimal" minOccurs="0" />
+<xs:element name="estado" type="xs:string" minOccurs="0" />
+<xs:element name="estadoContable" type="xs:string" minOccurs="0" />
+<xs:element name="estadoFiscal" type="xs:string" minOccurs="0" />
+<xs:element name="estadoImpresion" type="xs:string" minOccurs="0" />
+<xs:element name="fecha" type="xs:dateTime" minOccurs="0" />
+<xs:element name="fechaCancelacion" type="xs:dateTime" minOccurs="0" />
+<xs:element name="fechaModificacion" type="xs:dateTime" minOccurs="0" />
+<xs:element name="fechaPedimento" type="xs:string" minOccurs="0" />
+<xs:element name="fechaVencimiento" type="xs:dateTime" minOccurs="0" />
+<xs:element name="folio" type="xs:long" minOccurs="0" />
+<xs:element name="generationDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="idArchivoSincronizacion" type="xs:int" minOccurs="0" />
+<xs:element name="idCfd" type="xs:int" minOccurs="0" />
+<xs:element name="idCliente" type="xs:int" />
+<xs:element name="idConfiguracion" type="xs:int" minOccurs="0" />
+<xs:element name="idDireccion" type="xs:int" minOccurs="0" />
+<xs:element name="idPlantilla" type="xs:int" minOccurs="0" />
+<xs:element name="idSucursal" type="xs:int" />
+<xs:element name="idTipocfd" type="xs:int" />
+<xs:element name="imprimirEn" type="xs:int" minOccurs="0" />
+<xs:element name="iva" type="xs:decimal" minOccurs="0" />
+<xs:element name="numeroAprobacion" type="xs:long" minOccurs="0" />
+<xs:element name="pedimento" type="xs:string" minOccurs="0" />
+<xs:element name="rfcEmisor" type="xs:string" minOccurs="0" />
+<xs:element name="rfcReceptor" type="xs:string" minOccurs="0" />
+<xs:element name="serie" type="xs:string" minOccurs="0" />
+<xs:element name="subtotal" type="xs:decimal" minOccurs="0" />
+<xs:element name="ticket" type="xs:string" minOccurs="0" />
+<xs:element name="tienePdf" type="xs:boolean" minOccurs="0" />
+<xs:element name="tipoCambio" type="xs:decimal" minOccurs="0" />
+<xs:element name="tipoCfd" type="xs:string" minOccurs="0" />
+<xs:element name="tipoMoneda" type="xs:string" minOccurs="0" />
+<xs:element name="total" type="xs:decimal" minOccurs="0" />
+<xs:element name="uuid" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obtenerCliente">
+<xs:sequence>
+<xs:element name="idCliente" type="xs:int" minOccurs="0" />
+<xs:element name="key" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obtenerClienteResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:clientes" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verificarConexion">
+<xs:sequence>
+<xs:element name="key_servidor" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="verificarConexionResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obtenerCancelados">
+<xs:sequence>
+<xs:element name="rfc" type="xs:string" minOccurs="0" />
+<xs:element name="fecha" type="xs:string" minOccurs="0" />
+<xs:element name="idCfd" type="xs:int" minOccurs="0" />
+<xs:element name="key" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="obtenerCanceladosResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:cfds" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="agregarCfdiValido">
+<xs:sequence>
+<xs:element name="ObjCfdi" type="tns:objCfdiRecibir" minOccurs="0" />
+<xs:element name="key" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="objCfdiRecibir">
+<xs:sequence>
+<xs:element name="cadenaOriginal" type="xs:string" minOccurs="0" />
+<xs:element name="email" type="xs:string" minOccurs="0" />
+<xs:element name="encoding" type="xs:string" minOccurs="0" />
+<xs:element name="error" type="xs:string" minOccurs="0" />
+<xs:element name="estado" type="xs:string" minOccurs="0" />
+<xs:element name="estadoContable" type="xs:string" minOccurs="0" />
+<xs:element name="estadoFiscal" type="xs:string" minOccurs="0" />
+<xs:element name="existError" type="xs:boolean" minOccurs="0" />
+<xs:element name="fecha" type="xs:dateTime" minOccurs="0" />
+<xs:element name="fechaRecepcion" type="xs:dateTime" minOccurs="0" />
+<xs:element name="folio" type="xs:long" minOccurs="0" />
+<xs:element name="idCfdrecibido" type="xs:int" minOccurs="0" />
+<xs:element name="RFCCliente" type="xs:string" minOccurs="0" />
+<xs:element name="RFCEmpresa" type="xs:string" minOccurs="0" />
+<xs:element name="reportado" type="xs:string" minOccurs="0" />
+<xs:element name="serie" type="xs:string" minOccurs="0" />
+<xs:element name="total" type="xs:decimal" minOccurs="0" />
+<xs:element name="uuid" type="xs:string" minOccurs="0" />
+<xs:element name="xmlSat" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="agregarCfdiValidoResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:anyType" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ObtenerNombreEmpresa">
+<xs:sequence>
+<xs:element name="idEmpresa" type="xs:int" />
+<xs:element name="key" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ObtenerNombreEmpresaResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AgregarCliente">
+<xs:sequence>
+<xs:element name="Cliente" type="tns:clientes" minOccurs="0" />
+<xs:element name="key" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AgregarClienteResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

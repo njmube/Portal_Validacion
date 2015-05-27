@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide()"/>  
+
+                <p:dialog modal="true" widgetVar="statusDialog" showHeader="false"  
+                          draggable="false" closable="false" resizable="false" style="font-size: small">  
+                    <p:graphicImage value="/resources/images/ajax-loader.gif" /> 
+                </p:dialog>
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmSMTP">
+                    <p:panel id="panelSMTP" header="Configuración SMTP" style="margin-bottom:20px; font-size: large">
+                        <h:panelGrid columns="2" cellpadding="10" style="font-size: small">
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Email De:" />
+                                <p:outputLabel value="#{mbServicios.emailSMTP.valor}" />
+                                <p:outputLabel value="Nombre:" />
+                                <p:outputLabel value="#{mbServicios.nombreSMTP.valor}" />
+                                <p:outputLabel value="Puerto:" />
+                                <p:outputLabel value="#{mbServicios.portSMTP.valor}" />
+                                <p:outputLabel value="Servidor:" />
+                                <p:outputLabel value="#{mbServicios.hostSMTP.valor}" />
+                                <p:outputLabel value="Usa TLS:" />
+                                <p:outputLabel value="#{mbServicios.sslSMTP.valor ? 'Sí' : 'No'}" />
+                                <p:outputLabel value="Usuario:" />
+                                <p:outputLabel value="#{mbServicios.userSMTP.valor}" />
+                                <p></p>
+                                <p:outputLabel/>
+                                <p:outputLabel/>
+                                <p:commandButton id="btnModificarSMTP" value="Modificar" oncomplete="PF('dialogModificarSMTP').show();" actionListener="#{mbServicios.cancelarSMTP}" update="frmSMTP:displaySMTP" icon="ui-icon-pencil" styleClass="boton" rendered="#{mbAcceso.CONFIG_SERVICIOS}"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <p:dialog header="Servidor de Envío de Correos Electrónicos" widgetVar="dialogModificarSMTP" modal="true" resizable="fasle" >
+                        <h:panelGrid id="displaySMTP" columns="2" >
+                            <p:outputLabel value="Servidor:" />
+                            <p:inputText value="#{mbServicios.hostSMTP.valor}" label="Servidor" size="40" validator="validarVacio" disabled="#{mbServicios.connectSMTP}"/>
+                            <p:outputLabel value="Puerto:" />
+                            <p:inputText value="#{mbServicios.portSMTP.valor}" label="Puerto" size="40" validator="validarVacio" disabled="#{mbServicios.connectSMTP}"/>
+                            <p:outputLabel value="Nombre:" />
+                            <p:inputText value="#{mbServicios.nombreSMTP.valor}" size="40" disabled="#{mbServicios.connectSMTP}"/>
+                            <p:outputLabel value="De:" />
+                            <p:inputText value="#{mbServicios.emailSMTP.valor}" label="De" size="40" disabled="#{mbServicios.connectSMTP}"/>
+                            <p:outputLabel value="Usuario:" />
+                            <p:inputText value="#{mbServicios.userSMTP.valor}" size="40" disabled="#{mbServicios.connectSMTP}"/>
+                            <p:outputLabel value="Contraseña:" />
+                            <p:password value="#{mbServicios.passSMTP.valor}" size="40" disabled="#{mbServicios.connectSMTP}"/>
+                            <p:outputLabel value="Enviar código a:" />
+                            <p:inputText value="#{mbServicios.codigoEmail}" label="Enviar código a" size="40" validator="validarEmail" disabled="#{mbServicios.connectSMTP}"/>
+                            <p:outputLabel />
+                            <h:panelGrid columns="2" cellspacing="10">
+                                <p:selectBooleanCheckbox value="#{mbServicios.sslSMTP.valor}" disabled="#{mbServicios.connectSMTP}"/>
+                                <p:outputLabel value="Usar SSL" />
+                            </h:panelGrid>
+                            <p:outputLabel value="Código:" rendered="#{mbServicios.connectSMTP}"/>
+                            <p:inputText value="#{mbServicios.hashSMTP}" size="60" rendered="#{mbServicios.connectSMTP}"/>
+                            <p:outputLabel />
+                            <p:outputLabel />
+                            <p/>
+                            <h:panelGrid columns="6" cellspacing="5">
+                                <p:panel style="visibility: hidden" />
+                                <p:commandButton id="btnCancelarSMTP" value="Cancelar" action="#{mbServicios.reloadSMTP}" update=":frmSMTP:displaySMTP" icon="ui-icon-close" styleClass="boton"/>
+                                <p:panel style="visibility: hidden" rendered="#{!mbServicios.connectSMTP}"/>
+                                <p:commandButton id="btnProbarConexion" value="Probar Conexión" actionListener="#{mbServicios.conexionSMTP}" icon="ui-icon-transferthick-e-w" styleClass="boton" update=":frmSMTP:displaySMTP" rendered="#{!mbServicios.connectSMTP}"/>
+                                <p:panel style="visibility: hidden" rendered="#{mbServicios.connectSMTP}"/>
+                                <p:commandButton id="btnCancelarHash" value="Nueva Conexión" actionListener="#{mbServicios.cancelarSMTP}" update=":frmSMTP:displaySMTP" icon="ui-icon-circle-plus" styleClass="boton" rendered="#{mbServicios.connectSMTP}"/>
+                                <p:panel style="visibility: hidden" rendered="#{mbServicios.connectSMTP}"/>
+                                <p:commandButton id="btnGuardarHash" value="Guardar" actionListener="#{mbServicios.updateSMTP}" oncomplete="validaGuardarSMTP(xhr, status, args)" update="frmSMTP:panelSMTP, frmSMTP:displaySMTP" icon="ui-icon-disk" styleClass="boton" rendered="#{mbServicios.connectSMTP}"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <script type="text/javascript">
+                            function validaGuardarSMTP(xhr, status, args) {
+                                if (args.smtp) {
+                                    dialogModificarSMTP.hide();
+                                } else {
+                                    dialogModificarSMTP.jq.effect("shake", {times: 5}, 500);
+                                }
+                            }
+                        </script>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

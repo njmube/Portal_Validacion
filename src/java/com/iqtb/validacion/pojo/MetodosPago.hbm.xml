@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-mar-2015 19:22:02 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="com.iqtb.validacion.pojo.MetodosPago" table="METODOS_PAGO" catalog="iqtb" optimistic-lock="version">
+        <id name="idMetodosPago" type="java.lang.Integer">
+            <column name="idMETODOS_PAGO" />
+            <generator class="identity" />
+        </id>
+        <property name="idCfdiRecibido" type="int">
+            <column name="idCFDI_RECIBIDO" not-null="true" />
+        </property>
+        <property name="tipo" type="string">
+            <column name="TIPO" length="14" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../Templates/general.xhtml">
+
+            <ui:define name="top">
+            </ui:define>
+
+            <ui:define name="left">
+            </ui:define>
+
+            <ui:define name="right">
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true" autoUpdate="true" sticky="false"/>
+
+                <h:form id="frmConfigFTP">
+                    <p:panel header="Usuario FTP" style="font-size: large">
+                        <p:panel style="font-size: small; border: hidden">
+                            <h:panelGrid columns="2" cellspacing="5">
+                                <h:outputLabel value="Usuario: " />
+                                <h:outputLabel value="#{mbConfiguracionFTP.valUser.valor}" />
+                                <h:outputLabel />
+                                <h:panelGrid columns="2" rendered="#{mbAcceso.CONFIGURAR_FTP}">
+                                    <p:commandButton value="Agregar" onclick="PF('dialogValidacion').show();" update=":frmValidacion:displayValidacion" icon="ui-icon-person" styleClass="boton" disabled="#{mbConfiguracionFTP.valUser.valor ne '' ? 'true':'false'}"/>
+                                    <p:commandButton value="Eliminar" onclick="PF('dialogDelValidacion').show();" update=":frmValidacion:displayValidacion" icon="ui-icon-trash" styleClass="boton" disabled="#{mbConfiguracionFTP.valUser.valor ne '' ? 'false':'true'}"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:panel>
+                </h:form>
+
+                <h:form id="frmValidacion">
+                    <p:dialog header="Configuración FTP" widgetVar="dialogValidacion" modal="true" resizable="fasle">
+                        <h:panelGrid id="displayValidacion" columns="2" cellspacing="5">
+                            <p:outputLabel value="Usuario: " />
+                            <p:inputText value="#{mbConfiguracionFTP.user}" />
+                            <p:outputLabel value="Contraseña: " />
+                            <p:password value="#{mbConfiguracionFTP.pass}" />
+                            <p:outputLabel value="Confirmar Contraseña: " />
+                            <p:password value="#{mbConfiguracionFTP.confirmPass}" />
+                            <p></p>
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:commandButton id="btnCancelarValidacion" value="Cancelar" onclick="dialogValidacion.hide();" icon="ui-icon-close" styleClass="boton" update=":frmConfigFTP, :frmValidacion:displayValidacion" />
+                                <p:commandButton id="btnConexionValidacion" value="Agregar Usuario" actionListener="#{mbConfiguracionFTP.createUserVal}" oncomplete="dialogValidacion.hide()" icon="ui-icon-check" styleClass="boton" update=":frmConfigFTP"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="frmDeleteValidacion">
+                    <p:confirmDialog id="confirmDialog" message="¿Desea eliminar el Usuario FTP?" header="Eliminar Usuario FTP"
+                                     severity="alert" widgetVar="dialogDelValidacion" showEffect="fade" hideEffect="fade" closable="false" >
+                        <center>
+                            <h:panelGrid columns="2" cellspacing="5">
+                                <p:commandButton id="decline" value="Cancelar" onclick="dialogDelValidacion.hide()" icon="ui-icon-close"/>
+                                <p:commandButton id="confirm" value="Aceptar" ajax="fasle" update=":frmValidacion:displayValidacion" oncomplete="dialogDelValidacion.hide()" actionListener="#{mbConfiguracionFTP.deleteUserVal}" icon="ui-icon-check"/> 
+                            </h:panelGrid>
+                        </center>
+                    </p:confirmDialog>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

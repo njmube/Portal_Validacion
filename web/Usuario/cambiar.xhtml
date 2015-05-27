@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>Acceso</title>
+        <link rel="stylesheet" href="/Validacion/resources/css/cssLogin.css"/>
+        <link rel="shortcut icon" href="/Validacion/resources/images/favicon.ico" type="image/x-icon"/>
+    </h:head>
+    <h:body>
+        <p:growl showDetail="true" autoUpdate="true" sticky="fasle"/>
+
+        <section class="contenedorLogin">
+            <h:form id="frmRestablecer" class="formulario">  
+                <h:panelGrid columns="2" cellpadding="1" cellspacing="5">
+                    <p:panel style="border-style: hidden; background: border-box " >
+                        <p:graphicImage value="/resources/images/logo.png" width="80px"/>  
+                    </p:panel>        
+                    <h2>Validación</h2>
+                </h:panelGrid>
+                <p:outputLabel value="Introduzca una nueva contraseña" />
+                <!--<h3>Introduzca una nueva contraseña</h3>-->
+                <p></p>
+                <p><h:inputSecret pt:placeholder="Introduzca su nueva contraseña" label="Contraseña" value="#{mbAcceso.pass}" /></p>
+                <p><h:inputSecret pt:placeholder="Confirmar Contraseña" label="Confirmar Contraseña" value="#{mbAcceso.confirmarPass}" /></p>
+                <section class="seccionBotones">
+                    <p:commandButton id="btn" value="Aceptar" actionListener="#{mbAcceso.nuevaContrasenia}" styleClass="btnLogin" update=":frmRestablecer" oncomplete="validaUpdatePass(xhr, status, args)"/>
+                </section>
+                <p:outputLabel value="VERSION: 0.2" style="font-size: xx-small; color: #036fab; font-weight: bold"/>
+                <script type="text/javascript">
+                    function validaUpdatePass(xhr, status, args) {
+                        if (!args.actualiza) {
+                            confirmation.hide();
+                        }
+                        else {
+                            confirmation.show();
+                        }
+                    }
+                </script>
+
+                <p:confirmDialog message="La contraseña ha sido modificada exitosamente" showEffect="fade" 
+                                 header="Contraseña modificada" severity="info" widgetVar="confirmation" style="font-size: small;" closable="false">
+                    <center> <p:commandButton value="Aceptar" oncomplete="confirmation.hide()" action="#{mbAcceso.irLogin}" update=":frmRestablecer" icon="ui-icon-circle-check"/> </center>
+                </p:confirmDialog> 
+            </h:form>
+        </section>
+    </h:body>
+</html>
+
